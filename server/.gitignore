@@ -3,3 +3,4 @@ cred
 
 node_modules
 *.log
+dist

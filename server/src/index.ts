@@ -2,13 +2,16 @@ import "./firebase-app";
 
 import express from "express";
 
-import { getDb } from "./firebase-app";
+import { getFirestore } from "./firebase-app";
 
 const app = express();
 
 app.get("/", async (req, res) => {
   const name = process.env.NAME || "World";
-  await getDb().collection("users").add({ createdAt: new Date().toString() });
+  await getFirestore()
+    .collection("users")
+    .add({ createdAt: new Date().toString() })
+    .catch((e) => console.error(e));
   res.send(`Hello Fucking ${name}!.`);
 });
 
