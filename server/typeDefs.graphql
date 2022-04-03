@@ -1,3 +1,29 @@
+scalar DateTime
+
+#
+# ROOT
+#
+type User {
+  id: ID!
+  displayName: String!
+}
+
+#
+# QUERY
+#
 type Query {
-  hello: String
+  me: User!
+}
+
+#
+# MUTATION
+#
+input SignUpInput {
+  displayName: String!
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  signUp(input: SignUpInput!): User!
 }

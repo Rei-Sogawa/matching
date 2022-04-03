@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 import { applicationDefault, initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
+import { getAuth as originalGetAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
 if (process.env.NODE_ENV === "production") {
@@ -20,4 +20,5 @@ if (process.env.NODE_ENV === "production") {
   initializeApp();
 }
 
-export { getAuth, getFirestore };
+export const getAuth = () => originalGetAuth();
+export const getDb = () => getFirestore();

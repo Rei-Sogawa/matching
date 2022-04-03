@@ -4,14 +4,9 @@ import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import expressPlayground from "graphql-playground-middleware-express";
 
-import { Resolvers } from "./graphql/generated";
+import { serverContext } from "./context";
 import { typeDefs } from "./graphql/typeDefs";
-
-const resolvers: Resolvers = {
-  Query: {
-    hello: () => "Hello World",
-  },
-};
+import { resolvers } from "./resolvers";
 
 async function start() {
   const app = express();
@@ -20,7 +15,7 @@ async function start() {
     res.send("Hello World!.");
   });
 
-  const server = new ApolloServer({ typeDefs, resolvers });
+  const server = new ApolloServer({ typeDefs, resolvers, context: serverContext });
   server.start().then(() => {
     server.applyMiddleware({ app });
   });

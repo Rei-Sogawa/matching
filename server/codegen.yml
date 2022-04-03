@@ -10,11 +10,9 @@ generates:
       enumsAsConst: true
       scalars:
         DateTime: Date
-      # contextType: ../context#Context
-      # mappers:
-      #   User: ../fire/doc/index#UserDoc
-      #   Topic: ../fire/doc/index#TopicDoc
-      #   Comment: ../fire/doc/index#CommentDoc
+      contextType: ../context#Context
+      mappers:
+        User: ../fire/docs/index#UserDoc
   src/graphql/typeDefs.ts:
     plugins:
       - "typescript-type-defs.js"
