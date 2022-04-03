@@ -1,4 +1,8 @@
+import { gql } from "@apollo/client";
 import { Swiper } from "antd-mobile";
+
+import { Apollo } from "./contexts/Apollo";
+import { useHelloQuery } from "./graphql/generated";
 
 function Fruits() {
   return (
@@ -28,10 +32,22 @@ function Fruits() {
   );
 }
 
+gql`
+  query hello {
+    hello
+  }
+`;
+
+function Hello() {
+  const { data } = useHelloQuery();
+
+  return <div>{data?.hello}</div>;
+}
+
 export function App() {
   return (
-    <div className="h-full bg-gray-50">
-      <Fruits />
-    </div>
+    <Apollo>
+      <Hello />
+    </Apollo>
   );
 }

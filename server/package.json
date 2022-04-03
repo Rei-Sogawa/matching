@@ -11,7 +11,7 @@
     "deploy": "gcloud builds submit",
     "dev": "ts-node-dev --respawn src/index",
     "emu": "firebase emulators:start --only auth,firestore",
-    "gql": "graphql-codegen --config codegen.yml"
+    "gql": "graphql-codegen"
   },
   "dependencies": {
     "apollo-server-core": "^3.6.7",
