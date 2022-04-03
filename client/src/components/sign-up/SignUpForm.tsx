@@ -39,7 +39,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
                   type="email"
                   className="input input-bordered input-primary"
                   placeholder="Email"
-                  autoComplete="off"
+                  autoComplete="on"
                   required
                   {...input}
                 />
@@ -57,6 +57,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
                   type="password"
                   className="input input-bordered input-primary"
                   placeholder="Password"
+                  autoComplete="on"
                   required
                   {...input}
                 />
@@ -77,6 +78,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
                     meta.error && meta.touched ? "input-error" : "input-primary"
                   )}
                   placeholder="Password Confirm"
+                  autoComplete="on"
                   required
                   {...input}
                 />

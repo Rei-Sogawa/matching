@@ -29,7 +29,7 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
                   type="email"
                   className="input input-bordered input-primary"
                   placeholder="Email"
-                  autoComplete="off"
+                  autoComplete="on"
                   required
                   {...input}
                 />
@@ -47,6 +47,7 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
                   type="password"
                   className="input input-bordered input-primary"
                   placeholder="Password"
+                  autoComplete="on"
                   required
                   {...input}
                 />
