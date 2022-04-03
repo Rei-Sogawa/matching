@@ -13,5 +13,5 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 if (!import.meta.env.PROD) {
-  connectAuthEmulator(getAuth(), "http://localhost:9099");
+  connectAuthEmulator(getAuth(), "http://localhost:9099", { disableWarnings: true });
 }
