@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { Swiper } from "antd-mobile";
 
 import { Apollo } from "./contexts/Apollo";
+import { AuthProvider } from "./contexts/Auth";
 import { useHelloQuery } from "./graphql/generated";
 
 function Fruits() {
@@ -46,8 +47,10 @@ function Hello() {
 
 export function App() {
   return (
-    <Apollo>
-      <Hello />
-    </Apollo>
+    <AuthProvider>
+      <Apollo>
+        <Hello />
+      </Apollo>
+    </AuthProvider>
   );
 }
