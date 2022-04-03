@@ -7,9 +7,7 @@
     "node": ">= 14.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "gcloud:build": "gcloud builds submit --tag gcr.io/playground-firebase-abc/matching-server",
-    "gcloud:deploy": "gcloud run deploy --image gcr.id/playground-firebase-abc/matching-server --platform managed"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.3"

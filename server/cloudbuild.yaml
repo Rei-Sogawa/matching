@@ -1,0 +1,22 @@
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/playground-abc-firebase/matching-server", "."]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/playground-abc-firebase/matching-server"]
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "matching-server",
+        "--image",
+        "gcr.io/playground-abc-firebase/matching-server",
+        "--region",
+        "asia-northeast1",
+      ]
+images:
+  - gcr.io/playground-abc-firebase/matching-server
