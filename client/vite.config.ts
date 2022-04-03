@@ -4,5 +4,6 @@ import babel from "vite-plugin-babel";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: { port: 3001 },
   plugins: [react(), babel()],
 });

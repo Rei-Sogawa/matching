@@ -5,7 +5,7 @@ import * as admin from "firebase-admin";
 if (process.env.NODE_ENV === "production") {
   process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.GOOGLE_APPLICATION_CREDENTIALS_PATH;
 } else {
-  const PROJECT_ID = "playground-firebase-abc--test";
+  const PROJECT_ID = "playground-abc-firebase";
   const FIREBASE_AUTH_EMULATOR_HOST = "localhost:9099";
   const FIRESTORE_EMULATOR_HOST = "localhost:8080";
 

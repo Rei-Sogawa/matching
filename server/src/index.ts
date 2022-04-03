@@ -12,7 +12,8 @@ app.get("/", async (req, res) => {
   res.send(`Hello Fucking ${name}!.`);
 });
 
-const port = process.env.PORT || 8080;
+// NOTE: use port 3000 when local development, because firebase emulator firestore use port 8080
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`helloworld: listening on port ${port}`);
 });

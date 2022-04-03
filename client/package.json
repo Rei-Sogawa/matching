@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "predeploy": "yarn build",
-    "deploy": "npx -p firebase-tools 'firebase deploy --only hosting'"
+    "deploy": "firebase deploy --only hosting"
   },
   "dependencies": {
     "antd-mobile": "^5.9.4",

@@ -2,4 +2,4 @@ cred
 .env
 
 node_modules
-yarn-error.log
+*.log
