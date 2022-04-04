@@ -11,10 +11,6 @@ import { resolvers } from "./resolvers";
 async function start() {
   const app = express();
 
-  app.get("/", async (req, res) => {
-    res.send("Hello World!.");
-  });
-
   const server = new ApolloServer({ typeDefs, resolvers, context: serverContext });
   server.start().then(() => {
     server.applyMiddleware({ app });
