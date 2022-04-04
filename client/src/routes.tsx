@@ -1,6 +1,6 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
-import { WithoutAuth } from "./components/functional/WithoutAuth";
+import { BeforeAuthenticated } from "./components/functional/BeforeAuthenticated";
 import { Index } from "./pages/Index";
 import { LogIn } from "./pages/log-in";
 import { SignUp } from "./pages/sign-up";
@@ -18,12 +18,12 @@ export const routes = {
   [SIGN_UP]: {
     path: pathBuilder(SIGN_UP),
     Component: SignUp,
-    middleware: [WithoutAuth],
+    middleware: [BeforeAuthenticated],
   },
   [LOG_IN]: {
     path: pathBuilder(LOG_IN),
     Component: LogIn,
-    middleware: [WithoutAuth],
+    middleware: [BeforeAuthenticated],
   },
 };
 
