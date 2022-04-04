@@ -2,7 +2,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { LogInForm } from "../components/sign-up/LogInForm";
+import { LogInForm } from "../components/domain/LogInForm";
 import { routes } from "../routes";
 
 export const LogIn: FC = () => {

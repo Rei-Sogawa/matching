@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Compose } from "./components/functional/Compose";
 import { Apollo } from "./contexts/Apollo";
 import { AuthProvider, useAuth } from "./contexts/Auth";
 import { Me } from "./contexts/Me";
+import { Compose } from "./functional/Compose";
 import { paths, routes } from "./routes";
 
 const Pages: FC = () => {

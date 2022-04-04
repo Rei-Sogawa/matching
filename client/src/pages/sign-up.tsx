@@ -3,7 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { SignUpForm } from "../components/sign-up/SignUpForm";
+import { SignUpForm } from "../components/domain/SignUpForm";
 import { SignUpInput, useSignUpMutation } from "../graphql/generated";
 import { routes } from "../routes";
 

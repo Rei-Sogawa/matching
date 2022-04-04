@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { Navigate } from "react-router-dom";
 
-import { useAuth } from "../../contexts/Auth";
-import { routes } from "../../routes";
+import { useAuth } from "../contexts/Auth";
+import { routes } from "../routes";
 
 export const Authenticated: FC = ({ children }) => {
   const { uid } = useAuth();

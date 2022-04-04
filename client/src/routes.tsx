@@ -1,6 +1,6 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
-import { BeforeAuthenticated } from "./components/functional/BeforeAuthenticated";
+import { BeforeAuthenticated } from "./functional/BeforeAuthenticated";
 import { Index } from "./pages/Index";
 import { LogIn } from "./pages/log-in";
 import { SignUp } from "./pages/sign-up";

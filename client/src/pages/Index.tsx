@@ -2,9 +2,9 @@ import { getAuth, signOut } from "firebase/auth";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
-import { AppLayout } from "../components/layouts/AppLayout";
 import { useAuth } from "../contexts/Auth";
 import { useMeQuery } from "../graphql/generated";
+import { AppLayout } from "../layouts/AppLayout";
 import { routes } from "../routes";
 
 export const Index: FC = () => {
