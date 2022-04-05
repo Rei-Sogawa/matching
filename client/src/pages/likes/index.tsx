@@ -4,7 +4,7 @@ import "swiper/css/navigation";
 import "./index.css";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { EffectCards, Virtual } from "swiper";
+import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 
 type UserCardProps = {
@@ -27,7 +27,7 @@ const UserCard: FC<UserCardProps> = ({ index, onShow, onHide }) => {
 
 const LikeBadge: FC = () => {
   return (
-    <div className="absolute top-1/4 right-1/4 z-10 origin-top rotate-12 px-3 py-2 border-4 rounded border-green-500 text-green-500 font-bold text-4xl">
+    <div className="absolute top-1/4 right-1/4 z-10 origin-top rotate-12 px-3 py-2 border-4 rounded border-green-500 text-green-500 font-bold text-5xl">
       LIKE
     </div>
   );
@@ -35,7 +35,7 @@ const LikeBadge: FC = () => {
 
 const NopeBadge: FC = () => {
   return (
-    <div className="absolute top-1/4 left-1/4 z-10 origin-top -rotate-12 px-3 py-2 border-4 rounded border-red-500 text-red-500 font-bold text-4xl">
+    <div className="absolute top-1/4 left-1/4 z-10 origin-top -rotate-12 px-3 py-2 border-4 rounded border-red-500 text-red-500 font-bold text-5xl">
       NOPE
     </div>
   );
@@ -46,10 +46,8 @@ export const Likes: FC = () => {
   const onShow = (index: number) => setVisibleSlides((prev) => [...new Set([...prev, index])]);
   const onHide = (index: number) => setVisibleSlides((prev) => prev.filter((_index) => _index !== index));
 
-  const [activeSlide, setActiveSlide] = useState<number>(0);
-  useEffect(() => {
-    if (visibleSlides.length === 1) setActiveSlide(visibleSlides[0]);
-  }, [visibleSlides]);
+  const DEFAULT_INDEX = 50;
+  const [activeSlide, setActiveSlide] = useState<number>(DEFAULT_INDEX);
 
   const toLike = useMemo(() => {
     if (visibleSlides.length === 2) {
@@ -64,6 +62,22 @@ export const Likes: FC = () => {
     return false;
   }, [visibleSlides, activeSlide]);
 
+  const onLiked = () => {
+    console.log("did LIKE");
+  };
+  const onNoped = () => {
+    console.log("did NOPE");
+  };
+
+  const onSwiper = (swiper: SwiperClass) => {
+    swiper.slideTo(DEFAULT_INDEX);
+  };
+  const onSlideChange = (swiper: SwiperClass) => {
+    if (activeSlide > swiper.activeIndex) onLiked();
+    if (activeSlide < swiper.activeIndex) onNoped();
+    setActiveSlide(swiper.activeIndex);
+  };
+
   return (
     <div className="h-full bg-white relative">
       <Swiper
@@ -71,9 +85,8 @@ export const Likes: FC = () => {
         virtual
         modules={[EffectCards, Virtual]}
         className="app-swiper"
-        onSwiper={(swipe) => {
-          swipe.slideTo(50);
-        }}
+        onSwiper={onSwiper}
+        onSlideChange={onSlideChange}
       >
         {Array.from({ length: 100 }).map((_, index) => (
           <SwiperSlide key={index} virtualIndex={index} className="bg-gray-200">
