@@ -4,7 +4,6 @@ import "swiper/css/navigation";
 import "./index.css";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { useDebounce } from "react-use";
 import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 
