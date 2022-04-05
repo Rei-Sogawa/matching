@@ -75,7 +75,7 @@ export const Likes: FC = () => {
   const onSlideChange = (swiper: SwiperClass) => {
     if (activeSlideIndex > swiper.activeIndex) onLike();
     if (activeSlideIndex < swiper.activeIndex) onNope();
-    // NOTE: activeSlideIndex が変更された直後は visibleSlideIndexes が 2 つ存在し、toLike と toNope の切り替えがちらつくため、setTimeout を使っている
+    // NOTE: activeSlideIndex の変更前後は visibleSlideIndexes が 2 つ存在し、toLike と toNope の切り替えがちらつく。setTimeout を使い、ちらつきを避ける
     setTimeout(() => {
       setActiveSlideIndex(swiper.activeIndex);
     }, 100);
@@ -91,7 +91,7 @@ export const Likes: FC = () => {
         onSwiper={onSwiper}
         onSlideChange={onSlideChange}
       >
-        {Array.from({ length: 100 }).map((_, index) => (
+        {Array.from({ length: DEFAULT_INDEX * 2 }).map((_, index) => (
           <SwiperSlide key={index} virtualIndex={index} className="bg-gray-200">
             <UserCard index={index} onShow={onShow} onHide={onHide} />
           </SwiperSlide>
