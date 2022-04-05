@@ -46,8 +46,8 @@ export const Likes: FC = () => {
   const onShow = (index: number) => setVisibleSlideIndexes((prev) => [...new Set([...prev, index])]);
   const onHide = (index: number) => setVisibleSlideIndexes((prev) => prev.filter((_index) => _index !== index));
 
-  const DEFAULT_INDEX = 50;
-  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(DEFAULT_INDEX);
+  const USER_CARD_LENGTH = 50;
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(USER_CARD_LENGTH);
 
   const toLike = useMemo(() => {
     if (visibleSlideIndexes.length === 2) {
@@ -70,7 +70,7 @@ export const Likes: FC = () => {
   };
 
   const onSwiper = (swiper: SwiperClass) => {
-    swiper.slideTo(DEFAULT_INDEX);
+    swiper.slideTo(USER_CARD_LENGTH);
   };
   const onSlideChange = (swiper: SwiperClass) => {
     if (activeSlideIndex > swiper.activeIndex) onLike();
@@ -91,7 +91,7 @@ export const Likes: FC = () => {
         onSwiper={onSwiper}
         onSlideChange={onSlideChange}
       >
-        {Array.from({ length: DEFAULT_INDEX * 2 }).map((_, index) => (
+        {Array.from({ length: USER_CARD_LENGTH * 2 }).map((_, index) => (
           <SwiperSlide key={index} virtualIndex={index} className="bg-gray-200">
             <UserCard index={index} onShow={onShow} onHide={onHide} />
           </SwiperSlide>
