@@ -4,6 +4,7 @@ import "swiper/css/navigation";
 import "./index.css";
 
 import { FC, useEffect, useMemo, useState } from "react";
+import { useDebounce } from "react-use";
 import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 
@@ -42,40 +43,43 @@ const NopeBadge: FC = () => {
 };
 
 export const Likes: FC = () => {
-  const [visibleSlides, setVisibleSlides] = useState<number[]>([]);
-  const onShow = (index: number) => setVisibleSlides((prev) => [...new Set([...prev, index])]);
-  const onHide = (index: number) => setVisibleSlides((prev) => prev.filter((_index) => _index !== index));
+  const [visibleSlideIndexes, setVisibleSlideIndexes] = useState<number[]>([]);
+  const onShow = (index: number) => setVisibleSlideIndexes((prev) => [...new Set([...prev, index])]);
+  const onHide = (index: number) => setVisibleSlideIndexes((prev) => prev.filter((_index) => _index !== index));
 
   const DEFAULT_INDEX = 50;
-  const [activeSlide, setActiveSlide] = useState<number>(DEFAULT_INDEX);
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(DEFAULT_INDEX);
 
   const toLike = useMemo(() => {
-    if (visibleSlides.length === 2) {
-      return visibleSlides.some((index) => index < activeSlide);
+    if (visibleSlideIndexes.length === 2) {
+      return visibleSlideIndexes.some((index) => index < activeSlideIndex);
     }
     return false;
-  }, [visibleSlides, activeSlide]);
+  }, [visibleSlideIndexes]);
   const toNope = useMemo(() => {
-    if (visibleSlides.length === 2) {
-      return visibleSlides.some((index) => index > activeSlide);
+    if (visibleSlideIndexes.length === 2) {
+      return visibleSlideIndexes.some((index) => index > activeSlideIndex);
     }
     return false;
-  }, [visibleSlides, activeSlide]);
+  }, [visibleSlideIndexes]);
 
-  const onLiked = () => {
-    console.log("did LIKE");
+  const onLike = () => {
+    console.log("LIKE");
   };
-  const onNoped = () => {
-    console.log("did NOPE");
+  const onNope = () => {
+    console.log("NOPE");
   };
 
   const onSwiper = (swiper: SwiperClass) => {
     swiper.slideTo(DEFAULT_INDEX);
   };
   const onSlideChange = (swiper: SwiperClass) => {
-    if (activeSlide > swiper.activeIndex) onLiked();
-    if (activeSlide < swiper.activeIndex) onNoped();
-    setActiveSlide(swiper.activeIndex);
+    if (activeSlideIndex > swiper.activeIndex) onLike();
+    if (activeSlideIndex < swiper.activeIndex) onNope();
+    // NOTE: activeSlideIndex が変更された直後は visibleSlideIndexes が 2 つ存在し、toLike と toNope の切り替えがちらつくため、setTimeout を使っている
+    setTimeout(() => {
+      setActiveSlideIndex(swiper.activeIndex);
+    }, 100);
   };
 
   return (
