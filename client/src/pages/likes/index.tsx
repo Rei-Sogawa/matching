@@ -13,7 +13,7 @@ type UserCardProps = {
   onHide: (index: number) => void;
 };
 
-const UserCard: FC<UserCardProps> = ({ index, onShow, onHide }) => {
+const UserSwiperSlide: FC<UserCardProps> = ({ index, onShow, onHide }) => {
   const swiperSlide = useSwiperSlide();
   useEffect(() => {
     if (swiperSlide.isVisible) {
@@ -27,7 +27,7 @@ const UserCard: FC<UserCardProps> = ({ index, onShow, onHide }) => {
 
 const LikeBadge: FC = () => {
   return (
-    <div className="absolute top-1/4 right-1/4 z-10 origin-top rotate-12 px-3 py-2 border-4 rounded border-green-500 text-green-500 font-bold text-5xl">
+    <div className="absolute top-1/4 right-1/4 z-10 origin-top -rotate-12 px-3 py-2 border-4 rounded border-green-500 text-green-500 font-bold text-5xl">
       LIKE
     </div>
   );
@@ -35,7 +35,7 @@ const LikeBadge: FC = () => {
 
 const NopeBadge: FC = () => {
   return (
-    <div className="absolute top-1/4 left-1/4 z-10 origin-top -rotate-12 px-3 py-2 border-4 rounded border-red-500 text-red-500 font-bold text-5xl">
+    <div className="absolute top-1/4 left-1/4 z-10 origin-top rotate-12 px-3 py-2 border-4 rounded border-red-500 text-red-500 font-bold text-5xl">
       NOPE
     </div>
   );
@@ -43,8 +43,8 @@ const NopeBadge: FC = () => {
 
 export const Likes: FC = () => {
   const [visibleSlideIndexes, setVisibleSlideIndexes] = useState<number[]>([]);
-  const onShow = (index: number) => setVisibleSlideIndexes((prev) => [...new Set([...prev, index])]);
-  const onHide = (index: number) => setVisibleSlideIndexes((prev) => prev.filter((_index) => _index !== index));
+  const onShowSlide = (index: number) => setVisibleSlideIndexes((prev) => [...new Set([...prev, index])]);
+  const onHideSlide = (index: number) => setVisibleSlideIndexes((prev) => prev.filter((_index) => _index !== index));
 
   const USER_CARD_LENGTH = 50;
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(USER_CARD_LENGTH);
@@ -93,7 +93,7 @@ export const Likes: FC = () => {
       >
         {Array.from({ length: USER_CARD_LENGTH * 2 }).map((_, index) => (
           <SwiperSlide key={index} virtualIndex={index} className="bg-gray-200">
-            <UserCard index={index} onShow={onShow} onHide={onHide} />
+            <UserSwiperSlide index={index} onShow={onShowSlide} onHide={onHideSlide} />
           </SwiperSlide>
         ))}
       </Swiper>
