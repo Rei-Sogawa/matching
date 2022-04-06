@@ -1,10 +1,11 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
 import "swiper/css/navigation";
+import "swiper/css/pagination";
 import "./index.css";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
+import { EffectCards, Navigation, Pagination, Swiper as SwiperClass, Virtual } from "swiper";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 
 type UserCardProps = {
@@ -22,7 +23,28 @@ const UserSwiperSlide: FC<UserCardProps> = ({ index, onShow, onHide }) => {
       onHide(index);
     }
   }, [swiperSlide.isVisible]);
-  return <div className="h-full flex justify-center items-center">{`Slide ${index}`}</div>;
+  return (
+    <div className="h-full flex flex-col space-y-2">
+      <div className="flex-1 mx-2">
+        <div className="h-full w-full bg-white">
+          <Swiper
+            navigation={true}
+            pagination={{ clickable: true }}
+            modules={[Navigation, Pagination]}
+            className="h-full"
+            allowTouchMove={false}
+          >
+            {Array.from({ length: 5 }).map((_, index) => (
+              <SwiperSlide key={index} className="h-full flex justify-center items-center text-5xl">
+                {index}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </div>
+      <div className="h-28"></div>
+    </div>
+  );
 };
 
 const LikeBadge: FC = () => {
