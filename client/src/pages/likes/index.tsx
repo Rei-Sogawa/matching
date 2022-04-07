@@ -45,7 +45,7 @@ const UserSwiperSlide: FC<UserCardProps> = ({ index, onShow, onHide }) => {
         <button className="btn btn-lg text-white" onClick={onNope}>
           nope
         </button>
-        <button className="btn btn-lg btn-accent" onClick={onLike}>
+        <button className="btn btn-lg btn-success" onClick={onLike}>
           like
         </button>
       </div>
