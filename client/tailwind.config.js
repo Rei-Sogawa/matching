@@ -1,7 +1,6 @@
 /* eslint-disable */
 module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
-  plugins: [require("daisyui")],
   theme: {
     extend: {
       width: {
@@ -12,4 +11,5 @@ module.exports = {
       },
     },
   },
+  plugins: [require("daisyui")],
 };
