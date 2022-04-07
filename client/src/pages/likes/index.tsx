@@ -1,11 +1,8 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import "./index.css";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { useTimeout, useTimeoutFn } from "react-use";
 import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
 
