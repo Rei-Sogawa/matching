@@ -19,10 +19,10 @@ type UserCardProps = {
 const UserSwiperSlide: FC<UserCardProps> = ({ index, onShow, onHide }) => {
   const swiper = useSwiper();
   const onLike = () => {
-    swiper.slidePrev();
+    swiper.slidePrev(500);
   };
   const onNope = () => {
-    swiper.slideNext();
+    swiper.slideNext(500);
   };
 
   const swiperSlide = useSwiperSlide();
