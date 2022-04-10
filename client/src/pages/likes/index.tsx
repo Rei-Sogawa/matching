@@ -79,45 +79,47 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
 
   return (
-    <div className="h-full py-10 flex flex-col space-y-4">
-      <div className={classNames("h-3/4 w-full relative", { hidden: !isReady })}>
-        <div className="absolute inset-0">
-          <img src={activeImage} className="h-full mx-auto rounded-lg object-contain" />
+    <>
+      <div className={classNames("h-full py-10 flex flex-col space-y-4", { hidden: !isReady })}>
+        <div className="h-3/4 w-full relative">
+          <div className="absolute inset-0">
+            <img src={activeImage} className="h-full mx-auto rounded-lg object-contain" />
+          </div>
+        </div>
+
+        <div className="h-1/4 flex flex-col items-center space-y-4">
+          <div className="flex space-x-2">
+            {user.images.map((image) => (
+              <input
+                key={image}
+                type="radio"
+                className="radio radio-accent"
+                name={`radio-group-${index}`}
+                value={image}
+                checked={image === activeImage}
+                onChange={noOperate}
+                onClick={() => setActiveImage(image)}
+              />
+            ))}
+          </div>
+
+          <div className="font-bold">{user.displayName}</div>
+
+          <div className="flex-1 flex justify-center items-center space-x-4">
+            <button className="btn btn-lg text-white" onClick={onNope}>
+              nope
+            </button>
+            <button className="btn btn-lg btn-success" onClick={onLike}>
+              like
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className={classNames("h-3/4 flex justify-center items-center", { hidden: isReady })}>
-        <div className="text-gray-500 font-bold text-lg">LOADING...</div>
+      <div className={classNames("h-full flex justify-center items-center", { hidden: isReady })}>
+        <div className="font-bold text-xl">LOADING...</div>
       </div>
-
-      <div className="h-1/4 flex flex-col items-center space-y-4">
-        <div className="flex space-x-2">
-          {user.images.map((image) => (
-            <input
-              key={image}
-              type="radio"
-              className="radio radio-accent"
-              name={`radio-group-${index}`}
-              value={image}
-              checked={image === activeImage}
-              onChange={noOperate}
-              onClick={() => setActiveImage(image)}
-            />
-          ))}
-        </div>
-
-        <div className="font-bold">{user.displayName}</div>
-
-        <div className="flex-1 flex justify-center items-center space-x-4">
-          <button className="btn btn-lg text-white" disabled={!isReady} onClick={onNope}>
-            nope
-          </button>
-          <button className="btn btn-lg btn-success" disabled={!isReady} onClick={onLike}>
-            like
-          </button>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
