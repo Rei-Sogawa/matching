@@ -3,6 +3,7 @@ import "swiper/css/effect-cards";
 import "./index.css";
 
 import classNames from "classnames";
+import { first } from "lodash-es";
 import { ChangeEventHandler, FC, useEffect, useMemo, useState } from "react";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
@@ -24,7 +25,7 @@ type User = {
   images: string[];
 };
 
-const users: User[] = Array.from({ length: 5 }).map((_, index) => {
+const users: User[] = Array.from({ length: 10 }).map((_, index) => {
   const topImage = getImage();
   const restImages = Array.from({ length: getRandomInt(5) }).map(() => getImage());
   return {
@@ -61,7 +62,12 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   }, [isVisible]);
 
   const [activeImage, setActiveImage] = useState(user.topImage);
-  const onSelectImage: ChangeEventHandler<HTMLInputElement> = (e) => setActiveImage(e.target.value);
+  const onSelectImage: ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    setTimeout(() => {
+      setActiveImage(e.target.value);
+    }, 100);
+  };
   useEffect(() => {
     if (!isActive) return;
     setActiveImage(user.topImage);
@@ -71,17 +77,13 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
     <div className="h-full flex flex-col space-y-2">
       <div className="h-3/4">
         <div className="h-full relative">
-          {isActive && (
-            <div className="absolute inset-0">
-              {user.images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  className={classNames("h-full w-full py-2 object-contain", { hidden: image !== activeImage })}
-                />
-              ))}
-            </div>
-          )}
+          <div className="absolute inset-0">
+            <img
+              key={index}
+              src={activeImage}
+              className={classNames("h-full w-full py-2 object-contain", { hidden: !isActive })}
+            />
+          </div>
         </div>
       </div>
 
@@ -93,7 +95,7 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
               type="radio"
               className="radio radio-accent"
               value={image}
-              checked={image === activeImage}
+              checked={image == activeImage}
               onChange={onSelectImage}
             />
           ))}
@@ -138,7 +140,7 @@ export const Likes: FC = () => {
   const [init, setInit] = useState(false);
 
   const [dirtyUsers, setDirtyUsers] = useState(users);
-  const activeUser = useMemo(() => dirtyUsers.at(0), [dirtyUsers]);
+  const activeUser = useMemo(() => first(dirtyUsers), [dirtyUsers]);
 
   const indexes = useMemo(() => Array.from({ length: users.length * 2 + 1 }).map((_, index) => index), []);
   const [activeIndex, setActiveIndex] = useState(users.length);
@@ -192,9 +194,9 @@ export const Likes: FC = () => {
   return (
     <div className="h-full bg-white relative">
       <Swiper
+        speed={0}
         effect="cards"
         modules={[EffectCards]}
-        speed={500}
         className="app-swiper"
         onSwiper={onSwiper}
         onSlideChange={onSlideChange}
