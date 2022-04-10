@@ -2,17 +2,20 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 import "./index.css";
 
+import classNames from "classnames";
 import { ChangeEventHandler, FC, useEffect, useMemo, useState } from "react";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
 
 import { LikeBadge, NopeBadge } from "../../components/case/LikeNopeBadge";
 
-const getRandomArbitrary = (max: number, min = 0) => {
-  return Math.random() * (max - min) + min;
+const getRandomInt = (max: number, min = 0) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getImage = () => `https://picsum.photos/seed/${getRandomArbitrary(1000)}/800/1200`;
+const getImage = () => `https://picsum.photos/seed/${getRandomInt(1000)}/800/1200`;
 
 type User = {
   id: string;
@@ -21,9 +24,9 @@ type User = {
   images: string[];
 };
 
-const users: User[] = Array.from({ length: 5 }).map((_, index) => {
+const users: User[] = Array.from({ length: 3 }).map((_, index) => {
   const topImage = getImage();
-  const restImages = Array.from({ length: getRandomArbitrary(5) }).map(() => getImage());
+  const restImages = Array.from({ length: getRandomInt(5) }).map(() => getImage());
   return {
     id: index.toString(),
     displayName: `user-${index}`,
@@ -59,25 +62,31 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
 
   const [activeImage, setActiveImage] = useState(user.topImage);
   const onSelectImage: ChangeEventHandler<HTMLInputElement> = (e) => setActiveImage(e.target.value);
+  useEffect(() => {
+    if (!isActive) return;
+    setActiveImage(user.topImage);
+  }, [user, isActive]);
 
   return (
     <div className="h-full flex flex-col space-y-2">
       <div className="h-3/4">
-        <div className="h-full flex flex-col space-y-2">
+        <div className="h-full relative">
           {isActive && (
-            <>
-              <div className="flex-1 relative">
-                <div className="absolute inset-0">
-                  <img src={activeImage} className="h-full w-full object-cover" />
-                </div>
-              </div>
-            </>
+            <div className="absolute inset-0">
+              {user.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  className={classNames("h-full w-full py-2 object-contain", { hidden: image !== activeImage })}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
 
       <div className="h-1/4 flex flex-col items-center space-y-2">
-        <div className="self-center flex space-x-2">
+        <div className="flex space-x-2">
           {user.images.map((image, index) => (
             <input
               key={index}
@@ -89,6 +98,8 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
             />
           ))}
         </div>
+
+        <div className="font-bold">{user.displayName}</div>
 
         <div className="flex-1 flex items-center space-x-4">
           <button className="btn btn-lg text-white" onClick={onNope}>
@@ -103,23 +114,43 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   );
 };
 
+type PadSlideProps = {
+  index: number;
+  onShow: (index: number) => void;
+  onHide: (index: number) => void;
+};
+
+const PadSlide: FC<PadSlideProps> = ({ index, onShow, onHide }) => {
+  const { isVisible } = useSwiperSlide();
+  useEffect(() => {
+    if (isVisible) {
+      onShow(index);
+    } else {
+      onHide(index);
+    }
+  }, [isVisible]);
+  return null;
+};
+
 export const Likes: FC = () => {
   const [init, setInit] = useState(false);
 
   const [dirtyUsers, setDirtyUsers] = useState(users);
   const activeUser = useMemo(() => dirtyUsers.at(0), [dirtyUsers]);
 
-  const indexes = useMemo(() => Array.from({ length: users.length * 2 - 1 }).map((_, index) => index), []);
-  const [activeIndex, setActiveIndex] = useState(users.length - 1);
-  const [visibleIndexes, setVisibleIndexes] = useState([users.length - 1]);
+  const indexes = useMemo(() => Array.from({ length: users.length * 2 + 1 }).map((_, index) => index), []);
+  const [activeIndex, setActiveIndex] = useState(users.length);
+  const [visibleIndexes, setVisibleIndexes] = useState([users.length]);
   const [liked, setLiked] = useState(false);
   const [noped, setNoped] = useState(false);
 
   const toLike = useMemo(() => {
+    if (!activeUser) return false;
     if (visibleIndexes.length !== 2) return false;
     return visibleIndexes.some((index) => index < activeIndex);
   }, [visibleIndexes]);
   const toNope = useMemo(() => {
+    if (!activeUser) return false;
     if (visibleIndexes.length !== 2) return false;
     return visibleIndexes.some((index) => index > activeIndex);
   }, [visibleIndexes]);
@@ -132,13 +163,14 @@ export const Likes: FC = () => {
   };
 
   const onSwiper = (swiper: SwiperClass) => {
-    swiper.slideTo(users.length - 1);
+    swiper.slideTo(users.length);
     setTimeout(() => {
       setInit(true);
     }, 1_000);
   };
   const onSlideChange = (swiper: SwiperClass) => {
     if (!init) return;
+    if (!activeUser) return;
 
     const nextActiveIndex = swiper.activeIndex;
 
@@ -167,7 +199,11 @@ export const Likes: FC = () => {
       >
         {indexes.map((index) => (
           <SwiperSlide key={index} className="bg-gray-50">
-            {activeUser && <UserSlide index={index} onShow={onShowSlide} onHide={onHideSlide} user={activeUser} />}
+            {activeUser ? (
+              <UserSlide index={index} onShow={onShowSlide} onHide={onHideSlide} user={activeUser} />
+            ) : (
+              <PadSlide index={index} onShow={onShowSlide} onHide={onHideSlide} />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
