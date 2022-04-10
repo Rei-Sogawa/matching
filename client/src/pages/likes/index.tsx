@@ -110,10 +110,10 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
         <div className="font-bold">{user.displayName}</div>
 
         <div className="flex item-center space-x-4">
-          <button className="btn btn-lg text-white" onClick={onNope}>
+          <button className="btn btn-lg text-white" disabled={loading} onClick={onNope}>
             nope
           </button>
-          <button className="btn btn-lg btn-success" onClick={onLike}>
+          <button className="btn btn-lg btn-success" disabled={loading} onClick={onLike}>
             like
           </button>
         </div>
