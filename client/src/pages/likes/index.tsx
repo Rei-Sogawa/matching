@@ -69,12 +69,9 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
     }, 100);
   };
 
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!isActive) return;
-    setLoading(true);
     setActiveImage(user.topImage);
-    setTimeout(() => setLoading(false), 500);
   }, [user, isActive]);
 
   return (
@@ -85,7 +82,7 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
             <img
               key={index}
               src={activeImage}
-              className={classNames("h-full w-full object-contain", { hidden: !isActive || loading })}
+              className={classNames("h-full w-full object-contain", { hidden: !isActive })}
             />
           </div>
         </div>
@@ -102,19 +99,11 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
             />
           ))}
         </div>
-
-        {/* NOTE: for cache */}
-        <div className="hidden">
-          {user.images.map((image) => (
-            <img key={image} src={image} />
-          ))}
-        </div>
       </div>
 
       <div className="h-1/4 flex flex-col items-center space-y-4">
         <div className="font-bold">{user.displayName}</div>
 
-        {/* <div className="flex-1 flex items-center"> */}
         <div className="flex item-center space-x-4">
           <button className="btn btn-lg text-white" onClick={onNope}>
             nope
@@ -124,7 +113,6 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
           </button>
         </div>
       </div>
-      {/* </div> */}
     </div>
   );
 };
@@ -224,6 +212,15 @@ export const Likes: FC = () => {
       </Swiper>
       {(toLike || liked) && <LikeBadge />}
       {(toNope || noped) && <NopeBadge />}
+
+      {/* NOTE: for cache */}
+      <div className="hidden">
+        {users
+          .flatMap((user) => user.images)
+          .map((image) => (
+            <img key={image} src={image} />
+          ))}
+      </div>
     </div>
   );
 };
