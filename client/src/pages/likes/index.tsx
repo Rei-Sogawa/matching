@@ -89,6 +89,13 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
             />
           </div>
         </div>
+
+        {/* NOTE: cache */}
+        <div className="hidden">
+          {user.images.map((image) => (
+            <img key={image} src={image} />
+          ))}
+        </div>
       </div>
 
       <div className="h-1/4 flex flex-col items-center space-y-2">
