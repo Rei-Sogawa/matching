@@ -2,11 +2,10 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 import "./index.css";
 
-import { RadioGroup } from "@headlessui/react";
 import classNames from "classnames";
 import { first } from "lodash-es";
 import { FC, useEffect, useMemo, useState } from "react";
-import { EffectCards, Swiper as SwiperClass } from "swiper";
+import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
 
 import { LikeBadge, NopeBadge } from "../../components/case/LikeNopeBadge";
@@ -92,21 +91,20 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
       </div>
 
       <div className="h-1/4 flex flex-col items-center space-y-4">
-        <RadioGroup value={activeImage} onChange={setActiveImage} className="flex space-x-2">
+        <div className="flex space-x-2">
           {user.images.map((image) => (
-            <RadioGroup.Option key={image} value={image}>
-              {({ checked }) => (
-                <input
-                  type="radio"
-                  checked={checked}
-                  onChange={noOperate}
-                  className="radio radio-accent"
-                  disabled={!isReady}
-                />
-              )}
-            </RadioGroup.Option>
+            <input
+              key={image}
+              type="radio"
+              className="radio radio-accent"
+              name={`radio-group-${index}`}
+              value={image}
+              checked={image === activeImage}
+              onChange={noOperate}
+              onClick={() => setActiveImage(image)}
+            />
           ))}
-        </RadioGroup>
+        </div>
 
         <div className="font-bold">{user.displayName}</div>
 
@@ -216,6 +214,7 @@ export const Likes: FC = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+
       {(toLike || liked) && <LikeBadge />}
       {(toNope || noped) && <NopeBadge />}
 
