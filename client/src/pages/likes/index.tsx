@@ -24,7 +24,7 @@ type User = {
   images: string[];
 };
 
-const users: User[] = Array.from({ length: 3 }).map((_, index) => {
+const users: User[] = Array.from({ length: 5 }).map((_, index) => {
   const topImage = getImage();
   const restImages = Array.from({ length: getRandomInt(5) }).map(() => getImage());
   return {
@@ -101,13 +101,15 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
 
         <div className="font-bold">{user.displayName}</div>
 
-        <div className="flex-1 flex items-center space-x-4">
-          <button className="btn btn-lg text-white" onClick={onNope}>
-            nope
-          </button>
-          <button className="btn btn-lg btn-success" onClick={onLike}>
-            like
-          </button>
+        <div className="flex-1 flex items-center">
+          <div className="flex item-center space-x-4">
+            <button className="btn btn-lg text-white" onClick={onNope}>
+              nope
+            </button>
+            <button className="btn btn-lg btn-success" onClick={onLike}>
+              like
+            </button>
+          </div>
         </div>
       </div>
     </div>

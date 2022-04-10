@@ -39,11 +39,12 @@ export const App: FC = () => {
   return (
     <AuthProvider>
       <AuthInitialized>
-        <Apollo>
+        {/* <Apollo>
           <Me>
             <Pages />
           </Me>
-        </Apollo>
+        </Apollo> */}
+        <Pages />
       </AuthInitialized>
     </AuthProvider>
   );
