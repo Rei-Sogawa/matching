@@ -3,7 +3,7 @@ import "swiper/css/effect-cards";
 import "./index.css";
 
 import classNames from "classnames";
-import { first } from "lodash-es";
+import { divide, first } from "lodash-es";
 import { ChangeEventHandler, FC, useEffect, useMemo, useState } from "react";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
@@ -68,9 +68,13 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
       setActiveImage(e.target.value);
     }, 100);
   };
+
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!isActive) return;
+    setLoading(true);
     setActiveImage(user.topImage);
+    setTimeout(() => setLoading(false), 500);
   }, [user, isActive]);
 
   return (
@@ -81,7 +85,7 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
             <img
               key={index}
               src={activeImage}
-              className={classNames("h-full w-full py-2 object-contain", { hidden: !isActive })}
+              className={classNames("h-full w-full py-2 object-contain", { hidden: !isActive || loading })}
             />
           </div>
         </div>
@@ -180,11 +184,11 @@ export const Likes: FC = () => {
 
     if (activeIndex > nextActiveIndex) {
       setLiked(true);
-      setTimeout(() => setLiked(false), 250);
+      setTimeout(() => setLiked(false), 500);
     }
     if (activeIndex < nextActiveIndex) {
       setNoped(true);
-      setTimeout(() => setNoped(false), 250);
+      setTimeout(() => setNoped(false), 500);
     }
 
     setActiveIndex(nextActiveIndex);
