@@ -46,10 +46,10 @@ type UserSlideProps = {
 const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   const swiper = useSwiper();
   const onLike = () => {
-    swiper.slidePrev(500);
+    swiper.slidePrev(0);
   };
   const onNope = () => {
-    swiper.slideNext(500);
+    swiper.slideNext(0);
   };
 
   const { isActive, isVisible } = useSwiperSlide();
@@ -79,11 +79,7 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
       <div className="h-3/4 flex flex-col space-y-4">
         <div className="flex-1 relative">
           <div className="absolute inset-0">
-            <img
-              key={index}
-              src={activeImage}
-              className={classNames("h-full w-full object-contain", { hidden: !isActive })}
-            />
+            <img key={index} src={activeImage} className="h-full w-full object-contain" />
           </div>
         </div>
 
