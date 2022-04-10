@@ -16,7 +16,7 @@ const getRandomInt = (max: number, min = 0) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/800/1200`;
+const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/400/600`;
 
 type User = {
   id: string;
@@ -69,9 +69,14 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
     }, 100);
   };
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!isActive) return;
+
+    setLoading(true);
     setActiveImage(user.topImage);
+    setTimeout(() => setLoading(false), 500);
   }, [user, isActive]);
 
   return (
@@ -79,7 +84,11 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
       <div className="h-3/4 flex flex-col space-y-4">
         <div className="flex-1 relative">
           <div className="absolute inset-0">
-            <img key={index} src={activeImage} className="h-full w-full object-contain" />
+            <img
+              key={index}
+              src={activeImage}
+              className={classNames("h-full w-full object-contain", { hidden: !isActive || loading })}
+            />
           </div>
         </div>
 
