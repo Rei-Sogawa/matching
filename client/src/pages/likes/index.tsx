@@ -3,7 +3,7 @@ import "swiper/css/effect-cards";
 import "./index.css";
 
 import classNames from "classnames";
-import { divide, first } from "lodash-es";
+import { first } from "lodash-es";
 import { ChangeEventHandler, FC, useEffect, useMemo, useState } from "react";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
@@ -63,10 +63,7 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
 
   const [activeImage, setActiveImage] = useState(user.topImage);
   const onSelectImage: ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    setTimeout(() => {
-      setActiveImage(e.target.value);
-    }, 100);
+    setActiveImage(e.target.value);
   };
 
   const [loading, setLoading] = useState(false);
@@ -79,27 +76,26 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
     setTimeout(() => setLoading(false), 500);
   }, [user, isActive]);
 
+  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
+
   return (
     <div className="h-full py-10 flex flex-col space-y-4">
       <div className="h-3/4 flex flex-col space-y-4">
-        <div className="flex-1 relative">
+        <div className={classNames("flex-1 relative", { hidden: !isReady })}>
           <div className="absolute inset-0">
-            <img
-              key={index}
-              src={activeImage}
-              className={classNames("h-full w-full object-contain", { hidden: !isActive || loading })}
-            />
+            <img key={index} src={activeImage} className="h-full w-full object-contain" />
           </div>
         </div>
 
-        <div className="self-center flex space-x-2">
-          {user.images.map((image, index) => (
+        <div className={classNames("self-center flex space-x-2", { hidden: !isReady })}>
+          {user.images.map((image) => (
             <input
-              key={index}
+              key={image}
               type="radio"
+              name={`radio-group-${index}`}
               className="radio radio-accent"
               value={image}
-              checked={image == activeImage}
+              checked={image === activeImage}
               onChange={onSelectImage}
             />
           ))}
@@ -109,11 +105,11 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
       <div className="h-1/4 flex flex-col items-center space-y-4">
         <div className="font-bold">{user.displayName}</div>
 
-        <div className="flex item-center space-x-4">
-          <button className="btn btn-lg text-white" disabled={loading} onClick={onNope}>
+        <div className="flex-1 flex justify-center items-center space-x-4">
+          <button className="btn btn-lg text-white" disabled={!isReady} onClick={onNope}>
             nope
           </button>
-          <button className="btn btn-lg btn-success" disabled={loading} onClick={onLike}>
+          <button className="btn btn-lg btn-success" disabled={!isReady} onClick={onLike}>
             like
           </button>
         </div>
