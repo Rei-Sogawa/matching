@@ -16,7 +16,7 @@ const getRandomInt = (max: number, min = 0) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getImage = () => `https://picsum.photos/seed/${getRandomInt(1000)}/800/1200`;
+const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/800/1200`;
 
 type User = {
   id: string;
@@ -78,28 +78,19 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   }, [user, isActive]);
 
   return (
-    <div className="h-full flex flex-col space-y-2">
-      <div className="h-3/4">
-        <div className="h-full relative">
+    <div className="h-full py-10 flex flex-col space-y-4">
+      <div className="h-3/4 flex flex-col space-y-4">
+        <div className="flex-1 relative">
           <div className="absolute inset-0">
             <img
               key={index}
               src={activeImage}
-              className={classNames("h-full w-full py-2 object-contain", { hidden: !isActive || loading })}
+              className={classNames("h-full w-full object-contain", { hidden: !isActive || loading })}
             />
           </div>
         </div>
 
-        {/* NOTE: cache */}
-        <div className="hidden">
-          {user.images.map((image) => (
-            <img key={image} src={image} />
-          ))}
-        </div>
-      </div>
-
-      <div className="h-1/4 flex flex-col items-center space-y-2">
-        <div className="flex space-x-2">
+        <div className="self-center flex space-x-2">
           {user.images.map((image, index) => (
             <input
               key={index}
@@ -112,19 +103,28 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
           ))}
         </div>
 
-        <div className="font-bold">{user.displayName}</div>
-
-        <div className="flex-1 flex items-center">
-          <div className="flex item-center space-x-4">
-            <button className="btn btn-lg text-white" onClick={onNope}>
-              nope
-            </button>
-            <button className="btn btn-lg btn-success" onClick={onLike}>
-              like
-            </button>
-          </div>
+        {/* NOTE: for cache */}
+        <div className="hidden">
+          {user.images.map((image) => (
+            <img key={image} src={image} />
+          ))}
         </div>
       </div>
+
+      <div className="h-1/4 flex flex-col items-center space-y-4">
+        <div className="font-bold">{user.displayName}</div>
+
+        {/* <div className="flex-1 flex items-center"> */}
+        <div className="flex item-center space-x-4">
+          <button className="btn btn-lg text-white" onClick={onNope}>
+            nope
+          </button>
+          <button className="btn btn-lg btn-success" onClick={onLike}>
+            like
+          </button>
+        </div>
+      </div>
+      {/* </div> */}
     </div>
   );
 };
