@@ -2,9 +2,10 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 import "./index.css";
 
+import { RadioGroup } from "@headlessui/react";
 import classNames from "classnames";
 import { first } from "lodash-es";
-import { ChangeEventHandler, FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
 
@@ -62,8 +63,8 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   }, [isVisible]);
 
   const [activeImage, setActiveImage] = useState(user.topImage);
-  const onSelectImage: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setActiveImage(e.target.value);
+  const noOperate = () => {
+    return;
   };
 
   const [loading, setLoading] = useState(false);
@@ -80,29 +81,33 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
 
   return (
     <div className="h-full py-10 flex flex-col space-y-4">
-      <div className="h-3/4 flex flex-col space-y-4">
-        <div className={classNames("flex-1 relative", { hidden: !isReady })}>
-          <div className="absolute inset-0">
-            <img key={index} src={activeImage} className="h-full w-full object-contain" />
-          </div>
-        </div>
-
-        <div className={classNames("self-center flex space-x-2", { hidden: !isReady })}>
-          {user.images.map((image) => (
-            <input
-              key={image}
-              type="radio"
-              name={`radio-group-${index}`}
-              className="radio radio-accent"
-              value={image}
-              checked={image === activeImage}
-              onChange={onSelectImage}
-            />
-          ))}
+      <div className={classNames("h-3/4 w-full relative", { hidden: !isReady })}>
+        <div className="absolute inset-0">
+          <img src={activeImage} className="h-full mx-auto rounded-lg object-contain" />
         </div>
       </div>
 
+      <div className={classNames("h-3/4 flex justify-center items-center", { hidden: isReady })}>
+        <div className="text-gray-500 font-bold text-lg">LOADING...</div>
+      </div>
+
       <div className="h-1/4 flex flex-col items-center space-y-4">
+        <RadioGroup value={activeImage} onChange={setActiveImage} className="flex space-x-2">
+          {user.images.map((image) => (
+            <RadioGroup.Option key={image} value={image}>
+              {({ checked }) => (
+                <input
+                  type="radio"
+                  checked={checked}
+                  onChange={noOperate}
+                  className="radio radio-accent"
+                  disabled={!isReady}
+                />
+              )}
+            </RadioGroup.Option>
+          ))}
+        </RadioGroup>
+
         <div className="font-bold">{user.displayName}</div>
 
         <div className="flex-1 flex justify-center items-center space-x-4">
