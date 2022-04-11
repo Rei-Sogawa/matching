@@ -88,7 +88,8 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
         </div>
 
         <div className="h-1/4 flex flex-col items-center space-y-4">
-          <div className="flex space-x-2">
+          {/* NOTE: radio button の touch で swipe が反応しないようにするため https://swiperjs.com/swiper-api#param-noSwiping */}
+          <div className="flex space-x-2 swiper-no-swiping">
             {user.images.map((image) => (
               <input
                 key={image}
