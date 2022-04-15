@@ -41,6 +41,8 @@ export type User = {
   __typename?: 'User';
   displayName: Scalars['String'];
   id: Scalars['ID'];
+  imageUrls: Array<Scalars['String']>;
+  topImageUrl: Scalars['String'];
 };
 
 export type UserForMeFragment = { __typename?: 'User', id: string, displayName: string };

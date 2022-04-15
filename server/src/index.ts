@@ -17,8 +17,8 @@ async function start() {
   });
   if (process.env.NODE_ENV !== "production") app.get("/playground", expressPlayground({ endpoint: "/graphql" }));
 
-  // NOTE: use port 3000 when local development, because firebase emulator firestore use port 8080
-  app.listen({ port: process.env.PORT || 3000 }, () => console.log("GraphQL Server started!"));
+  // NOTE: use port 3001 when local development, because firebase emulator firestore use port 8080
+  app.listen({ port: process.env.PORT || 3001 }, () => console.log("GraphQL Server started!"));
 }
 
 start();

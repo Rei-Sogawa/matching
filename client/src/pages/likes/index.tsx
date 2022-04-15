@@ -1,11 +1,12 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
-import "./index.css";
 
+import { RadioGroup } from "@headlessui/react";
 import classNames from "classnames";
 import { first } from "lodash-es";
 import { FC, useEffect, useMemo, useState } from "react";
-import { EffectCards, Swiper as SwiperClass, Virtual } from "swiper";
+import styled from "styled-components";
+import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
 
 import { LikeBadge, NopeBadge } from "../../components/case/LikeNopeBadge";
@@ -62,9 +63,6 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
   }, [isVisible]);
 
   const [activeImage, setActiveImage] = useState(user.topImage);
-  const noOperate = () => {
-    return;
-  };
 
   const [loading, setLoading] = useState(false);
 
@@ -72,8 +70,9 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
     if (!isActive) return;
 
     setLoading(true);
-    setActiveImage(user.topImage);
     setTimeout(() => setLoading(false), 500);
+
+    setActiveImage(user.topImage);
   }, [user, isActive]);
 
   const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
@@ -88,21 +87,25 @@ const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
         </div>
 
         <div className="h-1/4 flex flex-col items-center space-y-4">
-          {/* NOTE: radio button の touch で swipe が反応しないようにするため https://swiperjs.com/swiper-api#param-noSwiping */}
-          <div className="flex space-x-2 swiper-no-swiping">
+          {/* NOTE: radio button の touch で swipe が反応しないようにするため swiper-no-swiping class を指定
+                    https://swiperjs.com/swiper-api#param-noSwiping */}
+          <RadioGroup value={activeImage} onChange={setActiveImage} className="swiper-no-swiping flex space-x-2">
             {user.images.map((image) => (
-              <input
-                key={image}
-                type="radio"
-                className="radio radio-accent"
-                name={`radio-group-${index}`}
-                value={image}
-                checked={image === activeImage}
-                onChange={noOperate}
-                onClick={() => setActiveImage(image)}
-              />
+              <RadioGroup.Option key={image} value={image}>
+                {({ checked }) => (
+                  <input
+                    type="radio"
+                    checked={checked}
+                    // NOTE: controlled component なので、onChange を指定しないと warning が出る
+                    onChange={() => {
+                      return;
+                    }}
+                    className="radio radio-accent"
+                  />
+                )}
+              </RadioGroup.Option>
             ))}
-          </div>
+          </RadioGroup>
 
           <div className="font-bold">{user.displayName}</div>
 
@@ -141,6 +144,16 @@ const PadSlide: FC<PadSlideProps> = ({ index, onShow, onHide }) => {
   }, [isVisible]);
   return null;
 };
+
+const AppSwiper = styled.div`
+  width: 100%;
+  height: 100%;
+  .swiper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+`;
 
 export const Likes: FC = () => {
   const [init, setInit] = useState(false);
@@ -199,24 +212,19 @@ export const Likes: FC = () => {
 
   return (
     <div className="h-full bg-white relative">
-      <Swiper
-        speed={0}
-        effect="cards"
-        modules={[EffectCards]}
-        className="app-swiper"
-        onSwiper={onSwiper}
-        onSlideChange={onSlideChange}
-      >
-        {indexes.map((index) => (
-          <SwiperSlide key={index} className="bg-gray-50">
-            {activeUser ? (
-              <UserSlide index={index} onShow={onShowSlide} onHide={onHideSlide} user={activeUser} />
-            ) : (
-              <PadSlide index={index} onShow={onShowSlide} onHide={onHideSlide} />
-            )}
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <AppSwiper>
+        <Swiper speed={0} effect="cards" modules={[EffectCards]} onSwiper={onSwiper} onSlideChange={onSlideChange}>
+          {indexes.map((index) => (
+            <SwiperSlide key={index} className="bg-gray-50">
+              {activeUser ? (
+                <UserSlide index={index} onShow={onShowSlide} onHide={onHideSlide} user={activeUser} />
+              ) : (
+                <PadSlide index={index} onShow={onShowSlide} onHide={onHideSlide} />
+              )}
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </AppSwiper>
 
       {(toLike || liked) && <LikeBadge />}
       {(toNope || noped) && <NopeBadge />}

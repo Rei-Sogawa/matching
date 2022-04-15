@@ -7,7 +7,7 @@ type User {
   id: ID!
   displayName: String!
   topImageUrl: String!
-  subImageUrls: [String!]!
+  imageUrls: [String!]!
 }
 
 #
