@@ -1,6 +1,6 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
-import { BeforeAuthenticated } from "./functional/BeforeAuthenticated";
+import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
 import { Index } from "./pages/Index";
 import { Likes } from "./pages/likes";
 import { LogIn } from "./pages/log-in";
@@ -14,7 +14,7 @@ const LIKES = "/likes";
 export const routes = {
   [INDEX]: {
     path: pathBuilder(INDEX),
-    Component: Likes,
+    Component: Index,
     middleware: [],
   },
   [SIGN_UP]: {

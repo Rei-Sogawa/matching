@@ -1,15 +1,16 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
 
-import { RadioGroup } from "@headlessui/react";
-import classNames from "classnames";
 import { first } from "lodash-es";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import styled from "styled-components";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
-import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import { LikeBadge, NopeBadge } from "../../components/case/LikeNopeBadge";
+import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
+import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
+import { UserSwipePadSlide } from "../../components/domain/UserSwiperPadSlide";
+import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
 
 const getRandomInt = (max: number, min = 0) => {
   min = Math.ceil(min);
@@ -19,7 +20,7 @@ const getRandomInt = (max: number, min = 0) => {
 
 const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/400/600`;
 
-type User = {
+export type User = {
   id: string;
   displayName: string;
   topImage: string;
@@ -37,114 +38,6 @@ const users: User[] = Array.from({ length: 10 }).map((_, index) => {
   };
 });
 
-type UserSlideProps = {
-  index: number;
-  onShow: (index: number) => void;
-  onHide: (index: number) => void;
-  user: User;
-};
-
-const UserSlide: FC<UserSlideProps> = ({ index, onShow, onHide, user }) => {
-  const swiper = useSwiper();
-  const onLike = () => {
-    swiper.slidePrev(0);
-  };
-  const onNope = () => {
-    swiper.slideNext(0);
-  };
-
-  const { isActive, isVisible } = useSwiperSlide();
-  useEffect(() => {
-    if (isVisible) {
-      onShow(index);
-    } else {
-      onHide(index);
-    }
-  }, [isVisible]);
-
-  const [activeImage, setActiveImage] = useState(user.topImage);
-
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!isActive) return;
-
-    setLoading(true);
-    setTimeout(() => setLoading(false), 500);
-
-    setActiveImage(user.topImage);
-  }, [user, isActive]);
-
-  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
-
-  return (
-    <>
-      <div className={classNames("h-full py-10 flex flex-col space-y-4", { hidden: !isReady })}>
-        <div className="h-3/4 w-full relative">
-          <div className="absolute inset-0">
-            <img src={activeImage} className="h-full mx-auto rounded-lg object-contain" />
-          </div>
-        </div>
-
-        <div className="h-1/4 flex flex-col items-center space-y-4">
-          {/* NOTE: radio button の touch で swipe が反応しないようにするため swiper-no-swiping class を指定
-                    https://swiperjs.com/swiper-api#param-noSwiping */}
-          <RadioGroup value={activeImage} onChange={setActiveImage} className="swiper-no-swiping flex space-x-2">
-            {user.images.map((image) => (
-              <RadioGroup.Option key={image} value={image}>
-                {({ checked }) => (
-                  <input
-                    type="radio"
-                    checked={checked}
-                    // NOTE: controlled component なので、onChange を指定しないと warning が出る
-                    onChange={() => {
-                      return;
-                    }}
-                    className="radio radio-accent"
-                  />
-                )}
-              </RadioGroup.Option>
-            ))}
-          </RadioGroup>
-
-          <div className="font-bold">{user.displayName}</div>
-
-          <div className="flex-1 flex justify-center items-center space-x-4">
-            <button className="btn btn-lg text-white" onClick={onNope}>
-              nope
-            </button>
-            <button className="btn btn-lg btn-success" onClick={onLike}>
-              like
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className={classNames("h-full flex justify-center items-center", { hidden: isReady })}>
-        <div className="font-bold text-xl">LOADING...</div>
-      </div>
-    </>
-  );
-};
-
-type PadSlideProps = {
-  index: number;
-  onShow: (index: number) => void;
-  onHide: (index: number) => void;
-};
-
-const PadSlide: FC<PadSlideProps> = ({ index, onShow, onHide }) => {
-  const { isVisible } = useSwiperSlide();
-  useEffect(() => {
-    if (isVisible) {
-      onShow(index);
-    } else {
-      onHide(index);
-    }
-  }, [isVisible]);
-  return null;
-};
-
 const AppSwiper = styled.div`
   width: 100%;
   height: 100%;
@@ -156,7 +49,7 @@ const AppSwiper = styled.div`
 `;
 
 export const Likes: FC = () => {
-  const [init, setInit] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   const [dirtyUsers, setDirtyUsers] = useState(users);
   const activeUser = useMemo(() => first(dirtyUsers), [dirtyUsers]);
@@ -172,6 +65,7 @@ export const Likes: FC = () => {
     if (visibleIndexes.length !== 2) return false;
     return visibleIndexes.some((index) => index < activeIndex);
   }, [visibleIndexes]);
+
   const toNope = useMemo(() => {
     if (!activeUser) return false;
     if (visibleIndexes.length !== 2) return false;
@@ -181,6 +75,7 @@ export const Likes: FC = () => {
   const onShowSlide = (index: number) => {
     setVisibleIndexes((prev) => [...new Set(prev.concat(index))]);
   };
+
   const onHideSlide = (index: number) => {
     setVisibleIndexes((prev) => prev.filter((_index) => _index !== index));
   };
@@ -188,11 +83,12 @@ export const Likes: FC = () => {
   const onSwiper = (swiper: SwiperClass) => {
     swiper.slideTo(users.length);
     setTimeout(() => {
-      setInit(true);
+      setInitialized(true);
     }, 1_000);
   };
+
   const onSlideChange = (swiper: SwiperClass) => {
-    if (!init) return;
+    if (!initialized) return;
     if (!activeUser) return;
 
     const nextActiveIndex = swiper.activeIndex;
@@ -217,17 +113,17 @@ export const Likes: FC = () => {
           {indexes.map((index) => (
             <SwiperSlide key={index} className="bg-gray-50">
               {activeUser ? (
-                <UserSlide index={index} onShow={onShowSlide} onHide={onHideSlide} user={activeUser} />
+                <UserSwipeSlide onShow={() => onShowSlide(index)} onHide={() => onHideSlide(index)} user={activeUser} />
               ) : (
-                <PadSlide index={index} onShow={onShowSlide} onHide={onHideSlide} />
+                <UserSwipePadSlide onShow={() => onShowSlide(index)} onHide={() => onHideSlide(index)} />
               )}
             </SwiperSlide>
           ))}
         </Swiper>
       </AppSwiper>
 
-      {(toLike || liked) && <LikeBadge />}
-      {(toNope || noped) && <NopeBadge />}
+      {(toLike || liked) && <SwipeLikeBadge />}
+      {(toNope || noped) && <SwipeNopeBadge />}
 
       {/* NOTE: for cache */}
       <div className="hidden">
