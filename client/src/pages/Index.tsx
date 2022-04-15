@@ -9,7 +9,7 @@ import { routes } from "../routes";
 
 export const Index: FC = () => {
   const { uid } = useAuth();
-  const { data } = useMeQuery({ skip: !uid });
+  const { data, loading } = useMeQuery({ skip: !uid });
 
   const logOut = async () => {
     await signOut(getAuth());
@@ -17,11 +17,11 @@ export const Index: FC = () => {
 
   return (
     <AppLayout>
-      <div className="h-full bg-gray-50 flex flex-col justify-center items-center">
-        <div className="font-bold text-2xl">{data?.me.displayName || "Not Logged In"}</div>
-        <div className="flex space-x-2">
+      {loading ? null : (
+        <div className="h-full bg-gray-50 flex flex-col justify-center items-center">
+          <div className="font-bold text-2xl">{data?.me.displayName || "Not Logged In"}</div>
           {uid ? (
-            <>
+            <div className="flex space-x-2">
               <Link to={routes["/likes"].path()} className="link link-primary">
                 Likes
               </Link>
@@ -35,19 +35,19 @@ export const Index: FC = () => {
               >
                 LogOut
               </Link>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="flex space-x-2">
               <Link to={routes["/sign-up"].path()} className="link link-primary">
                 SignUp
               </Link>
               <Link to={routes["/log-in"].path()} className="link link-primary">
                 LogIn
               </Link>
-            </>
+            </div>
           )}
         </div>
-      </div>
+      )}
     </AppLayout>
   );
 };

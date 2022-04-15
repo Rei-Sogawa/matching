@@ -10,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
-import { UserSwipePadSlide } from "../../components/domain/UserSwiperPadSlide";
+import { UserSwipePadSlide } from "../../components/domain/UserSwipePadSlide";
 import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
 import { routes } from "../../routes";
 

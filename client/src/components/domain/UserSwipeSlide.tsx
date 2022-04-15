@@ -1,7 +1,7 @@
 import { RadioGroup } from "@headlessui/react";
 import classNames from "classnames";
 import { FC, useEffect, useMemo, useState } from "react";
-import { useMountedState } from "react-use";
+import useMountedState from "react-use/lib/useMountedState";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
 import { User } from "../../pages/likes";
