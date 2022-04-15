@@ -1,10 +1,11 @@
 import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
-import { createContainer } from "unstated-next";
+import { createContext, FC, useContext, useEffect, useState } from "react";
+
+import { assertIsDefined } from "../utils/assert-is-defined";
 
 type State = { initialized: boolean; uid: string | undefined; token: string | undefined };
 
-const useAuthContainer = () => {
+const useAuthProvider = () => {
   const [state, setState] = useState<State>({
     initialized: false,
     uid: undefined,
@@ -25,6 +26,15 @@ const useAuthContainer = () => {
   return state;
 };
 
-const AuthContainer = createContainer(useAuthContainer);
-export const AuthProvider = AuthContainer.Provider;
-export const useAuth = AuthContainer.useContainer;
+const AuthContext = createContext<State | undefined>(undefined);
+
+export const AuthProvider: FC = ({ children }) => {
+  const state = useAuthProvider();
+  return state.initialized ? <AuthContext.Provider value={state}>{children}</AuthContext.Provider> : null;
+};
+
+export const useAuth = () => {
+  const state = useContext(AuthContext);
+  assertIsDefined(state);
+  return state;
+};

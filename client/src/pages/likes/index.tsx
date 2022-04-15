@@ -3,6 +3,7 @@ import "swiper/css/effect-cards";
 
 import { first } from "lodash-es";
 import { FC, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,6 +12,7 @@ import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
 import { UserSwipePadSlide } from "../../components/domain/UserSwiperPadSlide";
 import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
+import { routes } from "../../routes";
 
 const getRandomInt = (max: number, min = 0) => {
   min = Math.ceil(min);
@@ -27,7 +29,7 @@ export type User = {
   images: string[];
 };
 
-const users: User[] = Array.from({ length: 10 }).map((_, index) => {
+const users: User[] = Array.from({ length: 3 }).map((_, index) => {
   const topImage = getImage();
   const restImages = Array.from({ length: getRandomInt(5) }).map(() => getImage());
   return {
@@ -38,9 +40,9 @@ const users: User[] = Array.from({ length: 10 }).map((_, index) => {
   };
 });
 
-type UseUserSwipeOptions = { users: User[]; onLike: () => void; onNope: () => void };
+type UseUserSwipeOptions = { users: User[]; onLike: () => void; onNope: () => void; onEnd: () => void };
 
-const useUserSwipe = ({ users, onLike, onNope }: UseUserSwipeOptions) => {
+const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => {
   const [initialized, setInitialized] = useState(false);
 
   const [dirtyUsers, setDirtyUsers] = useState(users);
@@ -88,6 +90,8 @@ const useUserSwipe = ({ users, onLike, onNope }: UseUserSwipeOptions) => {
       onNope();
     }
 
+    if (dirtyUsers.length === 1) onEnd();
+
     setActiveIndex(nextActiveIndex);
     setDirtyUsers((prev) => prev.slice(1));
   };
@@ -125,6 +129,8 @@ const AppSwiper = styled.div`
 `;
 
 export const Likes: FC = () => {
+  const navigate = useNavigate();
+
   const { indexes, activeUser, toLike, toNope, liked, noped, onSwiper, onSlideChange, onShowSlide, onHideSlide } =
     useUserSwipe({
       users,
@@ -134,6 +140,12 @@ export const Likes: FC = () => {
       },
       onNope: () => {
         console.log("onNope");
+        return;
+      },
+      onEnd: () => {
+        setTimeout(() => {
+          navigate(routes["/"].path());
+        }, 500);
         return;
       },
     });
