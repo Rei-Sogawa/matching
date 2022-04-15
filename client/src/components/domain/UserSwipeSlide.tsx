@@ -1,18 +1,24 @@
 import { RadioGroup } from "@headlessui/react";
 import classNames from "classnames";
 import { FC, useEffect, useMemo, useState } from "react";
+import { useMountedState } from "react-use";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
 import { User } from "../../pages/likes";
 
-export type UserSwipeSlideProps = {
-  onShow: () => void;
-  onHide: () => void;
-  user: User;
-};
+type UseUserSwipeSlideOptions = { user: User; onShow: () => void; onHide: () => void };
 
-export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ onShow, onHide, user }) => {
+const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) => {
   const swiper = useSwiper();
+  const { isActive, isVisible } = useSwiperSlide();
+
+  const [activeImage, setActiveImage] = useState(user.topImage);
+
+  const [loading, setLoading] = useState(false);
+  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
+
+  const isMounted = useMountedState();
+
   const onLike = () => {
     swiper.slidePrev(0);
   };
@@ -20,7 +26,6 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ onShow, onHide, user }
     swiper.slideNext(0);
   };
 
-  const { isActive, isVisible } = useSwiperSlide();
   useEffect(() => {
     if (isVisible) {
       onShow();
@@ -29,20 +34,33 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ onShow, onHide, user }
     }
   }, [isVisible]);
 
-  const [activeImage, setActiveImage] = useState(user.topImage);
-
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     if (!isActive) return;
-
     setLoading(true);
-    setTimeout(() => setLoading(false), 500);
-
+    setTimeout(() => {
+      if (!isMounted()) return;
+      setLoading(false);
+    }, 500);
     setActiveImage(user.topImage);
   }, [user, isActive]);
 
-  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
+  return {
+    activeImage,
+    isReady,
+    setActiveImage,
+    onLike,
+    onNope,
+  };
+};
+
+export type UserSwipeSlideProps = {
+  onShow: () => void;
+  onHide: () => void;
+  user: User;
+};
+
+export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ onShow, onHide, user }) => {
+  const { onLike, onNope, activeImage, setActiveImage, isReady } = useUserSwipeSlide({ onShow, onHide, user });
 
   return (
     <>

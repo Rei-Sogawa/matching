@@ -38,17 +38,9 @@ const users: User[] = Array.from({ length: 10 }).map((_, index) => {
   };
 });
 
-const AppSwiper = styled.div`
-  width: 100%;
-  height: 100%;
-  .swiper {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-`;
+type UseUserSwipeOptions = { users: User[]; onLike: () => void; onNope: () => void };
 
-export const Likes: FC = () => {
+const useUserSwipe = ({ users, onLike, onNope }: UseUserSwipeOptions) => {
   const [initialized, setInitialized] = useState(false);
 
   const [dirtyUsers, setDirtyUsers] = useState(users);
@@ -72,19 +64,9 @@ export const Likes: FC = () => {
     return visibleIndexes.some((index) => index > activeIndex);
   }, [visibleIndexes]);
 
-  const onShowSlide = (index: number) => {
-    setVisibleIndexes((prev) => [...new Set(prev.concat(index))]);
-  };
-
-  const onHideSlide = (index: number) => {
-    setVisibleIndexes((prev) => prev.filter((_index) => _index !== index));
-  };
-
   const onSwiper = (swiper: SwiperClass) => {
     swiper.slideTo(users.length);
-    setTimeout(() => {
-      setInitialized(true);
-    }, 1_000);
+    setInitialized(true);
   };
 
   const onSlideChange = (swiper: SwiperClass) => {
@@ -96,15 +78,65 @@ export const Likes: FC = () => {
     if (activeIndex > nextActiveIndex) {
       setLiked(true);
       setTimeout(() => setLiked(false), 500);
+
+      onLike();
     }
     if (activeIndex < nextActiveIndex) {
       setNoped(true);
       setTimeout(() => setNoped(false), 500);
+
+      onNope();
     }
 
     setActiveIndex(nextActiveIndex);
     setDirtyUsers((prev) => prev.slice(1));
   };
+
+  const onShowSlide = (index: number) => {
+    setVisibleIndexes((prev) => [...new Set(prev.concat(index))]);
+  };
+
+  const onHideSlide = (index: number) => {
+    setVisibleIndexes((prev) => prev.filter((_index) => _index !== index));
+  };
+
+  return {
+    activeUser,
+    indexes,
+    liked,
+    noped,
+    toLike,
+    toNope,
+    onSwiper,
+    onSlideChange,
+    onShowSlide,
+    onHideSlide,
+  };
+};
+
+const AppSwiper = styled.div`
+  width: 100%;
+  height: 100%;
+  .swiper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+`;
+
+export const Likes: FC = () => {
+  const { indexes, activeUser, toLike, toNope, liked, noped, onSwiper, onSlideChange, onShowSlide, onHideSlide } =
+    useUserSwipe({
+      users,
+      onLike: () => {
+        console.log("onLike");
+        return;
+      },
+      onNope: () => {
+        console.log("onNope");
+        return;
+      },
+    });
 
   return (
     <div className="h-full bg-white relative">
