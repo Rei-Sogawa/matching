@@ -4,15 +4,13 @@ import { useSwiper, useSwiperSlide } from "swiper/react";
 
 import { User } from "../../pages/likes";
 
-type UseUserSwipeSlideOptions = { loading: boolean; user: User; onShow: () => void; onHide: () => void };
+type UseUserSwipeSlideOptions = { user: User; onShow: () => void; onHide: () => void };
 
-const useUserSwipeSlide = ({ loading, user, onShow, onHide }: UseUserSwipeSlideOptions) => {
+const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) => {
   const swiper = useSwiper();
   const { isActive, isVisible } = useSwiperSlide();
 
   const [activeImage, setActiveImage] = useState(user.topImage);
-
-  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
 
   const onLike = () => {
     swiper.slidePrev(0);
@@ -35,8 +33,8 @@ const useUserSwipeSlide = ({ loading, user, onShow, onHide }: UseUserSwipeSlideO
   }, [user, isActive]);
 
   return {
+    isActive,
     activeImage,
-    isReady,
     setActiveImage,
     onLike,
     onNope,
@@ -51,7 +49,9 @@ export type UserSwipeSlideProps = {
 };
 
 export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow, onHide }) => {
-  const { activeImage, isReady, setActiveImage, onLike, onNope } = useUserSwipeSlide({ loading, user, onShow, onHide });
+  const { isActive, activeImage, setActiveImage, onLike, onNope } = useUserSwipeSlide({ user, onShow, onHide });
+
+  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
 
   return (
     <>
