@@ -1,4 +1,3 @@
-import { RadioGroup } from "@headlessui/react";
 import { FC, useEffect, useState } from "react";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
@@ -66,25 +65,18 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ onShow, onHide, user }
       </div>
 
       <div className="h-1/4 flex flex-col items-center space-y-4">
-        {/* NOTE: radio button の touch で swipe が反応しないようにするため swiper-no-swiping class を指定
-                    https://swiperjs.com/swiper-api#param-noSwiping */}
-        <RadioGroup value={activeImage} onChange={setActiveImage} className="swiper-no-swiping flex space-x-2">
+        <div className="swiper-no-swiping flex space-x-2">
           {user.images.map((image) => (
-            <RadioGroup.Option key={image} value={image}>
-              {({ checked }) => (
-                <input
-                  type="radio"
-                  checked={checked}
-                  // NOTE: controlled component なので、onChange を指定しないと warning が出る
-                  onChange={() => {
-                    return;
-                  }}
-                  className="radio radio-accent"
-                />
-              )}
-            </RadioGroup.Option>
+            <input
+              key={image}
+              type="radio"
+              value={image}
+              checked={image === activeImage}
+              onChange={(e) => setActiveImage(e.target.value)}
+              className="radio radio-accent"
+            />
           ))}
-        </RadioGroup>
+        </div>
 
         <div className="font-bold">{user.displayName}</div>
 
