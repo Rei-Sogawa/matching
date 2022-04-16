@@ -40,10 +40,16 @@ const users: User[] = Array.from({ length: 3 }).map((_, index) => {
   };
 });
 
-type UseUserSwipeOptions = { users: User[]; onLike: () => void; onNope: () => void; onEnd: () => void };
+type UseUserSwipeOptions = {
+  users: User[];
+  onLike: (user: User) => void;
+  onNope: (user: User) => void;
+  onEnd: () => void;
+};
 
 const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => {
   const [initialized, setInitialized] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [dirtyUsers, setDirtyUsers] = useState(users);
   const activeUser = useMemo(() => first(dirtyUsers), [dirtyUsers]);
@@ -71,26 +77,41 @@ const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => 
     setInitialized(true);
   };
 
-  const onSlideChange = (swiper: SwiperClass) => {
+  const onSlideChange = async (swiper: SwiperClass) => {
     if (!initialized) return;
+    if (loading) return;
     if (!activeUser) return;
 
     const nextActiveIndex = swiper.activeIndex;
 
     if (activeIndex > nextActiveIndex) {
+      setLoading(true);
       setLiked(true);
-      setTimeout(() => setLiked(false), 500);
 
-      onLike();
+      await onLike(activeUser);
+
+      setTimeout(() => {
+        setLiked(false);
+        setLoading(false);
+      }, 500);
     }
     if (activeIndex < nextActiveIndex) {
+      setLoading(true);
       setNoped(true);
-      setTimeout(() => setNoped(false), 500);
 
-      onNope();
+      await onNope(activeUser);
+
+      setTimeout(() => {
+        setNoped(false);
+        setLoading(false);
+      }, 500);
     }
 
-    if (dirtyUsers.length === 1) onEnd();
+    if (dirtyUsers.length === 1) {
+      setTimeout(() => {
+        onEnd();
+      }, 500);
+    }
 
     setActiveIndex(nextActiveIndex);
     setDirtyUsers((prev) => prev.slice(1));
@@ -134,19 +155,16 @@ export const Likes: FC = () => {
   const { indexes, activeUser, toLike, toNope, liked, noped, onSwiper, onSlideChange, onShowSlide, onHideSlide } =
     useUserSwipe({
       users,
-      onLike: () => {
+      onLike: (user) => {
         console.log("onLike");
-        return;
+        console.log(user);
       },
-      onNope: () => {
+      onNope: (user) => {
         console.log("onNope");
-        return;
+        console.log(user);
       },
       onEnd: () => {
-        setTimeout(() => {
-          navigate(routes["/"].path());
-        }, 500);
-        return;
+        navigate(routes["/"].path());
       },
     });
 
