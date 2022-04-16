@@ -126,6 +126,7 @@ const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => 
   };
 
   return {
+    loading,
     activeUser,
     indexes,
     liked,
@@ -152,21 +153,32 @@ const AppSwiper = styled.div`
 export const Likes: FC = () => {
   const navigate = useNavigate();
 
-  const { indexes, activeUser, toLike, toNope, liked, noped, onSwiper, onSlideChange, onShowSlide, onHideSlide } =
-    useUserSwipe({
-      users,
-      onLike: (user) => {
-        console.log("onLike");
-        console.log(user);
-      },
-      onNope: (user) => {
-        console.log("onNope");
-        console.log(user);
-      },
-      onEnd: () => {
-        navigate(routes["/"].path());
-      },
-    });
+  const {
+    loading,
+    indexes,
+    activeUser,
+    toLike,
+    toNope,
+    liked,
+    noped,
+    onSwiper,
+    onSlideChange,
+    onShowSlide,
+    onHideSlide,
+  } = useUserSwipe({
+    users,
+    onLike: (user) => {
+      console.log("onLike");
+      console.log(user);
+    },
+    onNope: (user) => {
+      console.log("onNope");
+      console.log(user);
+    },
+    onEnd: () => {
+      navigate(routes["/"].path());
+    },
+  });
 
   return (
     <div className="h-full bg-white relative">
@@ -175,7 +187,12 @@ export const Likes: FC = () => {
           {indexes.map((index) => (
             <SwiperSlide key={index} className="bg-gray-50">
               {activeUser ? (
-                <UserSwipeSlide onShow={() => onShowSlide(index)} onHide={() => onHideSlide(index)} user={activeUser} />
+                <UserSwipeSlide
+                  loading={loading}
+                  user={activeUser}
+                  onShow={() => onShowSlide(index)}
+                  onHide={() => onHideSlide(index)}
+                />
               ) : (
                 <UserSwipePadSlide onShow={() => onShowSlide(index)} onHide={() => onHideSlide(index)} />
               )}
