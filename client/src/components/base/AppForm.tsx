@@ -29,7 +29,7 @@ export const InputControl: FC<InputControlProps> = ({ name, label, ...rest }) =>
   return (
     <Control name={name}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Input {...input} {...rest} isInvalid={meta.error && meta.touched} id={name} placeholder={label} />
+      <Input {...input} isInvalid={meta.error && meta.touched} id={name} placeholder={label} bg="white" {...rest} />
       <Error name={name} />
     </Control>
   );
