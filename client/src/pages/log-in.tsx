@@ -17,7 +17,7 @@ export const LogInPage: FC = () => {
 
   return (
     <Box h="full" bg="gray.50">
-      <Container h="full" py="20">
+      <Container h="full" py="10">
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
             Matching!

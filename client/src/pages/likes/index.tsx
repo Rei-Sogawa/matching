@@ -1,7 +1,7 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { first } from "lodash-es";
 import { FC, useMemo, useState } from "react";

@@ -6,7 +6,7 @@ export const SwipeLikeBadge: FC = () => {
     <Box
       position="absolute"
       top="25%"
-      right="25%"
+      right="10%"
       zIndex="10"
       transform="rotate(-12deg)"
       px="2"

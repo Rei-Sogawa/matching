@@ -29,8 +29,8 @@ export const SignUpPage: FC = () => {
   };
 
   return (
-    <Box h="full" bg="gray.50">
-      <Container h="full" py="20">
+    <Box minH="full" bg="gray.50">
+      <Container minH="full" py="10">
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
             Matching!

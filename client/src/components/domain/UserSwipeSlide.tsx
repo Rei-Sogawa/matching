@@ -60,7 +60,7 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
         <Image src={activePhoto} h="75%" rounded="md" />
 
         <Stack h="25%">
-          <RadioGroup colorScheme="gray" value={activePhoto} onChange={setActivePhoto}>
+          <RadioGroup value={activePhoto} onChange={setActivePhoto}>
             <HStack justifyContent="center" className="swiper-no-swiping">
               {user.photoUrls.map((url) => (
                 <Radio key={url} value={url} size="lg" />

@@ -6,7 +6,7 @@ export const SwipeNopeBadge: FC = () => {
     <Box
       position="absolute"
       top="25%"
-      left="25%"
+      left="10%"
       zIndex="10"
       transform="rotate(12deg)"
       px="2"

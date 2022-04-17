@@ -3,6 +3,7 @@ import { FC } from "react";
 import { Form } from "react-final-form";
 
 import { InputControl } from "../base/AppForm";
+import { UserPhotoPicker } from "./UserPhotoPicker";
 
 type FormValues = {
   email: string;
@@ -35,7 +36,9 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
             <Stack>
               <FormControl>
                 <FormLabel>Photo</FormLabel>
+                <UserPhotoPicker />
               </FormControl>
+
               <InputControl name="email" label="Email" type="email" isRequired />
               <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
               <InputControl name="confirm" label="Password Confirm" type="password" autoComplete="on" isRequired />
