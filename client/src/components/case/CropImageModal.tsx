@@ -58,7 +58,6 @@ const cropImage = async (imageRef: HTMLImageElement, file: File, crop: Crop) => 
 
 const useCropImage = (file: File) => {
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const { objectURL } = useObjectURL(file);
 
   const [crop, setCrop] = useState<Crop>();
 
@@ -69,7 +68,6 @@ const useCropImage = (file: File) => {
 
   return {
     imageRef,
-    objectURL,
     crop,
     setCrop,
     getCroppedImage,
@@ -84,9 +82,14 @@ type CropImageModalProps = {
 };
 
 export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose, onOk }) => {
-  const { imageRef, objectURL, crop, setCrop, getCroppedImage } = useCropImage(file);
+  const { imageRef, crop, setCrop, getCroppedImage } = useCropImage(file);
 
-  const handleOk = async () => onOk(await getCroppedImage());
+  const { objectURL } = useObjectURL(file);
+
+  const handleOk = async () => {
+    onOk(await getCroppedImage());
+    onClose();
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

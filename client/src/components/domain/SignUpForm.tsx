@@ -1,7 +1,8 @@
 import { Button, FormControl, FormLabel, Stack } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Form } from "react-final-form";
 
+import { useMultipleFileInput } from "../../hooks/useMultipleFileInput";
 import { InputControl } from "../base/AppForm";
 import { UserPhotoPicker } from "./UserPhotoPicker";
 
@@ -25,6 +26,16 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
     return res;
   };
 
+  const { ref, value, setValue, onClick, onChange, remove } = useMultipleFileInput();
+
+  const onCrop = (file: File, croppedFile: File) => {
+    setValue((prev) => prev.filter((_file) => (_file === file ? croppedFile : _file)));
+  };
+
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
+
   return (
     <Form
       initialValues={initialValues}
@@ -36,7 +47,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
             <Stack>
               <FormControl>
                 <FormLabel>Photo</FormLabel>
-                <UserPhotoPicker />
+                <UserPhotoPicker {...{ ref, value, onClick, onChange, onCrop, onRemove: remove }} />
               </FormControl>
 
               <InputControl name="email" label="Email" type="email" isRequired />
