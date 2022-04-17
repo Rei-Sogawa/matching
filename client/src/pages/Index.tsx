@@ -1,10 +1,10 @@
+import { Box, HStack, Stack } from "@chakra-ui/react";
 import { getAuth, signOut } from "firebase/auth";
 import { FC } from "react";
-import { Link } from "react-router-dom";
 
+import { AppLink } from "../components/base/AppLink";
 import { useAuth } from "../contexts/Auth";
 import { useMeQuery } from "../graphql/generated";
-import { AppLayout } from "../layouts/AppLayout";
 import { routes } from "../routes";
 
 export const IndexPage: FC = () => {
@@ -15,39 +15,30 @@ export const IndexPage: FC = () => {
     await signOut(getAuth());
   };
 
-  return (
-    <AppLayout>
-      {loading ? null : (
-        <div className="h-full bg-gray-50 flex flex-col justify-center items-center">
-          <div className="font-bold text-2xl">{data?.me.displayName || "Not Logged In"}</div>
-          {uid ? (
-            <div className="flex space-x-2">
-              <Link to={routes["/likes"].path()} className="link link-primary">
-                Likes
-              </Link>
-              <Link
-                to="#"
-                className="link link-primary"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await logOut();
-                }}
-              >
-                LogOut
-              </Link>
-            </div>
-          ) : (
-            <div className="flex space-x-2">
-              <Link to={routes["/sign-up"].path()} className="link link-primary">
-                SignUp
-              </Link>
-              <Link to={routes["/log-in"].path()} className="link link-primary">
-                LogIn
-              </Link>
-            </div>
-          )}
-        </div>
+  return loading ? null : (
+    <Stack h="full" bg="gray.50" justifyContent="center" alignItems="center">
+      <Box fontWeight="bold" fontSize="2xl">
+        {data?.me.displayName || "Not Logged In"}
+      </Box>
+      {uid ? (
+        <HStack>
+          <AppLink to={routes["/likes"].path()}>Likes</AppLink>
+          <AppLink
+            to="#"
+            onClick={async (e) => {
+              e.preventDefault();
+              await logOut();
+            }}
+          >
+            LogOut
+          </AppLink>
+        </HStack>
+      ) : (
+        <HStack>
+          <AppLink to={routes["/sign-up"].path()}>SignUp</AppLink>
+          <AppLink to={routes["/log-in"].path()}>LogIn</AppLink>
+        </HStack>
       )}
-    </AppLayout>
+    </Stack>
   );
 };
