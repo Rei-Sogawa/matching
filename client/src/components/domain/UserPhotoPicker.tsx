@@ -80,18 +80,20 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
         </Box>
       </Box>
 
-      <Wrap>
-        {value.map((file, index) => (
-          <WrapItem key={index}>
-            <UserPhotoCard
-              file={file}
-              onUp={() => onUp(index)}
-              onDown={() => onDown(index)}
-              onRemove={() => onRemove(index)}
-            />
-          </WrapItem>
-        ))}
-      </Wrap>
+      {value.length > 0 && (
+        <Wrap>
+          {value.map((file, index) => (
+            <WrapItem key={index}>
+              <UserPhotoCard
+                file={file}
+                onUp={() => onUp(index)}
+                onDown={() => onDown(index)}
+                onRemove={() => onRemove(index)}
+              />
+            </WrapItem>
+          ))}
+        </Wrap>
+      )}
     </Stack>
   );
 });
