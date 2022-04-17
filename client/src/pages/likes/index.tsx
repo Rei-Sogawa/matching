@@ -154,7 +154,7 @@ const AppSwiper = styled(Box)`
   }
 `;
 
-export const Likes: FC = () => {
+export const LikesPage: FC = () => {
   const navigate = useNavigate();
 
   const {

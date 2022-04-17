@@ -1,5 +1,10 @@
+import { Box } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const AppLayout: FC = ({ children }) => {
-  return <div className="h-full bg-white">{children}</div>;
+  return (
+    <Box h="full" bg="white">
+      {children}
+    </Box>
+  );
 };

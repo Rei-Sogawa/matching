@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { LogInForm } from "../components/domain/LogInForm";
 import { routes } from "../routes";
 
-export const LogIn: FC = () => {
+export const LogInPage: FC = () => {
   const navigate = useNavigate();
 
   const logIn = async ({ email, password }: { email: string; password: string }) => {

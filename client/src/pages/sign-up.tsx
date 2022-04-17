@@ -16,7 +16,7 @@ gql`
   }
 `;
 
-export const SignUp: FC = () => {
+export const SignUpPage: FC = () => {
   const navigate = useNavigate();
 
   const [mutate] = useSignUpMutation();

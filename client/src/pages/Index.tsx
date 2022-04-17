@@ -7,7 +7,7 @@ import { useMeQuery } from "../graphql/generated";
 import { AppLayout } from "../layouts/AppLayout";
 import { routes } from "../routes";
 
-export const Index: FC = () => {
+export const IndexPage: FC = () => {
   const { uid } = useAuth();
   const { data, loading } = useMeQuery({ skip: !uid });
 

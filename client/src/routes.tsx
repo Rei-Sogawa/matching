@@ -1,35 +1,35 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
 import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
-import { Index } from "./pages/Index";
-import { Likes } from "./pages/likes";
-import { LogIn } from "./pages/log-in";
-import { SignUp } from "./pages/sign-up";
+import { IndexPage } from "./pages/Index";
+import { LikesPage } from "./pages/likes";
+import { LogInPage } from "./pages/log-in";
+import { SignUpPage } from "./pages/sign-up";
 
-const INDEX = "/";
-const SIGN_UP = "/sign-up";
-const LOG_IN = "/log-in";
-const LIKES = "/likes";
+const INDEX_PATH = "/";
+const SIGN_UP_PATH = "/sign-up";
+const LOG_IN_PATH = "/log-in";
+const LIKES_PATH = "/likes";
 
 export const routes = {
-  [INDEX]: {
-    path: pathBuilder(INDEX),
-    Component: Likes,
+  [INDEX_PATH]: {
+    path: pathBuilder(INDEX_PATH),
+    Component: IndexPage,
     middleware: [],
   },
-  [SIGN_UP]: {
-    path: pathBuilder(SIGN_UP),
-    Component: SignUp,
+  [SIGN_UP_PATH]: {
+    path: pathBuilder(SIGN_UP_PATH),
+    Component: SignUpPage,
     middleware: [BeforeAuthenticated],
   },
-  [LOG_IN]: {
-    path: pathBuilder(LOG_IN),
-    Component: LogIn,
+  [LOG_IN_PATH]: {
+    path: pathBuilder(LOG_IN_PATH),
+    Component: LogInPage,
     middleware: [BeforeAuthenticated],
   },
-  [LIKES]: {
-    path: pathBuilder(LIKES),
-    Component: Likes,
+  [LIKES_PATH]: {
+    path: pathBuilder(LIKES_PATH),
+    Component: LikesPage,
     middleware: [],
   },
 };
