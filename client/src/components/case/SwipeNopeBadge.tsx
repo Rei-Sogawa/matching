@@ -1,9 +1,23 @@
+import { Box } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const SwipeNopeBadge: FC = () => {
   return (
-    <div className="absolute top-1/4 left-1/4 z-10 origin-top rotate-12 px-3 py-2 border-4 rounded border-red-500 text-red-500 font-bold text-5xl">
+    <Box
+      position="absolute"
+      top="25%"
+      left="25%"
+      zIndex="10"
+      transform="rotate(12deg)"
+      px="2"
+      borderWidth="4px"
+      borderColor="red.400"
+      rounded="md"
+      fontWeight="bold"
+      fontSize="5xl"
+      color="red.400"
+    >
       NOPE
-    </div>
+    </Box>
   );
 };

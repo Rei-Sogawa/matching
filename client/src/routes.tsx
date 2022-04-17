@@ -14,7 +14,7 @@ const LIKES = "/likes";
 export const routes = {
   [INDEX]: {
     path: pathBuilder(INDEX),
-    Component: Index,
+    Component: Likes,
     middleware: [],
   },
   [SIGN_UP]: {

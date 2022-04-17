@@ -1,5 +1,6 @@
-import classNames from "classnames";
+import { Box, Button, Center, HStack, Image, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { FC, useEffect, useMemo, useState } from "react";
+import { BiDislike, BiLike } from "react-icons/bi";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
 import { User } from "../../pages/likes";
@@ -54,44 +55,38 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
   const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
 
   return (
-    <>
-      <div className={classNames("h-full py-10 flex flex-col space-y-4", { hidden: !isReady })}>
-        <div className="h-3/4 w-full relative">
-          <div className="absolute inset-0">
-            <img src={activeImage} className="h-full mx-auto rounded-lg object-contain" />
-          </div>
-        </div>
+    <Box h="full">
+      <Stack h="full" py="10" alignItems="center" spacing="4" hidden={!isReady}>
+        <Image src={activeImage} h="75%" rounded="md" />
 
-        <div className="h-1/4 flex flex-col items-center space-y-4">
-          <div className="swiper-no-swiping flex space-x-2">
-            {user.images.map((image) => (
-              <input
-                key={image}
-                type="radio"
-                value={image}
-                checked={image === activeImage}
-                onChange={(e) => setActiveImage(e.target.value)}
-                className="radio radio-accent"
-              />
-            ))}
-          </div>
+        <Stack h="25%">
+          <RadioGroup value={activeImage} onChange={setActiveImage} colorScheme="gray">
+            <HStack justifyContent="center" className="swiper-no-swiping">
+              {user.images.map((image) => (
+                <Radio key={image} value={image} size="lg" />
+              ))}
+            </HStack>
+          </RadioGroup>
 
-          <div className="font-bold">{user.displayName}</div>
+          <Stack spacing="8">
+            <Box alignSelf="center" fontWeight="bold">
+              {user.displayName}
+            </Box>
+            <HStack spacing="4">
+              <Button size="lg" onClick={onNope} leftIcon={<BiDislike />}>
+                NOPE
+              </Button>
+              <Button size="lg" onClick={onLike} leftIcon={<BiLike />}>
+                LIKE
+              </Button>
+            </HStack>
+          </Stack>
+        </Stack>
+      </Stack>
 
-          <div className="flex-1 flex justify-center items-center space-x-4">
-            <button className="btn btn-lg text-white" onClick={onNope}>
-              nope
-            </button>
-            <button className="btn btn-lg btn-success" onClick={onLike}>
-              like
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className={classNames("h-full flex justify-center items-center", { hidden: isReady })}>
-        <div className="font-bold text-xl">LOADING...</div>
-      </div>
-    </>
+      <Center h="full" fontWeight="bold" fontSize="xl" hidden={isReady}>
+        LOADING...
+      </Center>
+    </Box>
   );
 };

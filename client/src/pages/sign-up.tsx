@@ -30,7 +30,7 @@ export const SignUp: FC = () => {
     <div className="min-h-full bg-gray-50">
       <div className="max-w-sm mx-4 sm:mx-auto py-8">
         <div className="text-center font-bold text-2xl">Matching!</div>
-        <SignUpForm onSubmit={signUp} />
+        {/* <SignUpForm onSubmit={signUp} /> */}
         <div className="mt-4 ml-1 flex flex-col space-y-1">
           <Link className="link link-primary" to={routes["/log-in"].path()}>
             Log In

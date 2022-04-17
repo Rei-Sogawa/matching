@@ -86,6 +86,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
   const header = <div className="font-bold text-xl">Crop You Photo</div>;
 
   const body = objectURL ? (
+    // NOTE: aspect は 2:3 にする
     <ReactCrop crop={crop} onChange={setCrop} aspect={5 / 7} style={{ maxHeight: "50vh" }}>
       <img ref={imageRef} src={objectURL} className="rounded-md" />
     </ReactCrop>

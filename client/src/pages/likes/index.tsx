@@ -1,10 +1,11 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
 
+import { Box } from "@chakra-ui/react";
+import styled from "@emotion/styled";
 import { first } from "lodash-es";
 import { FC, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import { EffectCards, Swiper as SwiperClass } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -140,13 +141,16 @@ const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => 
   };
 };
 
-const AppSwiper = styled.div`
+const AppSwiper = styled(Box)`
   width: 100%;
   height: 100%;
   .swiper {
     width: 100%;
     height: 100%;
     overflow: hidden;
+  }
+  .swiper-slide {
+    background-color: #fff;
   }
 `;
 
@@ -181,11 +185,11 @@ export const Likes: FC = () => {
   });
 
   return (
-    <div className="h-full bg-white relative">
+    <Box position="relative" h="full" bg="white">
       <AppSwiper>
         <Swiper speed={0} effect="cards" modules={[EffectCards]} onSwiper={onSwiper} onSlideChange={onSlideChange}>
           {indexes.map((index) => (
-            <SwiperSlide key={index} className="bg-gray-50">
+            <SwiperSlide key={index}>
               {activeUser ? (
                 <UserSwipeSlide
                   loading={loading}
@@ -205,13 +209,13 @@ export const Likes: FC = () => {
       {(toNope || noped) && <SwipeNopeBadge />}
 
       {/* NOTE: for cache */}
-      <div className="hidden">
+      <Box hidden>
         {users
           .flatMap((user) => user.images)
           .map((image) => (
             <img key={image} src={image} />
           ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

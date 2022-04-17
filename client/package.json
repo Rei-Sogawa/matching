@@ -41,7 +41,6 @@
     "@types/lodash-es": "^4.17.6",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
-    "@types/styled-components": "^5.1.25",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "@vitejs/plugin-react": "^1.0.7",
