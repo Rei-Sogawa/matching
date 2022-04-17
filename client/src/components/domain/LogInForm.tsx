@@ -20,7 +20,7 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
     <Form
       initialValues={initialValues}
       onSubmit={onSubmit}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <Stack>
@@ -28,7 +28,9 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
               <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
             </Stack>
 
-            <Button type="submit">Log In</Button>
+            <Button type="submit" disabled={submitting}>
+              Log In
+            </Button>
           </Stack>
         </form>
       )}

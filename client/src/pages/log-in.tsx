@@ -11,14 +11,13 @@ export const LogInPage: FC = () => {
   const navigate = useNavigate();
 
   const logIn = async ({ email, password }: { email: string; password: string }) => {
-    console.log(email, password);
     await signInWithEmailAndPassword(getAuth(), email, password);
     navigate(routes["/"].path());
   };
 
   return (
-    <Box h="full" py="20" bg="gray.50">
-      <Container>
+    <Box h="full" bg="gray.50">
+      <Container h="full" py="20">
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
             Matching!

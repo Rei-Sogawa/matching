@@ -1,8 +1,10 @@
 import { gql } from "@apollo/client";
+import { Box, Container, HStack, Stack } from "@chakra-ui/react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import { AppLink } from "../components/base/AppLink";
 import { SignUpForm } from "../components/domain/SignUpForm";
 import { SignUpInput, useSignUpMutation } from "../graphql/generated";
 import { routes } from "../routes";
@@ -27,19 +29,19 @@ export const SignUpPage: FC = () => {
   };
 
   return (
-    <div className="min-h-full bg-gray-50">
-      <div className="max-w-sm mx-4 sm:mx-auto py-8">
-        <div className="text-center font-bold text-2xl">Matching!</div>
-        {/* <SignUpForm onSubmit={signUp} /> */}
-        <div className="mt-4 ml-1 flex flex-col space-y-1">
-          <Link className="link link-primary" to={routes["/log-in"].path()}>
-            Log In
-          </Link>
-          <Link className="link link-primary" to={routes["/"].path()}>
-            Back
-          </Link>
-        </div>
-      </div>
-    </div>
+    <Box h="full" bg="gray.50">
+      <Container h="full" py="20">
+        <Stack>
+          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
+            Matching!
+          </Box>
+          <SignUpForm onSubmit={signUp} />
+          <HStack>
+            <AppLink to={routes["/log-in"].path()}>Log In</AppLink>
+            <AppLink to={routes["/"].path()}>Back</AppLink>
+          </HStack>
+        </Stack>
+      </Container>
+    </Box>
   );
 };
