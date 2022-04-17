@@ -6,8 +6,8 @@ scalar DateTime
 type User {
   id: ID!
   displayName: String!
-  topImageUrl: String!
-  imageUrls: [String!]!
+  topPhotoUrl: String!
+  photoUrls: [String!]!
 }
 
 #

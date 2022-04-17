@@ -11,7 +11,7 @@ const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) =
   const swiper = useSwiper();
   const { isActive, isVisible } = useSwiperSlide();
 
-  const [activeImage, setActiveImage] = useState(user.topImage);
+  const [activePhoto, setActivePhoto] = useState(user.topPhotoUrl);
 
   const onLike = () => {
     swiper.slidePrev(0);
@@ -30,13 +30,13 @@ const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) =
 
   useEffect(() => {
     if (!isActive) return;
-    setActiveImage(user.topImage);
+    setActivePhoto(user.topPhotoUrl);
   }, [user, isActive]);
 
   return {
     isActive,
-    activeImage,
-    setActiveImage,
+    activePhoto,
+    setActivePhoto,
     onLike,
     onNope,
   };
@@ -50,20 +50,20 @@ export type UserSwipeSlideProps = {
 };
 
 export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow, onHide }) => {
-  const { isActive, activeImage, setActiveImage, onLike, onNope } = useUserSwipeSlide({ user, onShow, onHide });
+  const { isActive, activePhoto, setActivePhoto, onLike, onNope } = useUserSwipeSlide({ user, onShow, onHide });
 
   const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
 
   return (
     <Box h="full">
       <Stack h="full" py="10" alignItems="center" spacing="4" hidden={!isReady}>
-        <Image src={activeImage} h="75%" rounded="md" />
+        <Image src={activePhoto} h="75%" rounded="md" />
 
         <Stack h="25%">
-          <RadioGroup colorScheme="gray" value={activeImage} onChange={setActiveImage}>
+          <RadioGroup colorScheme="gray" value={activePhoto} onChange={setActivePhoto}>
             <HStack justifyContent="center" className="swiper-no-swiping">
-              {user.images.map((image) => (
-                <Radio key={image} value={image} size="lg" />
+              {user.photoUrls.map((url) => (
+                <Radio key={url} value={url} size="lg" />
               ))}
             </HStack>
           </RadioGroup>

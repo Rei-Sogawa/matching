@@ -42,8 +42,8 @@ export type User = {
   __typename?: 'User';
   displayName: Scalars['String'];
   id: Scalars['ID'];
-  imageUrls: Array<Scalars['String']>;
-  topImageUrl: Scalars['String'];
+  photoUrls: Array<Scalars['String']>;
+  topPhotoUrl: Scalars['String'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -153,8 +153,8 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  imageUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  topImageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  photoUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  topPhotoUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

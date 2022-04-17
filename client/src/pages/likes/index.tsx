@@ -16,8 +16,6 @@ import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
 import { routes } from "../../routes";
 
 const getRandomInt = (max: number, min = 0) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -26,18 +24,18 @@ const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/400/
 export type User = {
   id: string;
   displayName: string;
-  topImage: string;
-  images: string[];
+  topPhotoUrl: string;
+  photoUrls: string[];
 };
 
 const users: User[] = Array.from({ length: 3 }).map((_, index) => {
-  const topImage = getImage();
-  const restImages = Array.from({ length: getRandomInt(5) }).map(() => getImage());
+  const topPhotoUrl = getImage();
+  const restPhotoUrls = Array.from({ length: getRandomInt(5) }).map(() => getImage());
   return {
     id: index.toString(),
     displayName: `user-${index}`,
-    topImage,
-    images: [topImage, ...restImages],
+    topPhotoUrl,
+    photoUrls: [topPhotoUrl, ...restPhotoUrls],
   };
 });
 
@@ -211,7 +209,7 @@ export const LikesPage: FC = () => {
       {/* NOTE: for cache */}
       <Box hidden>
         {users
-          .flatMap((user) => user.images)
+          .flatMap((user) => user.photoUrls)
           .map((image) => (
             <img key={image} src={image} />
           ))}

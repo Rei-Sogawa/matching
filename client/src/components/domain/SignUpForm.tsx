@@ -1,4 +1,4 @@
-import { Button, Stack } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Stack } from "@chakra-ui/react";
 import { FC } from "react";
 import { Form } from "react-final-form";
 
@@ -33,6 +33,9 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <Stack>
+              <FormControl>
+                <FormLabel>Photo</FormLabel>
+              </FormControl>
               <InputControl name="email" label="Email" type="email" isRequired />
               <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
               <InputControl name="confirm" label="Password Confirm" type="password" autoComplete="on" isRequired />

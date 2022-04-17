@@ -20,7 +20,7 @@ input SignUpInput {
 type User {
   displayName: String!
   id: ID!
-  imageUrls: [String!]!
-  topImageUrl: String!
+  photoUrls: [String!]!
+  topPhotoUrl: String!
 }
 `;
