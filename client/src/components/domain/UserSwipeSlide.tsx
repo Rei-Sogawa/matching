@@ -57,7 +57,9 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
   return (
     <Box h="full">
       <Stack h="full" py="10" alignItems="center" spacing="4" hidden={!isReady}>
-        <Image src={activePhoto} h="75%" rounded="md" />
+        <Box h="75%">
+          <Image src={activePhoto} h="full" rounded="md" htmlWidth="400px" htmlHeight="600px" objectFit="cover" />
+        </Box>
 
         <Stack h="25%">
           <RadioGroup value={activePhoto} onChange={setActivePhoto}>
