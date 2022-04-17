@@ -60,7 +60,7 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
         <Image src={activeImage} h="75%" rounded="md" />
 
         <Stack h="25%">
-          <RadioGroup value={activeImage} onChange={setActiveImage} colorScheme="gray">
+          <RadioGroup colorScheme="gray" value={activeImage} onChange={setActiveImage}>
             <HStack justifyContent="center" className="swiper-no-swiping">
               {user.images.map((image) => (
                 <Radio key={image} value={image} size="lg" />
@@ -73,10 +73,28 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
               {user.displayName}
             </Box>
             <HStack spacing="4">
-              <Button size="lg" onClick={onNope} leftIcon={<BiDislike />}>
+              <Button
+                size="lg"
+                w="28"
+                color="white"
+                bg="red.400"
+                _hover={{ bg: "red.500" }}
+                _active={{ bg: "red.500" }}
+                onClick={onNope}
+                leftIcon={<BiDislike />}
+              >
                 NOPE
               </Button>
-              <Button size="lg" onClick={onLike} leftIcon={<BiLike />}>
+              <Button
+                size="lg"
+                w="28"
+                color="white"
+                bg="green.400"
+                _hover={{ bg: "green.500" }}
+                _active={{ bg: "green.500" }}
+                onClick={onLike}
+                leftIcon={<BiLike />}
+              >
                 LIKE
               </Button>
             </HStack>

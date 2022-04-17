@@ -7,18 +7,11 @@ import ReactDOM from "react-dom";
 
 import { App } from "./App";
 
-const theme = extendTheme({
-  semanticTokens: {
-    colors: {
-      error: "red.500",
-      success: "green.500",
-    },
-  },
-});
+const extendedTheme = extendTheme({});
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={extendedTheme}>
       <App />
     </ChakraProvider>
   </React.StrictMode>,
