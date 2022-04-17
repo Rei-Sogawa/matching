@@ -69,7 +69,7 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
   };
 
   return (
-    <Stack spacing="4">
+    <Stack>
       <Box>
         <Button onClick={onClick} leftIcon={<BiUpload />}>
           Upload
