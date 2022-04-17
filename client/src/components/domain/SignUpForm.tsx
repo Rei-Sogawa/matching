@@ -1,6 +1,6 @@
 import { Button, FormControl, FormLabel, Stack } from "@chakra-ui/react";
 import { arrayMoveImmutable } from "array-move";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Form } from "react-final-form";
 
 import { useMultipleFileInput } from "../../hooks/useMultipleFileInput";
@@ -27,7 +27,9 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
     return res;
   };
 
-  const { ref, value, setValue, onClick, onChange, remove } = useMultipleFileInput();
+  const { ref, value, setValue, onClick, remove } = useMultipleFileInput();
+
+  const onSelect = (file: File) => setValue((prev) => prev.concat(file));
 
   const onUp = (index: number) => {
     const from = index;
@@ -36,9 +38,14 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
     setValue((v) => arrayMoveImmutable(v, from, to));
   };
 
-  const onCrop = (index: number, croppedFile: File) => {
-    setValue((prev) => prev.map((v, idx) => (idx === index ? croppedFile : v)));
+  const onDown = (index: number) => {
+    const from = index;
+    const to = index + 1;
+    if (to > value.length - 1) return;
+    setValue((v) => arrayMoveImmutable(v, from, to));
   };
+
+  useEffect(() => console.log(value), [value]);
 
   return (
     <Form
@@ -51,7 +58,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
             <Stack>
               <FormControl>
                 <FormLabel>Photo</FormLabel>
-                <UserPhotoPicker {...{ ref, value, onClick, onChange, onUp, onCrop, onRemove: remove }} />
+                <UserPhotoPicker {...{ ref, value, onClick, onSelect, onUp, onDown, onRemove: remove }} />
               </FormControl>
 
               <InputControl name="email" label="Email" type="email" isRequired />

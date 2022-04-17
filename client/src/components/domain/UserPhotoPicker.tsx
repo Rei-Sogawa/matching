@@ -1,20 +1,17 @@
-import { ArrowBackIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, Button, HStack, Image, Input, Stack, useDisclosure, VStack, Wrap, WrapItem } from "@chakra-ui/react";
-import { ChangeEventHandler, FC, forwardRef, useEffect } from "react";
+import { head } from "lodash-es";
+import { ChangeEventHandler, FC, forwardRef, useEffect, useState } from "react";
 import { BiUpload } from "react-icons/bi";
 
 import { useObjectURL } from "../../hooks/useObjectURL";
 import { CropImageModal } from "../case/CropImageModal";
 
-type UserPhotoCardProps = { file: File; onUp: () => void; onCrop: (file: File) => void; onRemove: () => void };
+type UserPhotoCardProps = { file: File; onUp: () => void; onDown: () => void; onRemove: () => void };
 
-const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onCrop, onRemove }) => {
+const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onDown, onRemove }) => {
   const { objectURL, setObject } = useObjectURL(file);
-  const modal = useDisclosure();
-
-  useEffect(() => {
-    setObject(file);
-  }, [file]);
+  useEffect(() => setObject(file), [file]);
 
   return objectURL ? (
     <Stack>
@@ -23,16 +20,13 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onCrop, onRemove })
         <Button onClick={onUp}>
           <ArrowBackIcon />
         </Button>
-        <Button onClick={modal.onOpen}>
-          <EditIcon />
+        <Button onClick={onDown}>
+          <ArrowForwardIcon />
         </Button>
         <Button onClick={onRemove}>
           <DeleteIcon />
         </Button>
       </HStack>
-      <Box>
-        <CropImageModal file={file} isOpen={modal.isOpen} onClose={modal.onClose} onOk={onCrop} />
-      </Box>
     </Stack>
   ) : null;
 };
@@ -40,16 +34,39 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onCrop, onRemove })
 type UserPhotoPickerProps = {
   value: File[];
   onClick: () => void;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  onSelect: (v: File) => void;
   onUp: (index: number) => void;
-  onCrop: (index: number, croppedFile: File) => void;
+  onDown: (index: number) => void;
   onRemove: (index: number) => void;
 };
 
 export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps>(function _UserPhotoPicker(
-  { value, onClick, onChange, onUp, onCrop, onRemove },
+  { value, onClick, onSelect, onUp, onDown, onRemove },
   ref
 ) {
+  const modal = useDisclosure();
+  const [croppingFile, setCroppingFile] = useState<File>();
+
+  const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const files = e.target.files;
+    if (!files) return;
+    const file = head(files);
+    if (!file) return;
+    setCroppingFile(file);
+    modal.onOpen();
+    return;
+  };
+
+  const onClose = () => {
+    setCroppingFile(undefined);
+    modal.onClose();
+  };
+
+  const onOk = (file: File) => {
+    onSelect(file);
+    onClose();
+  };
+
   return (
     <Stack spacing="4">
       <Box w="80px" h="120px" bg="white" rounded="md" borderWidth="1px" cursor="pointer" onClick={onClick}>
@@ -61,6 +78,10 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
         </VStack>
 
         <Input type="file" accept="image/*" hidden ref={ref} onChange={onChange} />
+
+        <Box>
+          {croppingFile && <CropImageModal file={croppingFile} isOpen={modal.isOpen} onClose={onClose} onOk={onOk} />}
+        </Box>
       </Box>
 
       <Wrap>
@@ -69,7 +90,7 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
             <UserPhotoCard
               file={file}
               onUp={() => onUp(index)}
-              onCrop={(croppedFile) => onCrop(index, croppedFile)}
+              onDown={() => onDown(index)}
               onRemove={() => onRemove(index)}
             />
           </WrapItem>

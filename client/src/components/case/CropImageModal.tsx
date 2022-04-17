@@ -100,7 +100,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Crop Photo</ModalHeader>
+        <ModalHeader />
         <ModalCloseButton />
         <ModalBody>
           {objectURL ? (
@@ -110,7 +110,9 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
           ) : null}
         </ModalBody>
         <ModalFooter>
-          <Button onClick={handleOk}>OK</Button>
+          <Button onClick={handleOk} disabled={!crop}>
+            OK
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
