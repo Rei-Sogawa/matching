@@ -16,7 +16,7 @@ export const LogInPage: FC = () => {
   };
 
   return (
-    <Box h="full" bg="gray.50">
+    <Box h="full" bg="white">
       <Container h="full" py="10">
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">

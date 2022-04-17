@@ -16,7 +16,7 @@ export const IndexPage: FC = () => {
   };
 
   return loading ? null : (
-    <Stack h="full" bg="gray.50" justifyContent="center" alignItems="center">
+    <Stack h="full" bg="white" justifyContent="center" alignItems="center">
       <Box fontWeight="bold" fontSize="2xl">
         {data?.me.displayName || "Not Logged In"}
       </Box>

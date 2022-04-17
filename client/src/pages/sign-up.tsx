@@ -29,7 +29,7 @@ export const SignUpPage: FC = () => {
   };
 
   return (
-    <Box minH="full" bg="gray.50">
+    <Box minH="full" bg="white">
       <Container minH="full" py="10">
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">

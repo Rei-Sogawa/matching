@@ -11,11 +11,12 @@ type UserPhotoCardProps = { file: File; onUp: () => void; onDown: () => void; on
 
 const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onDown, onRemove }) => {
   const { objectURL, setObject } = useObjectURL(file);
+
   useEffect(() => setObject(file), [file]);
 
   return objectURL ? (
     <Stack>
-      <Image src={objectURL} h="240px" rounded="md" htmlWidth="160px" htmlHeight="240px" objectFit="cover" />
+      <Image src={objectURL} rounded="md" htmlWidth="160px" htmlHeight="240px" objectFit="cover" />
       <HStack>
         <Button onClick={onUp}>
           <ArrowBackIcon />
@@ -69,16 +70,11 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
 
   return (
     <Stack spacing="4">
-      <Box w="80px" h="120px" bg="white" rounded="md" borderWidth="1px" cursor="pointer" onClick={onClick}>
-        <VStack h="full" justifyContent="center">
-          <Box fontSize="xl">
-            <BiUpload />
-          </Box>
-          <Box>Upload</Box>
-        </VStack>
-
+      <Box>
+        <Button onClick={onClick} leftIcon={<BiUpload />}>
+          Upload
+        </Button>
         <Input type="file" accept="image/*" hidden ref={ref} onChange={onChange} />
-
         <Box>
           {croppingFile && <CropImageModal file={croppingFile} isOpen={modal.isOpen} onClose={onClose} onOk={onOk} />}
         </Box>
