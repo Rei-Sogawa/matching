@@ -1,6 +1,6 @@
 import { ArrowBackIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, Button, HStack, Image, Input, Stack, useDisclosure, VStack, Wrap, WrapItem } from "@chakra-ui/react";
-import { ChangeEventHandler, FC, forwardRef, useEffect, useMemo } from "react";
+import { ChangeEventHandler, FC, forwardRef, useEffect } from "react";
 import { BiUpload } from "react-icons/bi";
 
 import { useObjectURL } from "../../hooks/useObjectURL";
@@ -14,7 +14,6 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onCrop, onRemove })
 
   useEffect(() => {
     setObject(file);
-    console.log("1");
   }, [file]);
 
   return objectURL ? (

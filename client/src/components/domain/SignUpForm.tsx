@@ -1,6 +1,6 @@
 import { Button, FormControl, FormLabel, Stack } from "@chakra-ui/react";
 import { arrayMoveImmutable } from "array-move";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Form } from "react-final-form";
 
 import { useMultipleFileInput } from "../../hooks/useMultipleFileInput";
