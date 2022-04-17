@@ -28,7 +28,7 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
               <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
             </Stack>
 
-            <Button type="submit" disabled={submitting}>
+            <Button type="submit" colorScheme="primary" disabled={submitting}>
               Log In
             </Button>
           </Stack>

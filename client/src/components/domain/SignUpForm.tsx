@@ -44,7 +44,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
               <InputControl name="confirm" label="Password Confirm" type="password" autoComplete="on" isRequired />
               <InputControl name="displayName" label="Display  Name" isRequired></InputControl>
             </Stack>
-            <Button type="submit" disabled={submitting}>
+            <Button type="submit" colorScheme="primary" disabled={submitting}>
               Sign Up
             </Button>
           </Stack>
