@@ -15,7 +15,7 @@ export const useMultipleFileInput = () => {
     setValue((prev) => prev.concat(files[0]));
   };
 
-  const remove = (file: File) => setValue((prev) => prev.filter((_file) => _file !== file));
+  const remove = (index: number) => setValue((prev) => prev.filter((_, idx) => idx !== index));
 
   const reset = () => setValue([]);
 

@@ -2,6 +2,7 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import {
   Button,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,7 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 
 import { useObjectURL } from "../../hooks/useObjectURL";
@@ -83,13 +84,17 @@ type CropImageModalProps = {
 
 export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose, onOk }) => {
   const { imageRef, crop, setCrop, getCroppedImage } = useCropImage(file);
-
-  const { objectURL } = useObjectURL(file);
+  const { objectURL, setObject } = useObjectURL(file);
 
   const handleOk = async () => {
     onOk(await getCroppedImage());
     onClose();
+    setCrop(undefined);
   };
+
+  useEffect(() => {
+    setObject(file);
+  }, [file]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -100,7 +105,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
         <ModalBody>
           {objectURL ? (
             <ReactCrop crop={crop} onChange={setCrop} aspect={2 / 3}>
-              <img ref={imageRef} src={objectURL} />
+              <Image ref={imageRef} src={objectURL} />
             </ReactCrop>
           ) : null}
         </ModalBody>
