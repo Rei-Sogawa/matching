@@ -1,5 +1,8 @@
+import { Button, Stack } from "@chakra-ui/react";
 import { FC } from "react";
-import { Field, Form } from "react-final-form";
+import { Form } from "react-final-form";
+
+import { InputControl } from "../base/AppForm";
 
 type FormValues = {
   email: string;
@@ -19,45 +22,14 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
       onSubmit={onSubmit}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          <Field name="email">
-            {({ input }) => (
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  className="input input-bordered input-primary"
-                  placeholder="Email"
-                  autoComplete="on"
-                  required
-                  {...input}
-                />
-              </div>
-            )}
-          </Field>
+          <Stack spacing="4">
+            <Stack>
+              <InputControl name="email" label="Email" type="email" isRequired />
+              <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
+            </Stack>
 
-          <Field name="password">
-            {({ input }) => (
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  className="input input-bordered input-primary"
-                  placeholder="Password"
-                  autoComplete="on"
-                  required
-                  {...input}
-                />
-              </div>
-            )}
-          </Field>
-
-          <button type="submit" className="w-full mt-4 btn">
-            Log In
-          </button>
+            <Button type="submit">Log In</Button>
+          </Stack>
         </form>
       )}
     />
