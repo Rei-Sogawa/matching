@@ -1,15 +1,17 @@
 import { ArrowBackIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { Box, Button, HStack, Image, Input, Stack, VStack, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Input, Stack, useDisclosure, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { FC } from "react";
 import { BiUpload } from "react-icons/bi";
 
 import { useMultipleFileInput } from "../../hooks/useMultipleFileInput";
 import { useObjectURL } from "../../hooks/useObjectURL";
+import { CropImageModal } from "../case/CropImageModal";
 
 type UserPhotoCardProps = { file: File };
 
 const UserPhotoCard: FC<UserPhotoCardProps> = ({ file }) => {
   const { objectURL } = useObjectURL(file);
+  const modal = useDisclosure();
 
   return objectURL ? (
     <Stack>
@@ -18,13 +20,16 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file }) => {
         <Button>
           <ArrowBackIcon />
         </Button>
-        <Button>
+        <Button onClick={modal.onOpen}>
           <EditIcon />
         </Button>
         <Button>
           <DeleteIcon />
         </Button>
       </HStack>
+      <Box>
+        <CropImageModal file={file} isOpen={modal.isOpen} onClose={modal.onClose} onOk={(f) => console.log(f)} />
+      </Box>
     </Stack>
   ) : null;
 };

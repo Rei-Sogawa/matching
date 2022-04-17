@@ -5,10 +5,6 @@ export const useObjectURL = (value: null | File | Blob | MediaSource) => {
   const [objectURL, setObjectURL] = useState<null | string>(null);
 
   useEffect(() => {
-    setObject(value);
-  }, [value]);
-
-  useEffect(() => {
     if (!object) {
       return;
     }
@@ -22,6 +18,8 @@ export const useObjectURL = (value: null | File | Blob | MediaSource) => {
   }, [object]);
 
   return {
+    object,
     objectURL,
+    setObject,
   };
 };
