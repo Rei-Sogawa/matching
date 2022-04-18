@@ -1,5 +1,5 @@
 import { ArrowBackIcon, ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Box, Button, HStack, Image, Input, Stack, useDisclosure, VStack, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Input, Stack, useDisclosure, Wrap, WrapItem } from "@chakra-ui/react";
 import { head } from "lodash-es";
 import { ChangeEventHandler, FC, forwardRef, useEffect, useState } from "react";
 import { BiUpload } from "react-icons/bi";
@@ -16,15 +16,15 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onDown, onRemove })
 
   return objectURL ? (
     <Stack>
-      <Image src={objectURL} rounded="md" htmlWidth="160px" htmlHeight="240px" objectFit="cover" />
-      <HStack>
-        <Button onClick={onUp}>
+      <Image src={objectURL} rounded="md" w="200px" h="250px" />
+      <HStack justifyContent="center">
+        <Button size="sm" onClick={onUp}>
           <ArrowBackIcon />
         </Button>
-        <Button onClick={onDown}>
+        <Button size="sm" onClick={onDown}>
           <ArrowForwardIcon />
         </Button>
-        <Button onClick={onRemove}>
+        <Button size="sm" onClick={onRemove}>
           <DeleteIcon />
         </Button>
       </HStack>
@@ -71,7 +71,7 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
   return (
     <Stack>
       <Box>
-        <Button onClick={onClick} leftIcon={<BiUpload />}>
+        <Button size="sm" onClick={onClick} leftIcon={<BiUpload />}>
           Upload
         </Button>
         <Input type="file" accept="image/*" hidden ref={ref} onChange={onChange} />

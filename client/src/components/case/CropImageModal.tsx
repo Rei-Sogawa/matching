@@ -2,6 +2,7 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import {
   Button,
+  Center,
   Image,
   Modal,
   ModalBody,
@@ -100,13 +101,15 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader />
+        <ModalHeader>Crop</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {objectURL ? (
-            <ReactCrop crop={crop} onChange={setCrop} aspect={2 / 3}>
-              <Image ref={imageRef} src={objectURL} />
-            </ReactCrop>
+            <Center>
+              <ReactCrop crop={crop} onChange={setCrop} aspect={4 / 5}>
+                <Image ref={imageRef} src={objectURL} w="full" h="auto" />
+              </ReactCrop>
+            </Center>
           ) : null}
         </ModalBody>
         <ModalFooter>
