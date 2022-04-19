@@ -16,7 +16,7 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onDown, onRemove })
 
   return objectURL ? (
     <Stack>
-      <Image src={objectURL} rounded="md" w="200px" h="250px" />
+      <Image src={objectURL} rounded="md" w="160px" h="200px" />
       <HStack justifyContent="center">
         <Button size="sm" onClick={onUp}>
           <ArrowBackIcon />
