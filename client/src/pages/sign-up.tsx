@@ -4,7 +4,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 
 import { AppLink } from "../components/base/AppLink";
-import { SignUpForm, SignUpFormProps } from "../components/domain/SignUpForm";
+import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
 import { useSignUpMutation } from "../graphql/generated";
 import { routes } from "../routes";

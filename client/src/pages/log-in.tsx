@@ -4,7 +4,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AppLink } from "../components/base/AppLink";
-import { LogInForm } from "../components/domain/LogInForm";
+import { LogInForm } from "../components/common/LogInForm";
 import { routes } from "../routes";
 
 export const LogInPage: FC = () => {

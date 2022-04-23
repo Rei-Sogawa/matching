@@ -1,11 +1,8 @@
-import { Button, Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react";
-import { arrayMoveImmutable } from "array-move";
+import { Button, Divider, Stack } from "@chakra-ui/react";
 import { FC } from "react";
 import { Form } from "react-final-form";
 
-import { useMultipleFileInput } from "../../hooks/useMultipleFileInput";
 import { InputControl } from "../base/AppForm";
-import { UserPhotoPicker } from "./UserPhotoPicker";
 
 type FormValues = {
   displayName: string;
@@ -27,24 +24,6 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
     return res;
   };
 
-  // const { ref, value, setValue, onClick, remove } = useMultipleFileInput();
-
-  // const onSelect = (file: File) => setValue((prev) => prev.concat(file));
-
-  // const onUp = (index: number) => {
-  //   const from = index;
-  //   const to = index - 1;
-  //   if (from < 1) return;
-  //   setValue((v) => arrayMoveImmutable(v, from, to));
-  // };
-
-  // const onDown = (index: number) => {
-  //   const from = index;
-  //   const to = index + 1;
-  //   if (to > value.length - 1) return;
-  //   setValue((v) => arrayMoveImmutable(v, from, to));
-  // };
-
   return (
     <Form
       initialValues={initialValues}
@@ -53,16 +32,6 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
-            {/* <Stack>
-              <FormControl>
-                <FormLabel>Photos</FormLabel>
-                <UserPhotoPicker {...{ ref, value, onClick, onSelect, onUp, onDown, onRemove: remove }} />
-              </FormControl>
-              <InputControl name="displayName" label="Display  Name" isRequired />
-            </Stack>
-
-            <Divider /> */}
-
             <Stack>
               <InputControl name="displayName" label="Display Name" isRequired />
               <InputControl name="email" label="Email" type="email" isRequired />
