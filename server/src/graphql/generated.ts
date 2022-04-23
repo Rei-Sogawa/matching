@@ -17,9 +17,19 @@ export type Scalars = {
   DateTime: Date;
 };
 
+export type Me = {
+  __typename?: 'Me';
+  displayName: Scalars['String'];
+  id: Scalars['ID'];
+  photoPaths: Array<Scalars['String']>;
+  photoUrls: Array<Scalars['String']>;
+  topPhotoUrl?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  signUp: User;
+  signUp: Me;
+  updateUser: Me;
 };
 
 
@@ -27,9 +37,15 @@ export type MutationSignUpArgs = {
   input: SignUpInput;
 };
 
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
+};
+
 export type Query = {
   __typename?: 'Query';
-  me: User;
+  me: Me;
+  users: Array<User>;
 };
 
 export type SignUpInput = {
@@ -38,12 +54,17 @@ export type SignUpInput = {
   password: Scalars['String'];
 };
 
+export type UpdateUserInput = {
+  displayName: Scalars['String'];
+  photoPaths: Array<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   displayName: Scalars['String'];
   id: Scalars['ID'];
   photoUrls: Array<Scalars['String']>;
-  topPhotoUrl: Scalars['String'];
+  topPhotoUrl?: Maybe<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -119,10 +140,12 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Me: ResolverTypeWrapper<UserDoc>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
+  UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserDoc>;
 }>;
 
@@ -131,10 +154,12 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   DateTime: Scalars['DateTime'];
   ID: Scalars['ID'];
+  Me: UserDoc;
   Mutation: {};
   Query: {};
   SignUpInput: SignUpInput;
   String: Scalars['String'];
+  UpdateUserInput: UpdateUserInput;
   User: UserDoc;
 }>;
 
@@ -142,24 +167,36 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type MeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Me'] = ResolversParentTypes['Me']> = ResolversObject<{
+  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  photoPaths?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  photoUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  topPhotoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  signUp?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
+  signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
+  updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   photoUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  topPhotoUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  topPhotoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
   DateTime?: GraphQLScalarType;
+  Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

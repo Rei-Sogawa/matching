@@ -12,6 +12,7 @@ generates:
         DateTime: Date
       contextType: ../context#Context
       mappers:
+        Me: ../fire/docs/index#UserDoc
         User: ../fire/docs/index#UserDoc
   src/graphql/typeDefs.ts:
     plugins:

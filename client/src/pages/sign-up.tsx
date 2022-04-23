@@ -13,7 +13,7 @@ gql`
   mutation SignUp($input: SignUpInput!) {
     signUp(input: $input) {
       id
-      ...UserForMe
+      ...MeForMe
     }
   }
 `;

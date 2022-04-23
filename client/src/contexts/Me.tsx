@@ -1,14 +1,16 @@
 import { gql } from "@apollo/client";
 import { createContext, FC, useContext } from "react";
 
-import { useMeQuery, UserForMeFragment } from "../graphql/generated";
+import { MeForMeFragment, useMeQuery } from "../graphql/generated";
 import { assertIsDefined } from "../utils/assert-is-defined";
 import { useAuth } from "./Auth";
 
 gql`
-  fragment UserForMe on User {
+  fragment MeForMe on Me {
     id
     displayName
+
+    photoPaths
   }
 `;
 
@@ -16,12 +18,12 @@ gql`
   query me {
     me {
       id
-      ...UserForMe
+      ...MeForMe
     }
   }
 `;
 
-const MeContext = createContext<UserForMeFragment | undefined>(undefined);
+const MeContext = createContext<MeForMeFragment | undefined>(undefined);
 
 export const MeProvider: FC = ({ children }) => {
   const { uid } = useAuth();

@@ -16,9 +16,19 @@ export type Scalars = {
   DateTime: string;
 };
 
+export type Me = {
+  __typename?: 'Me';
+  displayName: Scalars['String'];
+  id: Scalars['ID'];
+  photoPaths: Array<Scalars['String']>;
+  photoUrls: Array<Scalars['String']>;
+  topPhotoUrl?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  signUp: User;
+  signUp: Me;
+  updateUser: Me;
 };
 
 
@@ -26,9 +36,15 @@ export type MutationSignUpArgs = {
   input: SignUpInput;
 };
 
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
+};
+
 export type Query = {
   __typename?: 'Query';
-  me: User;
+  me: Me;
+  users: Array<User>;
 };
 
 export type SignUpInput = {
@@ -37,42 +53,55 @@ export type SignUpInput = {
   password: Scalars['String'];
 };
 
+export type UpdateUserInput = {
+  displayName: Scalars['String'];
+  photoPaths: Array<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   displayName: Scalars['String'];
   id: Scalars['ID'];
   photoUrls: Array<Scalars['String']>;
-  topPhotoUrl: Scalars['String'];
+  topPhotoUrl?: Maybe<Scalars['String']>;
 };
 
-export type UserForMeFragment = { __typename?: 'User', id: string, displayName: string };
+export type MeForMeFragment = { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, displayName: string } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'User', id: string, displayName: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
 
-export const UserForMeFragmentDoc = gql`
-    fragment UserForMe on User {
+export type UpdateUserMutationVariables = Exact<{
+  input: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
+
+export const MeForMeFragmentDoc = gql`
+    fragment MeForMe on Me {
   id
   displayName
+  photoPaths
 }
     `;
 export const MeDocument = gql`
     query me {
   me {
     id
-    ...UserForMe
+    ...MeForMe
   }
 }
-    ${UserForMeFragmentDoc}`;
+    ${MeForMeFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -104,10 +133,10 @@ export const SignUpDocument = gql`
     mutation SignUp($input: SignUpInput!) {
   signUp(input: $input) {
     id
-    ...UserForMe
+    ...MeForMe
   }
 }
-    ${UserForMeFragmentDoc}`;
+    ${MeForMeFragmentDoc}`;
 export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
 
 /**
@@ -134,3 +163,37 @@ export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignU
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    id
+    ...MeForMe
+  }
+}
+    ${MeForMeFragmentDoc}`;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;

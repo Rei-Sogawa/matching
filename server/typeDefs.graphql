@@ -3,10 +3,18 @@ scalar DateTime
 #
 # ROOT
 #
+type Me {
+  id: ID!
+  displayName: String!
+  photoPaths: [String!]!
+  topPhotoUrl: String
+  photoUrls: [String!]!
+}
+
 type User {
   id: ID!
   displayName: String!
-  topPhotoUrl: String!
+  topPhotoUrl: String
   photoUrls: [String!]!
 }
 
@@ -14,7 +22,8 @@ type User {
 # QUERY
 #
 type Query {
-  me: User!
+  me: Me!
+  users: [User!]!
 }
 
 #
@@ -26,6 +35,12 @@ input SignUpInput {
   password: String!
 }
 
+input UpdateUserInput {
+  displayName: String!
+  photoPaths: [String!]!
+}
+
 type Mutation {
-  signUp(input: SignUpInput!): User!
+  signUp(input: SignUpInput!): Me!
+  updateUser(input: UpdateUserInput!): Me!
 }

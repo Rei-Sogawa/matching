@@ -3,7 +3,7 @@ import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Form } from "react-final-form";
 import { v4 } from "uuid";
 
@@ -21,15 +21,16 @@ type FormValues = {
 type FinalFormValues = Omit<FormValues, "photoPaths">;
 
 export type UserProfileUpdateFormProps = {
+  initialValues: FormValues;
   onSubmit: (values: FormValues) => Promise<void>;
 };
 
-export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ onSubmit }) => {
+export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialValues, onSubmit }) => {
   const me = useMe();
 
-  const initialValues: FinalFormValues = { displayName: "" };
+  const finalInitialValues: FinalFormValues = useMemo(() => ({ displayName: initialValues.displayName }), []);
 
-  const [photoPaths, setPhotoPaths] = useState<string[]>([]);
+  const [photoPaths, setPhotoPaths] = useState<string[]>(initialValues.photoPaths);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ onSubmit
       const res = await Promise.all(photoPaths.map((photoPath) => getDownloadURL(ref(getStorage(), photoPath))));
       setPhotoUrls(res);
     })();
-  }, [photoPaths]);
+  }, [photoPaths.length]);
 
   const onPick = async (file: File) => {
     const compressed = await imageCompression(file, { maxSizeMB: 1 });
@@ -68,10 +69,14 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ onSubmit
     setPhotoUrls((v) => arrayMoveImmutable(v, from, to));
   };
 
+  const handleFinalSubmit = async (v: FinalFormValues) => {
+    await onSubmit({ ...v, photoPaths });
+  };
+
   return (
     <Form
-      initialValues={initialValues}
-      onSubmit={onSubmit}
+      initialValues={finalInitialValues}
+      onSubmit={handleFinalSubmit}
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
