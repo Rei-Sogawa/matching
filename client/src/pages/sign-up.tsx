@@ -20,8 +20,8 @@ gql`
 export const SignUpPage: FC = () => {
   const [signUpMutate] = useSignUpMutation();
 
-  const signUp: SignUpFormProps["onSubmit"] = async ({ email, password }) => {
-    await signUpMutate({ variables: { input: { email, password } } });
+  const signUp: SignUpFormProps["onSubmit"] = async ({ displayName, email, password }) => {
+    await signUpMutate({ variables: { input: { displayName, email, password } } });
     await signInWithEmailAndPassword(getAuth(), email, password);
   };
 

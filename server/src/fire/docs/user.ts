@@ -9,11 +9,9 @@ export type UserData = {
   updatedAt: Date;
 };
 
-export const userConverter = createConverter<UserData>();
-
 export class UserDoc extends FireDocument<UserData> {
   constructor(snap: FireDocumentInput<UserData>) {
-    super(snap, userConverter);
+    super(snap, createConverter<UserData>());
   }
 
   static create({ displayName }: Pick<UserData, "displayName">) {

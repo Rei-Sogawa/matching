@@ -12,6 +12,7 @@ type Query {
 }
 
 input SignUpInput {
+  displayName: String!
   email: String!
   password: String!
 }

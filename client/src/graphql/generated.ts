@@ -32,6 +32,7 @@ export type Query = {
 };
 
 export type SignUpInput = {
+  displayName: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
 };

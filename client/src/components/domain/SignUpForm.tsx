@@ -8,21 +8,20 @@ import { InputControl } from "../base/AppForm";
 import { UserPhotoPicker } from "./UserPhotoPicker";
 
 type FormValues = {
+  displayName: string;
   email: string;
   password: string;
   confirm: string;
 };
-
-type FinalFormValues = Omit<FormValues, "photos">;
 
 export type SignUpFormProps = {
   onSubmit: (values: FormValues) => Promise<void>;
 };
 
 export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
-  const initialValues: FinalFormValues = { email: "", password: "", confirm: "" };
+  const initialValues: FormValues = { displayName: "", email: "", password: "", confirm: "" };
 
-  const validate = (values: FinalFormValues) => {
+  const validate = (values: FormValues) => {
     let res = {};
     if (values.password !== values.confirm) res = { ...res, confirm: "Must match." };
     return res;
@@ -65,6 +64,7 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onSubmit }) => {
             <Divider /> */}
 
             <Stack>
+              <InputControl name="displayName" label="Display Name" isRequired />
               <InputControl name="email" label="Email" type="email" isRequired />
               <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
               <InputControl name="confirm" label="Password Confirm" type="password" autoComplete="on" isRequired />

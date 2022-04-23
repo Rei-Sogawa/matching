@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "deploy": "gcloud builds submit",
     "dev": "ts-node-dev --respawn src/index",
-    "emu": "firebase emulators:start --only auth,firestore",
+    "emu": "firebase emulators:start --only auth,firestore,storage",
     "gql": "graphql-codegen"
   },
   "dependencies": {
