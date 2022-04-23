@@ -1,6 +1,7 @@
 import { Button, Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react";
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
+import imageCompression from "browser-image-compression";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { FC, useEffect, useState } from "react";
 import { Form } from "react-final-form";
@@ -39,8 +40,9 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ onSubmit
   }, [photoPaths]);
 
   const onPick = async (file: File) => {
+    const compressed = await imageCompression(file, { maxSizeMB: 1 });
     const storageRef = ref(getStorage(), userProfileStoragePath({ userId: me.id, profilePhotoId: v4() }));
-    const res = await uploadBytes(storageRef, file, { contentType: "image/*" });
+    const res = await uploadBytes(storageRef, compressed, { contentType: compressed.type });
     setPhotoPaths((prev) => [...prev, res.ref.fullPath]);
   };
 

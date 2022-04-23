@@ -21,7 +21,7 @@ const getBlobFromCanvas = (canvas: HTMLCanvasElement, file: File): Promise<File>
   new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (blob) {
-        resolve(new File([blob], file.name, { lastModified: file.lastModified }));
+        resolve(new File([blob], file.name, { lastModified: file.lastModified, type: "image/*" }));
       } else {
         reject("Canvas is empty");
       }
