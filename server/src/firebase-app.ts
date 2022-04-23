@@ -1,8 +1,9 @@
 import "dotenv/config";
 
 import { applicationDefault, initializeApp } from "firebase-admin/app";
-import { getAuth as originalGetAuth } from "firebase-admin/auth";
+import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 if (process.env.NODE_ENV === "production") {
   process.env.GOOGLE_APPLICATION_CREDENTIALS = process.env.GOOGLE_APPLICATION_CREDENTIALS_PATH;
@@ -20,5 +21,5 @@ if (process.env.NODE_ENV === "production") {
   initializeApp();
 }
 
-export const getAuth = () => originalGetAuth();
 export const getDb = () => getFirestore();
+export { getAuth, getStorage };

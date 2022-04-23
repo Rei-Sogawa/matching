@@ -75,10 +75,24 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
               {user.displayName}
             </Box>
             <HStack spacing="4">
-              <Button size="lg" w="28" colorScheme="danger" onClick={onNope} leftIcon={<BiDislike />}>
+              <Button
+                size="lg"
+                w="28"
+                colorScheme="danger"
+                className="swiper-no-swiping"
+                onClick={onNope}
+                leftIcon={<BiDislike />}
+              >
                 NOPE
               </Button>
-              <Button size="lg" w="28" colorScheme="primary" onClick={onLike} leftIcon={<BiLike />}>
+              <Button
+                size="lg"
+                w="28"
+                colorScheme="primary"
+                className="swiper-no-swiping"
+                onClick={onLike}
+                leftIcon={<BiLike />}
+              >
                 LIKE
               </Button>
             </HStack>

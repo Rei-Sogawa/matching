@@ -21,7 +21,6 @@ type Query {
 # MUTATION
 #
 input SignUpInput {
-  displayName: String!
   email: String!
   password: String!
 }

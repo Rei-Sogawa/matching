@@ -1,4 +1,4 @@
-import { Button, Stack } from "@chakra-ui/react";
+import { Button, Divider, Stack } from "@chakra-ui/react";
 import { FC } from "react";
 import { Form } from "react-final-form";
 
@@ -27,6 +27,8 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
               <InputControl name="email" label="Email" type="email" isRequired />
               <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
             </Stack>
+
+            <Divider />
 
             <Button type="submit" colorScheme="primary" disabled={submitting}>
               Log In
