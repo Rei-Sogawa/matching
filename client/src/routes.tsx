@@ -1,15 +1,19 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
+import { Authenticated } from "./middleware/Authenticated";
+import { AuthorizeUser } from "./middleware/AuthorizeUser";
 import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
 import { IndexPage } from "./pages/Index";
 import { LikesPage } from "./pages/likes";
 import { LogInPage } from "./pages/log-in";
 import { SignUpPage } from "./pages/sign-up";
+import { UserEditPage } from "./pages/users/[userId]/edit";
 
 const INDEX_PATH = "/";
 const SIGN_UP_PATH = "/sign-up";
 const LOG_IN_PATH = "/log-in";
 const LIKES_PATH = "/likes";
+const USER_EDIT_PATH = "/users/:userId/edit";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -31,6 +35,11 @@ export const routes = {
     path: pathBuilder(LIKES_PATH),
     Component: LikesPage,
     middleware: [],
+  },
+  [USER_EDIT_PATH]: {
+    path: pathBuilder(USER_EDIT_PATH),
+    Component: UserEditPage,
+    middleware: [Authenticated, AuthorizeUser],
   },
 };
 

@@ -1,11 +1,17 @@
 import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
 import { createContext, FC, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { assertIsDefined } from "../utils/assert-is-defined";
+import { useGlobal } from "./Global";
 
 type State = { initialized: boolean; uid: string | undefined; token: string | undefined };
 
 const useAuthProvider = () => {
+  const navigate = useNavigate();
+
+  const { redirect, setRedirect } = useGlobal();
+
   const [state, setState] = useState<State>({
     initialized: false,
     uid: undefined,
@@ -22,6 +28,12 @@ const useAuthProvider = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (!redirect) return;
+    navigate(redirect);
+    setRedirect(null);
+  }, [state.uid]);
 
   return state;
 };

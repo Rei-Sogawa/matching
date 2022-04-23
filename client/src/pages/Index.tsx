@@ -23,6 +23,7 @@ export const IndexPage: FC = () => {
       {uid ? (
         <HStack>
           <AppLink to={routes["/likes"].path()}>Likes</AppLink>
+          <AppLink to={routes["/users/:userId/edit"].path({ userId: uid })}>Edit</AppLink>
           <AppLink
             to="#"
             onClick={async (e) => {

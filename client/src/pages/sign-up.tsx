@@ -5,6 +5,7 @@ import { FC } from "react";
 
 import { AppLink } from "../components/base/AppLink";
 import { SignUpForm, SignUpFormProps } from "../components/domain/SignUpForm";
+import { useGlobal } from "../contexts/Global";
 import { useSignUpMutation } from "../graphql/generated";
 import { routes } from "../routes";
 
@@ -18,10 +19,17 @@ gql`
 `;
 
 export const SignUpPage: FC = () => {
+  const { setRedirect } = useGlobal();
+
   const [signUpMutate] = useSignUpMutation();
 
   const signUp: SignUpFormProps["onSubmit"] = async ({ displayName, email, password }) => {
-    await signUpMutate({ variables: { input: { displayName, email, password } } });
+    const { data } = await signUpMutate({ variables: { input: { displayName, email, password } } });
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const redirect = routes["/users/:userId/edit"].path({ userId: data!.signUp.id });
+    setRedirect(redirect);
+
     await signInWithEmailAndPassword(getAuth(), email, password);
   };
 
