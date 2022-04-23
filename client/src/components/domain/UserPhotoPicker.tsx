@@ -1,22 +1,17 @@
 import { ArrowBackIcon, ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, Button, HStack, Image, Input, Stack, useDisclosure, Wrap, WrapItem } from "@chakra-ui/react";
-import { head } from "lodash-es";
-import { ChangeEventHandler, FC, forwardRef, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BiUpload } from "react-icons/bi";
 
-import { useObjectURL } from "../../hooks/useObjectURL";
+import { useFileInput } from "../../hooks/useFileInput";
 import { CropImageModal } from "../case/CropImageModal";
 
-type UserPhotoCardProps = { file: File; onUp: () => void; onDown: () => void; onRemove: () => void };
+type UserPhotoCardProps = { photoUrl: string; onUp: () => void; onDown: () => void; onRemove: () => void };
 
-const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onDown, onRemove }) => {
-  const { objectURL, setObject } = useObjectURL(file);
-
-  useEffect(() => setObject(file), [file]);
-
-  return objectURL ? (
+const UserPhotoCard: FC<UserPhotoCardProps> = ({ photoUrl, onUp, onDown, onRemove }) => {
+  return (
     <Stack>
-      <Image src={objectURL} rounded="md" w="160px" h="200px" />
+      <Image src={photoUrl} rounded="md" w="160px" h="200px" />
       <HStack justifyContent="center">
         <Button size="sm" onClick={onUp}>
           <ArrowBackIcon />
@@ -29,34 +24,21 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ file, onUp, onDown, onRemove })
         </Button>
       </HStack>
     </Stack>
-  ) : null;
+  );
 };
 
 type UserPhotoPickerProps = {
-  value: File[];
-  onClick: () => void;
-  onSelect: (v: File) => void;
+  photoUrls: string[];
+  onPick: (file: File) => void;
   onUp: (index: number) => void;
   onDown: (index: number) => void;
   onRemove: (index: number) => void;
 };
 
-export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps>(function _UserPhotoPicker(
-  { value, onClick, onSelect, onUp, onDown, onRemove },
-  ref
-) {
+export const UserPhotoPicker: FC<UserPhotoPickerProps> = ({ photoUrls, onPick, onUp, onDown, onRemove }) => {
   const modal = useDisclosure();
   const [croppingFile, setCroppingFile] = useState<File>();
-
-  const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const files = e.target.files;
-    if (!files) return;
-    const file = head(files);
-    if (!file) return;
-    setCroppingFile(file);
-    modal.onOpen();
-    return;
-  };
+  const { ref, value, onClick, onChange } = useFileInput();
 
   const onClose = () => {
     setCroppingFile(undefined);
@@ -64,9 +46,15 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
   };
 
   const onOk = (file: File) => {
-    onSelect(file);
+    onPick(file);
     onClose();
   };
+
+  useEffect(() => {
+    if (!value) return;
+    setCroppingFile(value);
+    modal.onOpen();
+  }, [value]);
 
   return (
     <Stack>
@@ -80,12 +68,12 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
         </Box>
       </Box>
 
-      {value.length > 0 && (
+      {photoUrls.length > 0 && (
         <Wrap>
-          {value.map((file, index) => (
+          {photoUrls.map((url, index) => (
             <WrapItem key={index}>
               <UserPhotoCard
-                file={file}
+                photoUrl={url}
                 onUp={() => onUp(index)}
                 onDown={() => onDown(index)}
                 onRemove={() => onRemove(index)}
@@ -96,4 +84,4 @@ export const UserPhotoPicker = forwardRef<HTMLInputElement, UserPhotoPickerProps
       )}
     </Stack>
   );
-});
+};

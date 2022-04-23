@@ -1,39 +1,69 @@
 import { Button, Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react";
+import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
-import { FC } from "react";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { FC, useEffect, useState } from "react";
 import { Form } from "react-final-form";
+import { v4 } from "uuid";
 
-import { useMultipleFileInput } from "../../hooks/useMultipleFileInput";
+import { useMe } from "../../contexts/Me";
 import { InputControl } from "../base/AppForm";
 import { UserPhotoPicker } from "./UserPhotoPicker";
 
+const userProfileStoragePath = pathBuilder("users/:userId/profilePhotos/:profilePhotoId");
+
 type FormValues = {
+  photoPaths: string[];
   displayName: string;
 };
+
+type FinalFormValues = Omit<FormValues, "photoPaths">;
 
 export type UserProfileUpdateFormProps = {
   onSubmit: (values: FormValues) => Promise<void>;
 };
 
 export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ onSubmit }) => {
-  const initialValues: FormValues = { displayName: "" };
+  const me = useMe();
 
-  const { ref, value, setValue, onClick, remove } = useMultipleFileInput();
+  const initialValues: FinalFormValues = { displayName: "" };
 
-  const onSelect = (file: File) => setValue((prev) => prev.concat(file));
+  const [photoPaths, setPhotoPaths] = useState<string[]>([]);
+  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await Promise.all(photoPaths.map((photoPath) => getDownloadURL(ref(getStorage(), photoPath))));
+      setPhotoUrls(res);
+    })();
+  }, [photoPaths]);
+
+  const onPick = async (file: File) => {
+    const storageRef = ref(getStorage(), userProfileStoragePath({ userId: me.id, profilePhotoId: v4() }));
+    const res = await uploadBytes(storageRef, file, { contentType: "image/*" });
+    setPhotoPaths((prev) => [...prev, res.ref.fullPath]);
+  };
+
+  const onRemove = async (index: number) => {
+    const photoPath = photoPaths[index];
+    await deleteObject(ref(getStorage(), photoPath));
+    setPhotoPaths((prev) => prev.filter((_, _index) => _index !== index));
+  };
 
   const onUp = (index: number) => {
     const from = index;
     const to = index - 1;
     if (from < 1) return;
-    setValue((v) => arrayMoveImmutable(v, from, to));
+    setPhotoPaths((v) => arrayMoveImmutable(v, from, to));
+    setPhotoUrls((v) => arrayMoveImmutable(v, from, to));
   };
 
   const onDown = (index: number) => {
     const from = index;
     const to = index + 1;
-    if (to > value.length - 1) return;
-    setValue((v) => arrayMoveImmutable(v, from, to));
+    if (to > photoPaths.length - 1) return;
+    setPhotoPaths((v) => arrayMoveImmutable(v, from, to));
+    setPhotoUrls((v) => arrayMoveImmutable(v, from, to));
   };
 
   return (
@@ -45,7 +75,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ onSubmit
           <Stack spacing="4">
             <FormControl>
               <FormLabel>Photos</FormLabel>
-              <UserPhotoPicker {...{ ref, value, onClick, onSelect, onUp, onDown, onRemove: remove }} />
+              <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
             </FormControl>
             <InputControl name="displayName" label="Display  Name" isRequired />
 
