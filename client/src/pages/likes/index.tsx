@@ -1,6 +1,7 @@
 import "swiper/css";
 import "swiper/css/effect-cards";
 
+import { gql } from "@apollo/client";
 import { Box } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { first } from "lodash-es";
@@ -13,36 +14,52 @@ import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
 import { UserSwipePadSlide } from "../../components/domain/UserSwipePadSlide";
 import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
+import { UserForUserSwipeSlideFragment, useUsersQuery } from "../../graphql/generated";
 import { routes } from "../../routes";
 
-const getRandomInt = (max: number, min = 0) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+// const getRandomInt = (max: number, min = 0) => {
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// };
+
+// const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/400/600`;
+
+// export type User = {
+//   id: string;
+//   displayName: string;
+//   topPhotoUrl: string;
+//   photoUrls: string[];
+// };
+
+// const users: User[] = Array.from({ length: 3 }).map((_, index) => {
+//   const topPhotoUrl = getImage();
+//   const restPhotoUrls = Array.from({ length: getRandomInt(5) }).map(() => getImage());
+//   return {
+//     id: index.toString(),
+//     displayName: `user-${index}`,
+//     topPhotoUrl,
+//     photoUrls: [topPhotoUrl, ...restPhotoUrls],
+//   };
+// });
+
+gql`
+  query Users {
+    users {
+      id
+      ...UserForUserSwipeSlide
+    }
+  }
+`;
+
+const useUsers = () => {
+  const { data, loading } = useUsersQuery();
+  const users = data?.users ?? [];
+  return { loading, users };
 };
-
-const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/400/600`;
-
-export type User = {
-  id: string;
-  displayName: string;
-  topPhotoUrl: string;
-  photoUrls: string[];
-};
-
-const users: User[] = Array.from({ length: 3 }).map((_, index) => {
-  const topPhotoUrl = getImage();
-  const restPhotoUrls = Array.from({ length: getRandomInt(5) }).map(() => getImage());
-  return {
-    id: index.toString(),
-    displayName: `user-${index}`,
-    topPhotoUrl,
-    photoUrls: [topPhotoUrl, ...restPhotoUrls],
-  };
-});
 
 type UseUserSwipeOptions = {
-  users: User[];
-  onLike: (user: User) => void;
-  onNope: (user: User) => void;
+  users: UserForUserSwipeSlideFragment[];
+  onLike: (user: UserForUserSwipeSlideFragment) => void;
+  onNope: (user: UserForUserSwipeSlideFragment) => void;
   onEnd: () => void;
 };
 
@@ -152,7 +169,9 @@ const AppSwiper = styled(Box)`
   }
 `;
 
-export const LikesPage: FC = () => {
+type LikesPageViewProps = { users: UserForUserSwipeSlideFragment[] };
+
+const LikesPageView: FC<LikesPageViewProps> = ({ users }) => {
   const navigate = useNavigate();
 
   const {
@@ -216,4 +235,10 @@ export const LikesPage: FC = () => {
       </Box>
     </Box>
   );
+};
+
+export const LikesPage: FC = () => {
+  const { loading, users } = useUsers();
+
+  return loading ? null : <LikesPageView users={users} />;
 };

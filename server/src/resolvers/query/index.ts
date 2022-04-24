@@ -10,4 +10,12 @@ export const Query: Resolvers["Query"] = {
 
     return usersCollection.findOneById(uid);
   },
+
+  users: (_parent, _args, context) => {
+    authorize(context);
+
+    const { usersCollection } = context.collections;
+
+    return usersCollection.findManyByQuery((ref) => ref.orderBy("createdAt", "desc"));
+  },
 };

@@ -1,11 +1,21 @@
+import { gql } from "@apollo/client";
 import { Box, Button, Center, HStack, Image, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { FC, useEffect, useMemo, useState } from "react";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
-import { User } from "../../pages/likes";
+import { User, UserForUserSwipeSlideFragment } from "../../graphql/generated";
 
-type UseUserSwipeSlideOptions = { user: User; onShow: () => void; onHide: () => void };
+gql`
+  fragment UserForUserSwipeSlide on User {
+    id
+    displayName
+    topPhotoUrl
+    photoUrls
+  }
+`;
+
+type UseUserSwipeSlideOptions = { user: UserForUserSwipeSlideFragment; onShow: () => void; onHide: () => void };
 
 const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) => {
   const swiper = useSwiper();
@@ -58,11 +68,11 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
     <Box h="full">
       <Stack h="full" py="10" alignItems="center" spacing="4" hidden={!isReady}>
         <Box h="75%">
-          <Image src={activePhoto} h="full" rounded="md" objectFit="contain" />
+          <Image src={activePhoto ?? undefined} h="full" rounded="md" objectFit="contain" />
         </Box>
 
         <Stack h="25%">
-          <RadioGroup value={activePhoto} onChange={setActivePhoto}>
+          <RadioGroup value={activePhoto ?? undefined} onChange={setActivePhoto}>
             <HStack justifyContent="center" className="swiper-no-swiping">
               {user.photoUrls.map((url) => (
                 <Radio key={url} value={url} size="lg" />

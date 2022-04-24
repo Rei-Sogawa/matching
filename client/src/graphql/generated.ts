@@ -66,12 +66,19 @@ export type User = {
   topPhotoUrl?: Maybe<Scalars['String']>;
 };
 
+export type UserForUserSwipeSlideFragment = { __typename?: 'User', id: string, displayName: string, topPhotoUrl?: string | null, photoUrls: Array<string> };
+
 export type MeForMeFragment = { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
+
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, topPhotoUrl?: string | null, photoUrls: Array<string> }> };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
@@ -87,6 +94,14 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
 
+export const UserForUserSwipeSlideFragmentDoc = gql`
+    fragment UserForUserSwipeSlide on User {
+  id
+  displayName
+  topPhotoUrl
+  photoUrls
+}
+    `;
 export const MeForMeFragmentDoc = gql`
     fragment MeForMe on Me {
   id
@@ -129,6 +144,41 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const UsersDocument = gql`
+    query Users {
+  users {
+    id
+    ...UserForUserSwipeSlide
+  }
+}
+    ${UserForUserSwipeSlideFragmentDoc}`;
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+      }
+export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+        }
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
 export const SignUpDocument = gql`
     mutation SignUp($input: SignUpInput!) {
   signUp(input: $input) {
