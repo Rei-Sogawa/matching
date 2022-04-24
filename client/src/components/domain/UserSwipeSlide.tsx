@@ -56,6 +56,9 @@ const useUserPhotos = (user: UserForUserSwipeSlideFragment) => {
     if (!isActive) return;
 
     (async () => {
+      setPhotoUrls([]);
+      setActivePhoto(undefined);
+
       // NOTE: 本当は server 側でここの処理してほしいけど、emulator で admin-sdk の storage 上手く扱えずに諦めた
       //       "bucket name not specified or invalid." となる
       const _photoUrls = await Promise.all(user.photoPaths.map((path) => getDownloadURL(ref(getStorage(), path))));
