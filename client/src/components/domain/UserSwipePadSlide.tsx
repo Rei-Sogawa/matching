@@ -1,3 +1,4 @@
+import { Box, Center } from "@chakra-ui/react";
 import { FC, useEffect } from "react";
 import { useSwiperSlide } from "swiper/react";
 
@@ -15,5 +16,11 @@ export const UserSwipePadSlide: FC<UserSwipePadSlideProps> = ({ onShow, onHide }
       onHide();
     }
   }, [isVisible]);
-  return null;
+  return (
+    <Box h="full">
+      <Center h="full" fontWeight="bold" fontSize="xl">
+        LOADING...
+      </Center>
+    </Box>
+  );
 };

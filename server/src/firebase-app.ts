@@ -23,7 +23,9 @@ if (process.env.NODE_ENV === "production") {
   process.env.FIRESTORE_EMULATOR_HOST = FIRESTORE_EMULATOR_HOST;
   process.env.FIREBASE_STORAGE_EMULATOR_HOST = FIREBASE_STORAGE_EMULATOR_HOST;
 
-  initializeApp();
+  initializeApp({
+    storageBucket: "playground-abc-firebase.appspot.com",
+  });
 }
 
 export const getDb = () => getFirestore();

@@ -33,6 +33,6 @@ input UpdateUserInput {
 type User {
   displayName: String!
   id: ID!
-  photoPaths: [String!]!
+  photoUrls: [String!]!
 }
 `;

@@ -106,7 +106,7 @@ const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => 
     if (dirtyUsers.length === 1) {
       setTimeout(() => {
         onEnd();
-      }, 500);
+      }, 750);
     }
 
     setActiveIndex(nextActiveIndex);

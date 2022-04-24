@@ -1,19 +1,17 @@
 import { gql } from "@apollo/client";
 import { Box, Button, Center, HStack, Image, Radio, RadioGroup, Stack } from "@chakra-ui/react";
-import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { head } from "lodash-es";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
 import { User, UserForUserSwipeSlideFragment } from "../../graphql/generated";
-import { useIsMounted } from "../../hooks/useIsMounted";
 
 gql`
   fragment UserForUserSwipeSlide on User {
     id
     displayName
-    photoPaths
+    photoUrls
   }
 `;
 
@@ -47,30 +45,15 @@ const useUserSwipeSlide = ({ onShow, onHide }: UseUserSwipeSlideOptions) => {
 
 const useUserPhotos = (user: UserForUserSwipeSlideFragment) => {
   const { isActive } = useSwiperSlide();
-  const isMounted = useIsMounted();
 
-  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [activePhoto, setActivePhoto] = useState<string>();
 
   useEffect(() => {
     if (!isActive) return;
-
-    (async () => {
-      setPhotoUrls([]);
-      setActivePhoto(undefined);
-
-      // NOTE: 本当は server 側でここの処理してほしいけど、emulator で admin-sdk の storage 上手く扱えずに諦めた
-      //       "bucket name not specified or invalid." となる
-      const _photoUrls = await Promise.all(user.photoPaths.map((path) => getDownloadURL(ref(getStorage(), path))));
-
-      if (!isMounted()) return;
-
-      setPhotoUrls(_photoUrls);
-      setActivePhoto(head(_photoUrls));
-    })();
+    setActivePhoto(head(user.photoUrls));
   }, [user, isActive]);
 
-  return { photoUrls, activePhoto, setActivePhoto };
+  return { activePhoto, setActivePhoto };
 };
 
 export type UserSwipeSlideProps = {
@@ -82,10 +65,9 @@ export type UserSwipeSlideProps = {
 
 export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow, onHide }) => {
   const { isActive, onLike, onNope } = useUserSwipeSlide({ onShow, onHide });
+  const { activePhoto, setActivePhoto } = useUserPhotos(user);
 
-  const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
-
-  const { photoUrls, activePhoto, setActivePhoto } = useUserPhotos(user);
+  const isReady = isActive && !loading;
 
   return (
     <Box h="full">
@@ -97,7 +79,7 @@ export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow,
         <Stack h="25%">
           <RadioGroup value={activePhoto} onChange={setActivePhoto}>
             <HStack justifyContent="center" className="swiper-no-swiping">
-              {photoUrls.map((url) => (
+              {user.photoUrls.map((url) => (
                 <Radio key={url} value={url} size="lg" />
               ))}
             </HStack>

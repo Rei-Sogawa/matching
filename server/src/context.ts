@@ -17,6 +17,7 @@ export const serverContext: Config<ExpressContext>["context"] = async ({ req }):
   const auth = getAuth();
   const db = getDb();
   const storage = getStorage();
+
   const collections = createCollections(db);
 
   const idToken = req.header("authorization")?.split("Bearer ")[1];
