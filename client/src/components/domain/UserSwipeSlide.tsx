@@ -1,27 +1,27 @@
 import { gql } from "@apollo/client";
 import { Box, Button, Center, HStack, Image, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import { head } from "lodash-es";
 import { FC, useEffect, useMemo, useState } from "react";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { useSwiper, useSwiperSlide } from "swiper/react";
 
 import { User, UserForUserSwipeSlideFragment } from "../../graphql/generated";
+import { useIsMounted } from "../../hooks/useIsMounted";
 
 gql`
   fragment UserForUserSwipeSlide on User {
     id
     displayName
-    topPhotoUrl
-    photoUrls
+    photoPaths
   }
 `;
 
-type UseUserSwipeSlideOptions = { user: UserForUserSwipeSlideFragment; onShow: () => void; onHide: () => void };
+type UseUserSwipeSlideOptions = { onShow: () => void; onHide: () => void };
 
-const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) => {
+const useUserSwipeSlide = ({ onShow, onHide }: UseUserSwipeSlideOptions) => {
   const swiper = useSwiper();
   const { isActive, isVisible } = useSwiperSlide();
-
-  const [activePhoto, setActivePhoto] = useState(user.topPhotoUrl);
 
   const onLike = () => {
     swiper.slidePrev(0);
@@ -38,18 +38,36 @@ const useUserSwipeSlide = ({ user, onShow, onHide }: UseUserSwipeSlideOptions) =
     }
   }, [isVisible]);
 
-  useEffect(() => {
-    if (!isActive) return;
-    setActivePhoto(user.topPhotoUrl);
-  }, [user, isActive]);
-
   return {
     isActive,
-    activePhoto,
-    setActivePhoto,
     onLike,
     onNope,
   };
+};
+
+const useUserPhotos = (user: UserForUserSwipeSlideFragment) => {
+  const { isActive } = useSwiperSlide();
+  const isMounted = useIsMounted();
+
+  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
+  const [activePhoto, setActivePhoto] = useState<string>();
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    (async () => {
+      // NOTE: 本当は server 側でここの処理してほしいけど、emulator で admin-sdk の storage 上手く扱えずに諦めた
+      //       "bucket name not specified or invalid." となる
+      const _photoUrls = await Promise.all(user.photoPaths.map((path) => getDownloadURL(ref(getStorage(), path))));
+
+      if (!isMounted()) return;
+
+      setPhotoUrls(_photoUrls);
+      setActivePhoto(head(_photoUrls));
+    })();
+  }, [user, isActive]);
+
+  return { photoUrls, activePhoto, setActivePhoto };
 };
 
 export type UserSwipeSlideProps = {
@@ -60,21 +78,23 @@ export type UserSwipeSlideProps = {
 };
 
 export const UserSwipeSlide: FC<UserSwipeSlideProps> = ({ loading, user, onShow, onHide }) => {
-  const { isActive, activePhoto, setActivePhoto, onLike, onNope } = useUserSwipeSlide({ user, onShow, onHide });
+  const { isActive, onLike, onNope } = useUserSwipeSlide({ onShow, onHide });
 
   const isReady = useMemo(() => isActive && !loading, [isActive, loading]);
+
+  const { photoUrls, activePhoto, setActivePhoto } = useUserPhotos(user);
 
   return (
     <Box h="full">
       <Stack h="full" py="10" alignItems="center" spacing="4" hidden={!isReady}>
         <Box h="75%">
-          <Image src={activePhoto ?? undefined} h="full" rounded="md" objectFit="contain" />
+          <Image src={activePhoto} h="full" rounded="md" objectFit="contain" />
         </Box>
 
         <Stack h="25%">
-          <RadioGroup value={activePhoto ?? undefined} onChange={setActivePhoto}>
+          <RadioGroup value={activePhoto} onChange={setActivePhoto}>
             <HStack justifyContent="center" className="swiper-no-swiping">
-              {user.photoUrls.map((url) => (
+              {photoUrls.map((url) => (
                 <Radio key={url} value={url} size="lg" />
               ))}
             </HStack>

@@ -7,15 +7,16 @@ type Me {
   id: ID!
   displayName: String!
   photoPaths: [String!]!
-  topPhotoUrl: String
-  photoUrls: [String!]!
+  # topPhotoUrl: String
+  # photoUrls: [String!]!
 }
 
 type User {
   id: ID!
   displayName: String!
-  topPhotoUrl: String
-  photoUrls: [String!]!
+  photoPaths: [String!]!
+  # topPhotoUrl: String
+  # photoUrls: [String!]!
 }
 
 #

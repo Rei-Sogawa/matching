@@ -21,8 +21,6 @@ export type Me = {
   displayName: Scalars['String'];
   id: Scalars['ID'];
   photoPaths: Array<Scalars['String']>;
-  photoUrls: Array<Scalars['String']>;
-  topPhotoUrl?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -62,11 +60,10 @@ export type User = {
   __typename?: 'User';
   displayName: Scalars['String'];
   id: Scalars['ID'];
-  photoUrls: Array<Scalars['String']>;
-  topPhotoUrl?: Maybe<Scalars['String']>;
+  photoPaths: Array<Scalars['String']>;
 };
 
-export type UserForUserSwipeSlideFragment = { __typename?: 'User', id: string, displayName: string, topPhotoUrl?: string | null, photoUrls: Array<string> };
+export type UserForUserSwipeSlideFragment = { __typename?: 'User', id: string, displayName: string, photoPaths: Array<string> };
 
 export type MeForMeFragment = { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> };
 
@@ -78,7 +75,7 @@ export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: strin
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, topPhotoUrl?: string | null, photoUrls: Array<string> }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, photoPaths: Array<string> }> };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
@@ -98,8 +95,7 @@ export const UserForUserSwipeSlideFragmentDoc = gql`
     fragment UserForUserSwipeSlide on User {
   id
   displayName
-  topPhotoUrl
-  photoUrls
+  photoPaths
 }
     `;
 export const MeForMeFragmentDoc = gql`

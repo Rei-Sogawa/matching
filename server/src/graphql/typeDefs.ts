@@ -7,8 +7,6 @@ type Me {
   displayName: String!
   id: ID!
   photoPaths: [String!]!
-  photoUrls: [String!]!
-  topPhotoUrl: String
 }
 
 type Mutation {
@@ -35,7 +33,6 @@ input UpdateUserInput {
 type User {
   displayName: String!
   id: ID!
-  photoUrls: [String!]!
-  topPhotoUrl: String
+  photoPaths: [String!]!
 }
 `;

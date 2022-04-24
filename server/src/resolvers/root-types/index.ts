@@ -1,40 +1,5 @@
-import "dotenv/config";
-
-import { addMinutes } from "date-fns";
-import { Storage } from "firebase-admin/storage";
-
 import { Resolvers } from "./../../graphql/generated";
 
-const getPublicUrl = (storage: Storage, path: string) => {
-  return storage.bucket().file(path).publicUrl();
-};
+export const Me: Resolvers["Me"] = {};
 
-const getSignedUrl = (storage: Storage, path: string) => {
-  return storage
-    .bucket()
-    .file(path)
-    .getSignedUrl({ action: "read", expires: addMinutes(new Date(), 15) })
-    .then((res) => res[0] as string);
-};
-
-export const Me: Resolvers["Me"] = {
-  topPhotoUrl: async (parent, _args, context) => {
-    const { storage } = context;
-    return parent.photoPaths.length > 0 ? getSignedUrl(storage, parent.photoPaths[0]) : null;
-  },
-  photoUrls: async (parent, _args, context) => {
-    const { storage } = context;
-    return Promise.all(parent.photoPaths.map((photoPath) => getSignedUrl(storage, photoPath)));
-  },
-};
-
-export const User: Resolvers["User"] = {
-  topPhotoUrl: async (parent, _args, context) => {
-    const { storage } = context;
-    return parent.photoPaths.length > 0 ? getSignedUrl(storage, parent.photoPaths[0]) : null;
-  },
-  photoUrls: async (parent, _args, context) => {
-    const { storage } = context;
-    return Promise.all(parent.photoPaths.map((photoPath) => getPublicUrl(storage, photoPath)));
-  },
-};
+export const User: Resolvers["User"] = {};

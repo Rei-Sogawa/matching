@@ -17,30 +17,6 @@ import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
 import { UserForUserSwipeSlideFragment, useUsersQuery } from "../../graphql/generated";
 import { routes } from "../../routes";
 
-// const getRandomInt = (max: number, min = 0) => {
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// };
-
-// const getImage = () => `https://picsum.photos/seed/${getRandomInt(100_000)}/400/600`;
-
-// export type User = {
-//   id: string;
-//   displayName: string;
-//   topPhotoUrl: string;
-//   photoUrls: string[];
-// };
-
-// const users: User[] = Array.from({ length: 3 }).map((_, index) => {
-//   const topPhotoUrl = getImage();
-//   const restPhotoUrls = Array.from({ length: getRandomInt(5) }).map(() => getImage());
-//   return {
-//     id: index.toString(),
-//     displayName: `user-${index}`,
-//     topPhotoUrl,
-//     photoUrls: [topPhotoUrl, ...restPhotoUrls],
-//   };
-// });
-
 gql`
   query Users {
     users {
@@ -224,15 +200,6 @@ const LikesPageView: FC<LikesPageViewProps> = ({ users }) => {
 
       {(toLike || liked) && <SwipeLikeBadge />}
       {(toNope || noped) && <SwipeNopeBadge />}
-
-      {/* NOTE: for cache */}
-      <Box hidden>
-        {users
-          .flatMap((user) => user.photoUrls)
-          .map((image) => (
-            <img key={image} src={image} />
-          ))}
-      </Box>
     </Box>
   );
 };
