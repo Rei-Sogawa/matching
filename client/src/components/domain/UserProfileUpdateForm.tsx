@@ -41,7 +41,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   }, [photoPaths.length]);
 
   const onPick = async (file: File) => {
-    const compressed = await imageCompression(file, { maxSizeMB: 1 });
+    const compressed = await imageCompression(file, { maxSizeMB: 1, maxWidthOrHeight: 500 });
     const storageRef = ref(getStorage(), userProfileStoragePath({ userId: me.id, profilePhotoId: v4() }));
     const res = await uploadBytes(storageRef, compressed, { contentType: compressed.type });
     setPhotoPaths((prev) => [...prev, res.ref.fullPath]);
