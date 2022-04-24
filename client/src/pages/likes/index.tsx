@@ -84,8 +84,10 @@ const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => 
 
       setTimeout(() => {
         setLiked(false);
-        setLoading(false);
       }, 500);
+      setTimeout(() => {
+        setLoading(false);
+      }, 750);
     }
     if (activeIndex < nextActiveIndex) {
       setLoading(true);
@@ -95,8 +97,10 @@ const useUserSwipe = ({ users, onLike, onNope, onEnd }: UseUserSwipeOptions) => 
 
       setTimeout(() => {
         setNoped(false);
-        setLoading(false);
       }, 500);
+      setTimeout(() => {
+        setLoading(false);
+      }, 750);
     }
 
     if (dirtyUsers.length === 1) {
