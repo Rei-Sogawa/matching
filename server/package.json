@@ -16,7 +16,7 @@
     "gql": "graphql-codegen"
   },
   "dependencies": {
-    "@rei-sogawa/unfireorm": "^1.0.6",
+    "@rei-sogawa/unfireorm": "^1.0.7",
     "@types/uuid": "^8.3.4",
     "apollo-server-core": "^3.6.7",
     "apollo-server-express": "^3.6.7",

@@ -13,6 +13,8 @@ const UserSchema = z.object({
 
 export type UserData = z.infer<typeof UserSchema>;
 
+export const userConverter = createConverter<UserData>();
+
 export class UserDoc extends FireDocument<UserData> implements UserData {
   displayName!: string;
   photoPaths!: string[];
@@ -20,7 +22,12 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   updatedAt!: Date;
 
   constructor(snap: FireDocumentInput<UserData>) {
-    super(snap, createConverter<UserData>());
+    super(snap, userConverter);
+  }
+
+  toData() {
+    const { id, ref, ...data } = this;
+    return UserSchema.parse(data);
   }
 
   static createData({ displayName, photoPaths }: Omit<UserData, "createdAt" | "updatedAt">): UserData {

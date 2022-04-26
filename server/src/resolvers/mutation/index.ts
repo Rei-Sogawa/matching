@@ -17,10 +17,11 @@ export const Mutation: Resolvers["Mutation"] = {
   async updateUser(_parent, args, context) {
     authorize(context);
 
-    const { photoPaths, displayName } = args.input;
+    const { displayName, photoPaths } = args.input;
+    const { authContext } = context;
     const { usersCollection } = context.collections;
 
-    const user = await usersCollection.findOneById(context.uid);
+    const user = await usersCollection.findOneById(authContext.uid);
     user.edit({ displayName, photoPaths });
     return user.update();
   },

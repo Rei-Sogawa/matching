@@ -1,7 +1,8 @@
-import { SetRequired } from "type-fest";
+import { DecodedIdToken } from "firebase-admin/auth";
+import { Merge } from "type-fest";
 
 import { Context } from "../context";
 
-export function authorize(context: Context): asserts context is SetRequired<Context, "uid"> {
-  if (!context.uid) throw new Error("Not Logged in");
+export function authorize(context: Context): asserts context is Merge<Context, { authContext: DecodedIdToken }> {
+  if (!context.authContext) throw new Error("Not Logged in");
 }

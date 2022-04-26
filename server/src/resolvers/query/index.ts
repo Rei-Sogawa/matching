@@ -5,10 +5,10 @@ export const Query: Resolvers["Query"] = {
   me: (_parent, _args, context) => {
     authorize(context);
 
-    const { uid } = context;
+    const { authContext } = context;
     const { usersCollection } = context.collections;
 
-    return usersCollection.findOneById(uid);
+    return usersCollection.findOneById(authContext.uid);
   },
 
   users: (_parent, _args, context) => {
