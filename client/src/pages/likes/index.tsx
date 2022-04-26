@@ -12,7 +12,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
-import { UserSwipePadSlide } from "../../components/domain/UserSwipePadSlide";
 import { UserSwipeSlide } from "../../components/domain/UserSwipeSlide";
 import { UserForUserSwipeSlideFragment, useUsersQuery } from "../../graphql/generated";
 import { routes } from "../../routes";
@@ -187,16 +186,12 @@ const LikesPageView: FC<LikesPageViewProps> = ({ users }) => {
         <Swiper speed={0} effect="cards" modules={[EffectCards]} onSwiper={onSwiper} onSlideChange={onSlideChange}>
           {indexes.map((index) => (
             <SwiperSlide key={index}>
-              {activeUser ? (
-                <UserSwipeSlide
-                  loading={loading}
-                  user={activeUser}
-                  onShow={() => onShowSlide(index)}
-                  onHide={() => onHideSlide(index)}
-                />
-              ) : (
-                <UserSwipePadSlide onShow={() => onShowSlide(index)} onHide={() => onHideSlide(index)} />
-              )}
+              <UserSwipeSlide
+                loading={loading}
+                user={activeUser}
+                onShow={() => onShowSlide(index)}
+                onHide={() => onHideSlide(index)}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

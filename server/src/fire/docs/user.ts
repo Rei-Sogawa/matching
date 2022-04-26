@@ -33,8 +33,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   static createData({ displayName, photoPaths }: Omit<UserData, "createdAt" | "updatedAt">): UserData {
     const createdAt = now();
     const userData = { displayName, photoPaths, createdAt, updatedAt: createdAt };
-    UserSchema.parse(userData);
-    return userData;
+    return UserSchema.parse(userData);
   }
 
   edit({ displayName, photoPaths }: Omit<UserData, "createdAt" | "updatedAt">) {
