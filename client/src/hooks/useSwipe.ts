@@ -9,10 +9,51 @@ type UseSwipeOptions = { length: number; onRight: () => void; onLeft: () => void
 export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) => {
   const [dragging, setDragging] = useState(false);
 
-  const gone = useRef(new Set());
+  const gone = useRef<number[]>([]);
+  const currentSwipeItem = length - gone.current.length - 1;
 
   const [toRight, setToRight] = useState(false);
   const [toLeft, setToLeft] = useState(false);
+
+  const doRight = (index: number) => {
+    gone.current.push(index);
+
+    springsApi.start((i) => {
+      if (index !== i) return;
+
+      const x = 200 + window.innerWidth;
+      const y = 0;
+      const rot = 20;
+
+      return {
+        x,
+        y,
+        rot,
+        delay: 0,
+        config: { duration: 500 },
+      };
+    });
+  };
+
+  const doLeft = (index: number) => {
+    gone.current.push(index);
+
+    springsApi.start((i) => {
+      if (index !== i) return;
+
+      const x = -1 * (200 + window.innerWidth);
+      const y = 0;
+      const rot = -20;
+
+      return {
+        x,
+        y,
+        rot,
+        delay: 0,
+        config: { duration: 500 },
+      };
+    });
+  };
 
   const [springs, springsApi] = useSprings(length, () => ({
     x: 0,
@@ -37,11 +78,12 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
     }
 
     const trigger = vx > 0.2;
+
     if (!active && trigger) {
-      gone.current.add(index);
+      gone.current.push(index);
       xDir > 0 ? onRight() : onLeft();
 
-      if (gone.current.size === length) {
+      if (gone.current.length === length) {
         onEnd();
       }
     }
@@ -49,7 +91,7 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
     springsApi.start((i) => {
       if (index !== i) return;
 
-      const isGone = gone.current.has(index);
+      const isGone = gone.current.includes(index);
 
       const x = isGone ? (200 + window.innerWidth) * xDir : active ? mx : 0;
       const y = active ? my : 0;
@@ -67,5 +109,5 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
 
   const style = (rot: SpringValue<number>) => ({ transform: interpolate([rot], transform) });
 
-  return { dragging, toRight, toLeft, swipeItems: springs, bind, style };
+  return { dragging, currentSwipeItem, doRight, doLeft, toRight, toLeft, swipeItems: springs, bind, style };
 };

@@ -55,8 +55,11 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
   };
 
   const {
+    currentSwipeItem,
     toRight: toLike,
     toLeft: toNope,
+    doRight: doLike,
+    doLeft: doNope,
     swipeItems,
     bind,
     style,
@@ -66,6 +69,16 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
     onLeft: onNope,
     onEnd,
   });
+
+  const onClickLike = () => {
+    doLike(currentSwipeItem);
+    onLike();
+  };
+
+  const onClickNope = () => {
+    doNope(currentSwipeItem);
+    onNope();
+  };
 
   return (
     <Stack position="relative" h="full">
@@ -80,7 +93,15 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
         ))}
       </Box>
       <HStack alignSelf="center" h="25%" spacing="8">
-        <IconButton w="20" h="20" fontSize="2xl" isRound icon={<BiDislike />} aria-label="dislike" onClick={onNope} />
+        <IconButton
+          w="20"
+          h="20"
+          fontSize="2xl"
+          isRound
+          icon={<BiDislike />}
+          aria-label="dislike"
+          onClick={onClickNope}
+        />
         <IconButton
           w="20"
           h="20"
@@ -89,7 +110,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
           colorScheme="primary"
           icon={<BiLike />}
           aria-label="like"
-          onClick={onLike}
+          onClick={onClickLike}
         />
       </HStack>
 
