@@ -9,7 +9,13 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
-    const userData = UserDoc.createData({ nickName: "ニックネーム", age: 30, livingPref: "東京", photoPaths: [] });
+    const userData = UserDoc.createData({
+      gender: "MALE",
+      nickName: "ニックネーム",
+      age: 30,
+      livingPref: "東京",
+      photoPaths: [],
+    });
     return usersCollection.insert({ id: uid, ...userData });
   },
 

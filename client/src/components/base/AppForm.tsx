@@ -1,38 +1,58 @@
 // SEE: https://final-form.org/docs/react-final-form/examples/chakra
 
-import { FormControl, FormControlProps, FormErrorMessage, FormLabel, Input, InputProps } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormControlProps,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  InputProps,
+  RadioGroup,
+} from "@chakra-ui/react";
 import { FC } from "react";
-import { useField } from "react-final-form";
+import { FieldInputProps, FieldMetaState, useField } from "react-final-form";
 
-type ControlProps = { name: string } & FormControlProps;
+export type ControlProps = { name: string } & FormControlProps;
 
-const Control: FC<ControlProps> = ({ name, ...rest }) => {
+export const Control: FC<ControlProps> = ({ name, ...rest }) => {
   const {
     meta: { error, touched },
   } = useField(name, { subscription: { touched: true, error: true } });
   return <FormControl {...rest} isInvalid={error && touched} />;
 };
 
-type ErrorProps = { name: string };
+export type ErrorProps = { name: string };
 
-const Error: FC<ErrorProps> = ({ name }) => {
+export const Error: FC<ErrorProps> = ({ name }) => {
   const {
     meta: { error },
   } = useField(name, { subscription: { error: true } });
-  return <FormErrorMessage fontSize="sm">{error}</FormErrorMessage>;
+  return <FormErrorMessage>{error}</FormErrorMessage>;
 };
 
-type InputControlProps = { name: string; label: string } & InputProps;
+export type InputControlProps = { name: string; label: string } & InputProps;
 
 export const InputControl: FC<InputControlProps> = ({ name, label, ...rest }) => {
   const { input, meta } = useField(name);
   return (
     <Control name={name}>
-      <FormLabel htmlFor={name} fontWeight="semibold" fontSize="sm">
-        {label}
-      </FormLabel>
-      <Input {...input} isInvalid={meta.error && meta.touched} id={name} placeholder={label} bg="white" {...rest} />
+      <FormLabel htmlFor={name}>{label}</FormLabel>
+      <Input {...input} id={name} placeholder={label} isInvalid={meta.invalid && meta.touched} {...rest} />
       <Error name={name} />
     </Control>
   );
 };
+
+export type AdaptedRadioGroupProps = {
+  input: FieldInputProps<any, HTMLElement>;
+  meta: FieldMetaState<any>;
+  label: string;
+};
+
+export const AdaptedRadioGroup: FC<AdaptedRadioGroupProps> = ({ input, meta, label, children }) => (
+  <FormControl isInvalid={meta.invalid && meta.touched}>
+    <FormLabel htmlFor={input.name}>{label}</FormLabel>
+    <RadioGroup {...input}>{children}</RadioGroup>
+    <FormErrorMessage fontSize="sm">{meta.error}</FormErrorMessage>
+  </FormControl>
+);

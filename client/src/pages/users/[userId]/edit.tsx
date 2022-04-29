@@ -6,6 +6,7 @@ import { AppLink } from "../../../components/base/AppLink";
 import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
 import { useMe } from "../../../contexts/Me";
 import { useUpdateUserMutation } from "../../../graphql/generated";
+import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 
 gql`
@@ -27,8 +28,8 @@ export const UserEditPage: FC = () => {
   };
 
   return (
-    <Box h="full" bg="white">
-      <Container h="full" py="10">
+    <AppLayout>
+      <Container>
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
             プロフィール編集
@@ -41,6 +42,6 @@ export const UserEditPage: FC = () => {
           </AppLink>
         </Stack>
       </Container>
-    </Box>
+    </AppLayout>
   );
 };

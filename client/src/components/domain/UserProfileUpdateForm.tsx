@@ -1,20 +1,22 @@
-import { Button, Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react";
+import { Box, Button, Divider, FormControl, FormLabel, HStack, Radio, Stack } from "@chakra-ui/react";
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { FC, useEffect, useMemo, useState } from "react";
-import { Form } from "react-final-form";
+import { Field, Form } from "react-final-form";
 import { v4 } from "uuid";
 
 import { useMe } from "../../contexts/Me";
-import { InputControl } from "../base/AppForm";
+import { Gender } from "../../graphql/generated";
+import { AdaptedRadioGroup, InputControl } from "../base/AppForm";
 import { UserPhotoPicker } from "./UserPhotoPicker";
 
 const userProfileStoragePath = pathBuilder("users/:userId/profilePhotos/:profilePhotoId");
 
 type FormValues = {
   photoPaths: string[];
+  gender: Gender;
   nickName: string;
   age: number;
   livingPref: string;
@@ -31,7 +33,12 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   const me = useMe();
 
   const finalInitialValues: FinalFormValues = useMemo(
-    () => ({ nickName: initialValues.nickName, age: initialValues.age, livingPref: initialValues.livingPref }),
+    () => ({
+      gender: initialValues.gender,
+      nickName: initialValues.nickName,
+      age: initialValues.age,
+      livingPref: initialValues.livingPref,
+    }),
     []
   );
 
@@ -86,11 +93,17 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>
-              <FormLabel fontWeight="semibold" fontSize="sm">
-                プロフィール写真
-              </FormLabel>
+              <FormLabel>プロフィール写真</FormLabel>
               <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
             </FormControl>
+            <Field name="gender" label="性別" component={AdaptedRadioGroup}>
+              <HStack>
+                {/* NOTE: Unable to preventDefault inside passive event listener invocation. エラーが発生する。公式でも発生している
+                          https://github.com/chakra-ui/chakra-ui/issues/2925 */}
+                <Radio value="MALE">男性</Radio>
+                <Radio value="FEMALE">女性</Radio>
+              </HStack>
+            </Field>
             <InputControl name="nickName" label="ニックネーム" isRequired />
             <InputControl name="age" label="年齢" type="number" min="18" isRequired />
             <InputControl name="livingPref" label="居住地" isRequired />

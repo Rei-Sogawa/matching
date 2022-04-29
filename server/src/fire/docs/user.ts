@@ -5,6 +5,7 @@ import { now } from "../../utils/now";
 import { createConverter } from "../helpers/create-converter";
 
 const UserSchema = z.object({
+  gender: z.enum(["MALE", "FEMALE"]),
   nickName: z.string().min(1),
   age: z.number().int().min(18),
   livingPref: z.string().min(1),
@@ -18,6 +19,7 @@ export type UserData = z.infer<typeof UserSchema>;
 export const userConverter = createConverter<UserData>();
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
+  gender!: "MALE" | "FEMALE";
   nickName!: string;
   age!: number;
   livingPref!: string;

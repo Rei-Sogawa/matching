@@ -8,6 +8,7 @@ import { useAuth } from "./Auth";
 gql`
   fragment MeForMe on Me {
     id
+    gender
     nickName
     age
     livingPref

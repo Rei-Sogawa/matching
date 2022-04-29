@@ -1,10 +1,19 @@
 scalar DateTime
 
 #
+# ENUM
+#
+enum Gender {
+  MALE
+  FEMALE
+}
+
+#
 # ROOT
 #
 type Me {
   id: ID!
+  gender: Gender!
   nickName: String!
   age: Int!
   livingPref: String!
@@ -14,6 +23,7 @@ type Me {
 
 type User {
   id: ID!
+  gender: Gender!
   nickName: String!
   age: Int!
   livingPref: String!
@@ -37,6 +47,7 @@ input SignUpInput {
 }
 
 input UpdateUserInput {
+  gender: Gender!
   nickName: String!
   age: Int!
   livingPref: String!

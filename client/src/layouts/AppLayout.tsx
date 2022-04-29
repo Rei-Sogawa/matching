@@ -3,7 +3,7 @@ import { FC } from "react";
 
 export const AppLayout: FC = ({ children }) => {
   return (
-    <Box h="full" bg="white">
+    <Box h="full" py="10" overflow="auto" bg="white">
       {children}
     </Box>
   );

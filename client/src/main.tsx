@@ -21,6 +21,17 @@ const extendedTheme = extendTheme({
   },
   components: {
     Steps,
+    FormLabel: {
+      baseStyle: {
+        fontWeight: "semibold",
+        fontSize: "sm",
+      },
+    },
+    FormErrorMessage: {
+      baseStyle: {
+        fontSize: "sm",
+      },
+    },
   },
 });
 

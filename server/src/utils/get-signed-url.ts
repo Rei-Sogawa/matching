@@ -9,6 +9,6 @@ export const getSignedUrl = async (storage: Storage, path: string) => {
   return storage
     .bucket()
     .file(path)
-    .getSignedUrl({ action: "read", expires: addMinutes(new Date(), 5) })
+    .getSignedUrl({ action: "read", expires: addMinutes(new Date(), 60) })
     .then((res) => res[0] as string);
 };

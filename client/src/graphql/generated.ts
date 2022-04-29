@@ -16,9 +16,16 @@ export type Scalars = {
   DateTime: string;
 };
 
+export const Gender = {
+  Female: 'FEMALE',
+  Male: 'MALE'
+} as const;
+
+export type Gender = typeof Gender[keyof typeof Gender];
 export type Me = {
   __typename?: 'Me';
   age: Scalars['Int'];
+  gender: Gender;
   id: Scalars['ID'];
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
@@ -55,6 +62,7 @@ export type SignUpInput = {
 
 export type UpdateUserInput = {
   age: Scalars['Int'];
+  gender: Gender;
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoPaths: Array<Scalars['String']>;
@@ -63,6 +71,7 @@ export type UpdateUserInput = {
 export type User = {
   __typename?: 'User';
   age: Scalars['Int'];
+  gender: Gender;
   id: Scalars['ID'];
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
@@ -71,12 +80,12 @@ export type User = {
 
 export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type MeForMeFragment = { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
+export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export type UsersForLikesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -88,14 +97,14 @@ export type SignUpMutationVariables = Exact<{
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
@@ -109,6 +118,7 @@ export const UserForUserSwipeCardFragmentDoc = gql`
 export const MeForMeFragmentDoc = gql`
     fragment MeForMe on Me {
   id
+  gender
   nickName
   age
   livingPref

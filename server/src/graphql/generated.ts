@@ -17,9 +17,16 @@ export type Scalars = {
   DateTime: Date;
 };
 
+export const Gender = {
+  Female: 'FEMALE',
+  Male: 'MALE'
+} as const;
+
+export type Gender = typeof Gender[keyof typeof Gender];
 export type Me = {
   __typename?: 'Me';
   age: Scalars['Int'];
+  gender: Gender;
   id: Scalars['ID'];
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
@@ -56,6 +63,7 @@ export type SignUpInput = {
 
 export type UpdateUserInput = {
   age: Scalars['Int'];
+  gender: Gender;
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoPaths: Array<Scalars['String']>;
@@ -64,6 +72,7 @@ export type UpdateUserInput = {
 export type User = {
   __typename?: 'User';
   age: Scalars['Int'];
+  gender: Gender;
   id: Scalars['ID'];
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
@@ -142,6 +151,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  Gender: Gender;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Me: ResolverTypeWrapper<UserDoc>;
@@ -174,6 +184,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type MeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Me'] = ResolversParentTypes['Me']> = ResolversObject<{
   age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  gender?: Resolver<ResolversTypes['Gender'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   livingPref?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nickName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -194,6 +205,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  gender?: Resolver<ResolversTypes['Gender'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   livingPref?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nickName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

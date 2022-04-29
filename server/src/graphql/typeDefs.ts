@@ -3,8 +3,14 @@ import { gql } from "apollo-server-express";
 export const typeDefs = gql`
 scalar DateTime
 
+enum Gender {
+  FEMALE
+  MALE
+}
+
 type Me {
   age: Int!
+  gender: Gender!
   id: ID!
   livingPref: String!
   nickName: String!
@@ -29,6 +35,7 @@ input SignUpInput {
 
 input UpdateUserInput {
   age: Int!
+  gender: Gender!
   livingPref: String!
   nickName: String!
   photoPaths: [String!]!
@@ -36,6 +43,7 @@ input UpdateUserInput {
 
 type User {
   age: Int!
+  gender: Gender!
   id: ID!
   livingPref: String!
   nickName: String!
