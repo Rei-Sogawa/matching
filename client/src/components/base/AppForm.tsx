@@ -19,7 +19,11 @@ const Error: FC<ErrorProps> = ({ name }) => {
   const {
     meta: { error },
   } = useField(name, { subscription: { error: true } });
-  return <FormErrorMessage>{error}</FormErrorMessage>;
+  return (
+    <FormErrorMessage fontWeight="semibold" fontSize="sm">
+      {error}
+    </FormErrorMessage>
+  );
 };
 
 type InputControlProps = { name: string; label: string } & InputProps;
@@ -28,7 +32,9 @@ export const InputControl: FC<InputControlProps> = ({ name, label, ...rest }) =>
   const { input, meta } = useField(name);
   return (
     <Control name={name}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
+      <FormLabel htmlFor={name} fontWeight="semibold" fontSize="sm">
+        {label}
+      </FormLabel>
       <Input {...input} isInvalid={meta.error && meta.touched} id={name} placeholder={label} bg="white" {...rest} />
       <Error name={name} />
     </Control>

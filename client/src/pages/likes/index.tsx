@@ -9,7 +9,7 @@ import { SwipeCardList } from "../../components/case/SwipeCardList";
 import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
 import { UserSwipeCard } from "../../components/domain/UserSwipeCard";
-import { UserForUserSwipeCardFragment, useUsersQuery } from "../../graphql/generated";
+import { UserForUserSwipeCardFragment, useUsersForLikesQuery } from "../../graphql/generated";
 import { useSwipeItems } from "../../hooks/useSwipeItems";
 import { routes } from "../../routes";
 
@@ -23,7 +23,7 @@ gql`
 `;
 
 const useUsers = () => {
-  const { data, loading } = useUsersQuery();
+  const { data, loading } = useUsersForLikesQuery();
   const users = data?.users ?? [];
   return { loading, users };
 };

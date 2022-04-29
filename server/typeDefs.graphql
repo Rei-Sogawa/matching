@@ -5,13 +5,18 @@ scalar DateTime
 #
 type Me {
   id: ID!
-  displayName: String!
+  nickName: String!
+  age: Int!
+  livingPref: String!
   photoPaths: [String!]!
+  photoUrls: [String!]!
 }
 
 type User {
   id: ID!
-  displayName: String!
+  nickName: String!
+  age: Int!
+  livingPref: String!
   photoUrls: [String!]!
 }
 
@@ -27,13 +32,14 @@ type Query {
 # MUTATION
 #
 input SignUpInput {
-  displayName: String!
   email: String!
   password: String!
 }
 
 input UpdateUserInput {
-  displayName: String!
+  nickName: String!
+  age: Int!
+  livingPref: String!
   photoPaths: [String!]!
 }
 

@@ -24,14 +24,14 @@ export const LogInForm: FC<LogInFormProps> = ({ onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <Stack>
-              <InputControl name="email" label="Email" type="email" isRequired />
-              <InputControl name="password" label="Password" type="password" autoComplete="on" isRequired />
+              <InputControl name="email" label="Eメール" type="email" isRequired />
+              <InputControl name="password" label="パスワード" type="password" autoComplete="on" isRequired />
             </Stack>
 
             <Divider />
 
             <Button type="submit" colorScheme="primary" disabled={submitting}>
-              Log In
+              ログイン
             </Button>
           </Stack>
         </form>

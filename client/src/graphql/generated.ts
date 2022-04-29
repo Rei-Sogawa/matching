@@ -18,9 +18,12 @@ export type Scalars = {
 
 export type Me = {
   __typename?: 'Me';
-  displayName: Scalars['String'];
+  age: Scalars['Int'];
   id: Scalars['ID'];
+  livingPref: Scalars['String'];
+  nickName: Scalars['String'];
   photoPaths: Array<Scalars['String']>;
+  photoUrls: Array<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -46,77 +49,71 @@ export type Query = {
 };
 
 export type SignUpInput = {
-  displayName: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
 };
 
 export type UpdateUserInput = {
-  displayName: Scalars['String'];
+  age: Scalars['Int'];
+  livingPref: Scalars['String'];
+  nickName: Scalars['String'];
   photoPaths: Array<Scalars['String']>;
 };
 
 export type User = {
   __typename?: 'User';
-  displayName: Scalars['String'];
+  age: Scalars['Int'];
   id: Scalars['ID'];
+  livingPref: Scalars['String'];
+  nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
 };
 
-export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> };
+export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type UserForUserSwipeSlideFragment = { __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> };
-
-export type MeForMeFragment = { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> };
+export type MeForMeFragment = { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
-
-export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> }> };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export type UsersForLikesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersForLikesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> }> };
+export type UsersForLikesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
+export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
   id
-  displayName
-  photoUrls
-}
-    `;
-export const UserForUserSwipeSlideFragmentDoc = gql`
-    fragment UserForUserSwipeSlide on User {
-  id
-  displayName
+  nickName
+  age
+  livingPref
   photoUrls
 }
     `;
 export const MeForMeFragmentDoc = gql`
     fragment MeForMe on Me {
   id
-  displayName
+  nickName
+  age
+  livingPref
   photoPaths
+  photoUrls
 }
     `;
 export const MeDocument = gql`
@@ -154,41 +151,6 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const UsersDocument = gql`
-    query Users {
-  users {
-    id
-    ...UserForUserSwipeSlide
-  }
-}
-    ${UserForUserSwipeSlideFragmentDoc}`;
-
-/**
- * __useUsersQuery__
- *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-      }
-export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-        }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
 export const UsersForLikesDocument = gql`
     query UsersForLikes {
   users {

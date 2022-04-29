@@ -4,24 +4,23 @@ import { Resolvers } from "./../../graphql/generated";
 
 export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
-    const { displayName, email, password } = args.input;
+    const { email, password } = args.input;
     const { auth } = context;
     const { usersCollection } = context.collections;
 
-    const { uid } = await auth.createUser({ displayName, email, password });
-    const userData = UserDoc.createData({ displayName, photoPaths: [] });
+    const { uid } = await auth.createUser({ email, password });
+    const userData = UserDoc.createData({ nickName: "ニックネーム", age: 30, livingPref: "東京", photoPaths: [] });
     return usersCollection.insert({ id: uid, ...userData });
   },
 
   async updateUser(_parent, args, context) {
     authorize(context);
 
-    const { displayName, photoPaths } = args.input;
     const { authContext } = context;
     const { usersCollection } = context.collections;
 
     const user = await usersCollection.findOneById(authContext.uid);
-    user.edit({ displayName, photoPaths });
+    user.edit(args.input);
     return user.update();
   },
 };

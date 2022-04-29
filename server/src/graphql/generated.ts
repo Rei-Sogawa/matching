@@ -19,9 +19,12 @@ export type Scalars = {
 
 export type Me = {
   __typename?: 'Me';
-  displayName: Scalars['String'];
+  age: Scalars['Int'];
   id: Scalars['ID'];
+  livingPref: Scalars['String'];
+  nickName: Scalars['String'];
   photoPaths: Array<Scalars['String']>;
+  photoUrls: Array<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -47,20 +50,23 @@ export type Query = {
 };
 
 export type SignUpInput = {
-  displayName: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
 };
 
 export type UpdateUserInput = {
-  displayName: Scalars['String'];
+  age: Scalars['Int'];
+  livingPref: Scalars['String'];
+  nickName: Scalars['String'];
   photoPaths: Array<Scalars['String']>;
 };
 
 export type User = {
   __typename?: 'User';
-  displayName: Scalars['String'];
+  age: Scalars['Int'];
   id: Scalars['ID'];
+  livingPref: Scalars['String'];
+  nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
 };
 
@@ -137,6 +143,7 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Me: ResolverTypeWrapper<UserDoc>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -151,6 +158,7 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   DateTime: Scalars['DateTime'];
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Me: UserDoc;
   Mutation: {};
   Query: {};
@@ -165,9 +173,12 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type MeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Me'] = ResolversParentTypes['Me']> = ResolversObject<{
-  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  livingPref?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nickName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   photoPaths?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  photoUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -182,8 +193,10 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
-  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  livingPref?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nickName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   photoUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

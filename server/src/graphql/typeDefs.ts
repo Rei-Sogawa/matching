@@ -4,9 +4,12 @@ export const typeDefs = gql`
 scalar DateTime
 
 type Me {
-  displayName: String!
+  age: Int!
   id: ID!
+  livingPref: String!
+  nickName: String!
   photoPaths: [String!]!
+  photoUrls: [String!]!
 }
 
 type Mutation {
@@ -20,19 +23,22 @@ type Query {
 }
 
 input SignUpInput {
-  displayName: String!
   email: String!
   password: String!
 }
 
 input UpdateUserInput {
-  displayName: String!
+  age: Int!
+  livingPref: String!
+  nickName: String!
   photoPaths: [String!]!
 }
 
 type User {
-  displayName: String!
+  age: Int!
   id: ID!
+  livingPref: String!
+  nickName: String!
   photoUrls: [String!]!
 }
 `;

@@ -8,9 +8,11 @@ import { useAuth } from "./Auth";
 gql`
   fragment MeForMe on Me {
     id
-    displayName
-
+    nickName
+    age
+    livingPref
     photoPaths
+    photoUrls
   }
 `;
 

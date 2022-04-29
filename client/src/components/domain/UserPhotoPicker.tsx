@@ -60,7 +60,7 @@ export const UserPhotoPicker: FC<UserPhotoPickerProps> = ({ photoUrls, onPick, o
     <Stack>
       <Box>
         <Button size="sm" onClick={onClick} leftIcon={<BiUpload />}>
-          Upload
+          写真を追加する
         </Button>
         <Input type="file" accept="image/*" hidden ref={ref} onChange={onChange} />
         <Box>

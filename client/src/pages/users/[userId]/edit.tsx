@@ -22,8 +22,8 @@ export const UserEditPage: FC = () => {
 
   const [updateUserMutation] = useUpdateUserMutation();
 
-  const updateUser: UserProfileUpdateFormProps["onSubmit"] = async ({ photoPaths, displayName }) => {
-    await updateUserMutation({ variables: { input: { photoPaths, displayName } } });
+  const updateUser: UserProfileUpdateFormProps["onSubmit"] = async (values) => {
+    await updateUserMutation({ variables: { input: values } });
   };
 
   return (
@@ -31,16 +31,13 @@ export const UserEditPage: FC = () => {
       <Container h="full" py="10">
         <Stack>
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-            Update Profile
+            プロフィール編集
           </Box>
 
-          <UserProfileUpdateForm
-            initialValues={{ photoPaths: me.photoPaths, displayName: me.displayName }}
-            onSubmit={updateUser}
-          />
+          <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
 
           <AppLink to={routes["/"].path()} maxW="max-content">
-            Back
+            戻る
           </AppLink>
         </Stack>
       </Container>

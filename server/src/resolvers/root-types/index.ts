@@ -1,23 +1,16 @@
-import { addMinutes } from "date-fns";
-
+import { getSignedUrl } from "../../utils/get-signed-url";
 import { Resolvers } from "./../../graphql/generated";
 
-export const Me: Resolvers["Me"] = {};
+export const Me: Resolvers["Me"] = {
+  photoUrls: async (parent, _args, context) => {
+    const { storage } = context;
+    return parent.photoPaths.map((path) => getSignedUrl(storage, path));
+  },
+};
 
 export const User: Resolvers["User"] = {
   photoUrls: async (parent, _args, context) => {
     const { storage } = context;
-
-    if (process.env.NODE_ENV !== "production") {
-      return parent.photoPaths.map((path) => storage.bucket().file(path).publicUrl());
-    }
-
-    return parent.photoPaths.map((path) =>
-      storage
-        .bucket()
-        .file(path)
-        .getSignedUrl({ action: "read", expires: addMinutes(new Date(), 15) })
-        .then((res) => res[0] as string)
-    );
+    return parent.photoPaths.map((path) => getSignedUrl(storage, path));
   },
 };

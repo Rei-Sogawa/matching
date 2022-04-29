@@ -24,8 +24,8 @@ export const LogInPage: FC = () => {
           </Box>
           <LogInForm onSubmit={logIn} />
           <HStack>
-            <AppLink to={routes["/sign-up"].path()}>Sign Up</AppLink>
-            <AppLink to={routes["/"].path()}>Back</AppLink>
+            <AppLink to={routes["/sign-up"].path()}>サインアップ</AppLink>
+            <AppLink to={routes["/"].path()}>戻る</AppLink>
           </HStack>
         </Stack>
       </Container>

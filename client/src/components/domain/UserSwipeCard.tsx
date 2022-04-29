@@ -7,7 +7,9 @@ import { UserForUserSwipeCardFragment } from "../../graphql/generated";
 gql`
   fragment UserForUserSwipeCard on User {
     id
-    displayName
+    nickName
+    age
+    livingPref
     photoUrls
   }
 `;
@@ -35,6 +37,7 @@ export const UserSwipeCard: FC<UserSwipeCardProps> = ({ user }) => {
         w="auto"
         h="full"
         rounded="md"
+        bg="gray.50"
         boxShadow="md"
       />
 
@@ -49,14 +52,14 @@ export const UserSwipeCard: FC<UserSwipeCardProps> = ({ user }) => {
 
       <Box position="absolute" top="70%" left="4" p="4">
         <Box color="white" fontSize="2xl" fontWeight="bold">
-          {user.displayName}
+          {user.nickName}
         </Box>
         <HStack spacing="4">
           <Box color="white" fontSize="xl" fontWeight="bold">
-            25歳
+            {user.age}歳
           </Box>
           <Box color="white" fontSize="xl" fontWeight="bold">
-            石川
+            {user.livingPref}
           </Box>
         </HStack>
       </Box>

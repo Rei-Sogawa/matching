@@ -24,8 +24,8 @@ export const SignUpPage: FC = () => {
 
   const [signUpMutate] = useSignUpMutation();
 
-  const signUp: SignUpFormProps["onSubmit"] = async ({ displayName, email, password }) => {
-    const { data } = await signUpMutate({ variables: { input: { displayName, email, password } } });
+  const signUp: SignUpFormProps["onSubmit"] = async ({ email, password }) => {
+    const { data } = await signUpMutate({ variables: { input: { email, password } } });
 
     assertIsDefined(data);
     const redirect = routes["/users/:userId/edit"].path({ userId: data.signUp.id });
@@ -45,8 +45,8 @@ export const SignUpPage: FC = () => {
           <SignUpForm onSubmit={signUp} />
 
           <HStack>
-            <AppLink to={routes["/log-in"].path()}>Log In</AppLink>
-            <AppLink to={routes["/"].path()}>Back</AppLink>
+            <AppLink to={routes["/log-in"].path()}>ログイン</AppLink>
+            <AppLink to={routes["/"].path()}>戻る</AppLink>
           </HStack>
         </Stack>
       </Container>

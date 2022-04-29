@@ -15,7 +15,9 @@ const userProfileStoragePath = pathBuilder("users/:userId/profilePhotos/:profile
 
 type FormValues = {
   photoPaths: string[];
-  displayName: string;
+  nickName: string;
+  age: number;
+  livingPref: string;
 };
 
 type FinalFormValues = Omit<FormValues, "photoPaths">;
@@ -28,7 +30,10 @@ export type UserProfileUpdateFormProps = {
 export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialValues, onSubmit }) => {
   const me = useMe();
 
-  const finalInitialValues: FinalFormValues = useMemo(() => ({ displayName: initialValues.displayName }), []);
+  const finalInitialValues: FinalFormValues = useMemo(
+    () => ({ nickName: initialValues.nickName, age: initialValues.age, livingPref: initialValues.livingPref }),
+    []
+  );
 
   const [photoPaths, setPhotoPaths] = useState<string[]>(initialValues.photoPaths);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
@@ -81,15 +86,19 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>
-              <FormLabel>Photos</FormLabel>
+              <FormLabel fontWeight="semibold" fontSize="sm">
+                プロフィール写真
+              </FormLabel>
               <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
             </FormControl>
-            <InputControl name="displayName" label="Display  Name" isRequired />
+            <InputControl name="nickName" label="ニックネーム" isRequired />
+            <InputControl name="age" label="年齢" type="number" min="18" isRequired />
+            <InputControl name="livingPref" label="居住地" isRequired />
 
             <Divider />
 
             <Button type="submit" colorScheme="primary" disabled={submitting}>
-              Save
+              保存
             </Button>
           </Stack>
         </form>
