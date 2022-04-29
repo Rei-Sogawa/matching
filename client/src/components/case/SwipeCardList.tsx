@@ -5,8 +5,8 @@ import { animated } from "react-spring";
 const _SwipeCardList: FC<BoxProps> = (props) => (
   <Box
     position="absolute"
-    w="full"
     h="full"
+    w="full"
     display="flex"
     alignItems="center"
     justifyContent="center"

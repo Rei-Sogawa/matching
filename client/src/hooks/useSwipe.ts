@@ -15,11 +15,11 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
   const [toRight, setToRight] = useState(false);
   const [toLeft, setToLeft] = useState(false);
 
-  const doRight = (index: number) => {
-    gone.current.push(index);
+  const doRight = () => {
+    gone.current.push(currentSwipeItem);
 
     springsApi.start((i) => {
-      if (index !== i) return;
+      if (currentSwipeItem !== i) return;
 
       const x = 200 + window.innerWidth;
       const y = 0;
@@ -33,13 +33,16 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
         config: { duration: 500 },
       };
     });
+
+    onRight();
+    if (gone.current.length === length) onEnd();
   };
 
-  const doLeft = (index: number) => {
-    gone.current.push(index);
+  const doLeft = () => {
+    gone.current.push(currentSwipeItem);
 
     springsApi.start((i) => {
-      if (index !== i) return;
+      if (currentSwipeItem !== i) return;
 
       const x = -1 * (200 + window.innerWidth);
       const y = 0;
@@ -53,9 +56,12 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
         config: { duration: 500 },
       };
     });
+
+    onRight();
+    if (gone.current.length === length) onEnd();
   };
 
-  const [springs, springsApi] = useSprings(length, () => ({
+  const [springs, springsApi] = useSprings(length, (i) => ({
     x: 0,
     y: 0,
     rot: 0,

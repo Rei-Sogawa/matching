@@ -27,26 +27,27 @@ export const UserSwipeCard: FC<UserSwipeCardProps> = ({ user }) => {
   };
 
   return (
-    <Flex
-      position="relative"
-      h="full"
-      sx={{ aspectRatio: "4 / 5" }}
-      rounded="md"
-      boxShadow="md"
-      backgroundImage={`url(${user.photoUrls[activePhotoIndex]})`}
-      backgroundSize="100% 100%"
-      backgroundRepeat="no-repeat"
-    >
-      <Box w="50%" onClick={onClickLeftHalf} />
-      <Box w="50%" onClick={onClickRightHalf} />
+    <Flex position="relative" h="full" p="2">
+      <Image
+        src={user.photoUrls[activePhotoIndex]}
+        htmlWidth="400px"
+        htmlHeight="500px"
+        w="auto"
+        h="full"
+        rounded="md"
+        boxShadow="md"
+      />
 
-      <HStack position="absolute" top="2" right="2" left="2">
+      <Box position="absolute" left="0" w="50%" h="full" onClick={onClickLeftHalf} />
+      <Box position="absolute" left="50%" w="50%" h="full" onClick={onClickRightHalf} />
+
+      <HStack position="absolute" top="4" right="4" left="4">
         {user.photoUrls.map((_, i) => (
           <Badge key={i} flex="1" h="1" bg={i === activePhotoIndex ? "white" : "gray.400"} />
         ))}
       </HStack>
 
-      <Box position="absolute" top="70%" left="2" p="4">
+      <Box position="absolute" top="70%" left="4" p="4">
         <Box color="white" fontSize="2xl" fontWeight="bold">
           {user.displayName}
         </Box>
@@ -58,12 +59,6 @@ export const UserSwipeCard: FC<UserSwipeCardProps> = ({ user }) => {
             石川
           </Box>
         </HStack>
-      </Box>
-
-      <Box position="absolute" display="none">
-        {user.photoUrls.map((url) => (
-          <Image key={url} src={url} />
-        ))}
       </Box>
     </Flex>
   );
