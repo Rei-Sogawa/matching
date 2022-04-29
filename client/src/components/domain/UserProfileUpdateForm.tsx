@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormLabel, HStack, Radio, Stack } from "@chakra-ui/react";
+import { Button, Divider, FormControl, FormLabel, HStack, Radio, Stack } from "@chakra-ui/react";
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
@@ -82,7 +82,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   };
 
   const handleFinalSubmit = async (v: FinalFormValues) => {
-    await onSubmit({ ...v, photoPaths });
+    await onSubmit({ ...v, age: Number(v.age), photoPaths });
   };
 
   return (
@@ -98,7 +98,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
             </FormControl>
             <Field name="gender" label="性別" component={AdaptedRadioGroup}>
               <HStack>
-                {/* NOTE: Unable to preventDefault inside passive event listener invocation. エラーが発生する。公式でも発生している
+                {/* NOTE: Unable to preventDefault inside passive event listener invocation. エラーが発生する。公式でも発生する
                           https://github.com/chakra-ui/chakra-ui/issues/2925 */}
                 <Radio value="MALE">男性</Radio>
                 <Radio value="FEMALE">女性</Radio>

@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
-import { Center, Flex, HStack, IconButton, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Center, HStack, IconButton, Spinner, Stack } from "@chakra-ui/react";
 import { FC, useEffect, useMemo, useState } from "react";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 import { SwipeCardItem } from "../../components/case/SwipeCardItem";
-import { SwipeCardList } from "../../components/case/SwipeCardList";
+import { SwipeCardItemWrapper } from "../../components/case/SwipeCardItemWrapper";
 import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
 import { UserSwipeCard } from "../../components/domain/UserSwipeCard";
@@ -84,15 +84,15 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
   return (
     <>
       <Stack position="relative" h="full" justifyContent="center" hidden={loading}>
-        <Flex h="70%" w="full" position="relative">
+        <Box h="70%" w="full" position="relative">
           {swipeItems.map(({ x, y, rot }, i) => (
-            <SwipeCardList key={i} style={{ x, y }}>
+            <SwipeCardItemWrapper key={i} style={{ x, y }}>
               <SwipeCardItem {...bind(i)} style={style(rot)}>
                 <UserSwipeCard user={users[i]} />
               </SwipeCardItem>
-            </SwipeCardList>
+            </SwipeCardItemWrapper>
           ))}
-        </Flex>
+        </Box>
 
         <HStack alignSelf="center" h="20%" spacing="8">
           <IconButton w="20" h="20" fontSize="2xl" isRound icon={<BiDislike />} aria-label="dislike" onClick={doNope} />
