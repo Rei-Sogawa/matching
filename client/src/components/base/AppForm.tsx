@@ -19,11 +19,7 @@ const Error: FC<ErrorProps> = ({ name }) => {
   const {
     meta: { error },
   } = useField(name, { subscription: { error: true } });
-  return (
-    <FormErrorMessage fontWeight="semibold" fontSize="sm">
-      {error}
-    </FormErrorMessage>
-  );
+  return <FormErrorMessage fontSize="sm">{error}</FormErrorMessage>;
 };
 
 type InputControlProps = { name: string; label: string } & InputProps;

@@ -18,7 +18,7 @@ export const IndexPage: FC = () => {
   return loading ? null : (
     <Stack h="full" bg="white" justifyContent="center" alignItems="center">
       <Box fontWeight="bold" fontSize="2xl">
-        {data?.me.displayName || "Not Logged In"}
+        {data?.me.nickName || "Not Logged In"}
       </Box>
       {uid ? (
         <HStack>
