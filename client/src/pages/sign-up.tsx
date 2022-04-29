@@ -8,6 +8,7 @@ import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
 import { useSignUpMutation } from "../graphql/generated";
 import { routes } from "../routes";
+import { assertIsDefined } from "../utils/assert-is-defined";
 
 gql`
   mutation SignUp($input: SignUpInput!) {
@@ -26,8 +27,8 @@ export const SignUpPage: FC = () => {
   const signUp: SignUpFormProps["onSubmit"] = async ({ displayName, email, password }) => {
     const { data } = await signUpMutate({ variables: { input: { displayName, email, password } } });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const redirect = routes["/users/:userId/edit"].path({ userId: data!.signUp.id });
+    assertIsDefined(data);
+    const redirect = routes["/users/:userId/edit"].path({ userId: data.signUp.id });
     setRedirect(redirect);
 
     await signInWithEmailAndPassword(getAuth(), email, password);

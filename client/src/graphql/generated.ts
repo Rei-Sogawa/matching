@@ -63,6 +63,8 @@ export type User = {
   photoUrls: Array<Scalars['String']>;
 };
 
+export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> };
+
 export type UserForUserSwipeSlideFragment = { __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> };
 
 export type MeForMeFragment = { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> };
@@ -76,6 +78,11 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> }> };
+
+export type UsersForLikesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersForLikesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, displayName: string, photoUrls: Array<string> }> };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
@@ -91,6 +98,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, displayName: string, photoPaths: Array<string> } };
 
+export const UserForUserSwipeCardFragmentDoc = gql`
+    fragment UserForUserSwipeCard on User {
+  id
+  displayName
+  photoUrls
+}
+    `;
 export const UserForUserSwipeSlideFragmentDoc = gql`
     fragment UserForUserSwipeSlide on User {
   id
@@ -175,6 +189,41 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const UsersForLikesDocument = gql`
+    query UsersForLikes {
+  users {
+    id
+    ...UserForUserSwipeCard
+  }
+}
+    ${UserForUserSwipeCardFragmentDoc}`;
+
+/**
+ * __useUsersForLikesQuery__
+ *
+ * To run a query within a React component, call `useUsersForLikesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersForLikesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersForLikesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersForLikesQuery(baseOptions?: Apollo.QueryHookOptions<UsersForLikesQuery, UsersForLikesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersForLikesQuery, UsersForLikesQueryVariables>(UsersForLikesDocument, options);
+      }
+export function useUsersForLikesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersForLikesQuery, UsersForLikesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersForLikesQuery, UsersForLikesQueryVariables>(UsersForLikesDocument, options);
+        }
+export type UsersForLikesQueryHookResult = ReturnType<typeof useUsersForLikesQuery>;
+export type UsersForLikesLazyQueryHookResult = ReturnType<typeof useUsersForLikesLazyQuery>;
+export type UsersForLikesQueryResult = Apollo.QueryResult<UsersForLikesQuery, UsersForLikesQueryVariables>;
 export const SignUpDocument = gql`
     mutation SignUp($input: SignUpInput!) {
   signUp(input: $input) {

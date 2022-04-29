@@ -9,7 +9,6 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection } = context.collections;
 
     const { uid } = await auth.createUser({ displayName, email, password });
-
     const userData = UserDoc.createData({ displayName, photoPaths: [] });
     return usersCollection.insert({ id: uid, ...userData });
   },
