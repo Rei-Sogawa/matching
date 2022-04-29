@@ -6,7 +6,7 @@ const transform = (rot: number) => `rotateZ(${rot}deg)`;
 
 type UseSwipeOptions = { length: number; onRight: () => void; onLeft: () => void; onEnd: () => void };
 
-export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) => {
+export const useSwipeItems = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) => {
   const [dragging, setDragging] = useState(false);
 
   const gone = useRef<number[]>([]);
@@ -57,11 +57,11 @@ export const useSwipe = ({ length, onRight, onLeft, onEnd }: UseSwipeOptions) =>
       };
     });
 
-    onRight();
+    onLeft();
     if (gone.current.length === length) onEnd();
   };
 
-  const [springs, springsApi] = useSprings(length, (i) => ({
+  const [springs, springsApi] = useSprings(length, () => ({
     x: 0,
     y: 0,
     rot: 0,

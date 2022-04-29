@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Flex, HStack, IconButton, Stack } from "@chakra-ui/react";
+import { Center, Flex, HStack, IconButton, Spinner, Stack } from "@chakra-ui/react";
 import { FC, useEffect, useMemo, useState } from "react";
 import { BiDislike, BiLike } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import { SwipeLikeBadge } from "../../components/case/SwipeLikeBadge";
 import { SwipeNopeBadge } from "../../components/case/SwipeNopeBadge";
 import { UserSwipeCard } from "../../components/domain/UserSwipeCard";
 import { UserForUserSwipeCardFragment, useUsersQuery } from "../../graphql/generated";
-import { useSwipe } from "../../hooks/useSwipe";
+import { useSwipeItems } from "../../hooks/useSwipeItems";
 import { routes } from "../../routes";
 
 gql`
@@ -74,7 +74,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
     swipeItems,
     bind,
     style,
-  } = useSwipe({
+  } = useSwipeItems({
     length: users.length,
     onRight: onLike,
     onLeft: onNope,
@@ -82,34 +82,40 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ users }) => {
   });
 
   return (
-    <Stack position="relative" h="full" justifyContent="center" hidden={loading}>
-      <Flex h="70%" w="full" position="relative">
-        {swipeItems.map(({ x, y, rot }, i) => (
-          <SwipeCardList key={i} style={{ x, y }}>
-            <SwipeCardItem {...bind(i)} style={style(rot)}>
-              <UserSwipeCard user={users[i]} />
-            </SwipeCardItem>
-          </SwipeCardList>
-        ))}
-      </Flex>
+    <>
+      <Stack position="relative" h="full" justifyContent="center" hidden={loading}>
+        <Flex h="70%" w="full" position="relative">
+          {swipeItems.map(({ x, y, rot }, i) => (
+            <SwipeCardList key={i} style={{ x, y }}>
+              <SwipeCardItem {...bind(i)} style={style(rot)}>
+                <UserSwipeCard user={users[i]} />
+              </SwipeCardItem>
+            </SwipeCardList>
+          ))}
+        </Flex>
 
-      <HStack alignSelf="center" h="20%" spacing="8">
-        <IconButton w="20" h="20" fontSize="2xl" isRound icon={<BiDislike />} aria-label="dislike" onClick={doNope} />
-        <IconButton
-          w="20"
-          h="20"
-          fontSize="2xl"
-          isRound
-          colorScheme="primary"
-          icon={<BiLike />}
-          aria-label="like"
-          onClick={doLike}
-        />
-      </HStack>
+        <HStack alignSelf="center" h="20%" spacing="8">
+          <IconButton w="20" h="20" fontSize="2xl" isRound icon={<BiDislike />} aria-label="dislike" onClick={doNope} />
+          <IconButton
+            w="20"
+            h="20"
+            fontSize="2xl"
+            isRound
+            colorScheme="primary"
+            icon={<BiLike />}
+            aria-label="like"
+            onClick={doLike}
+          />
+        </HStack>
 
-      {(toLike || liked) && <SwipeLikeBadge />}
-      {(toNope || noped) && <SwipeNopeBadge />}
-    </Stack>
+        {(toLike || liked) && <SwipeLikeBadge />}
+        {(toNope || noped) && <SwipeNopeBadge />}
+      </Stack>
+
+      <Center h="full" hidden={!loading}>
+        <Spinner size="lg" />
+      </Center>
+    </>
   );
 };
 
