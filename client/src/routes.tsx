@@ -1,19 +1,18 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
 import { Authenticated } from "./middleware/Authenticated";
-import { AuthorizeUser } from "./middleware/AuthorizeUser";
 import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
 import { IndexPage } from "./pages/Index";
 import { LogInPage } from "./pages/log-in";
-import { MyPage } from "./pages/my-page";
+import { MyPagePage } from "./pages/my-page";
+import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
 import { SignUpPage } from "./pages/sign-up";
-import { UserEditPage } from "./pages/users/[userId]/edit";
 
 const INDEX_PATH = "/";
 const SIGN_UP_PATH = "/sign-up";
 const LOG_IN_PATH = "/log-in";
 const MY_PAGE = "/my-page";
-const USER_EDIT_PATH = "/users/:userId/edit";
+const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -31,14 +30,14 @@ export const routes = {
     Component: LogInPage,
     middleware: [BeforeAuthenticated],
   },
-  [USER_EDIT_PATH]: {
-    path: pathBuilder(USER_EDIT_PATH),
-    Component: UserEditPage,
-    middleware: [Authenticated, AuthorizeUser],
-  },
   [MY_PAGE]: {
     path: pathBuilder(MY_PAGE),
-    Component: MyPage,
+    Component: MyPagePage,
+    middleware: [Authenticated],
+  },
+  [MY_PAGE_PROFILE_EDIT]: {
+    path: pathBuilder(MY_PAGE_PROFILE_EDIT),
+    Component: MyPageProfileEditPage,
     middleware: [Authenticated],
   },
 };

@@ -103,7 +103,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
       onSubmit={handleFinalSubmit}
       render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
-          <Stack spacing="4">
+          <Stack spacing="6">
             <FormControl>
               <FormLabel>プロフィール写真</FormLabel>
               <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />

@@ -6,7 +6,7 @@ import { AppMenu } from "./AppMenu";
 
 export const AppLayout: FC = ({ children }) => {
   return (
-    <Stack h="full">
+    <Stack h="full" spacing="0">
       <AppMain>{children}</AppMain>
       <AppMenu />
     </Stack>
