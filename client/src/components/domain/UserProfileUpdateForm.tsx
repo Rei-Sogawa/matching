@@ -85,7 +85,12 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
 
   const handleFinalSubmit = async (v: FinalFormValues) => {
     if (photoPaths.length < 1) {
-      toast({ title: "プロフィール写真が設定されていません。", status: "error", position: "top-right" });
+      toast({
+        title: "プロフィール写真が設定されていません。",
+        status: "error",
+        position: "top-right",
+        duration: 5000,
+      });
       return;
     }
 

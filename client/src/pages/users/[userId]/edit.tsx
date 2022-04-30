@@ -27,7 +27,7 @@ export const UserEditPage: FC = () => {
 
   const updateUser: UserProfileUpdateFormProps["onSubmit"] = async (values) => {
     await updateUserMutation({ variables: { input: values } });
-    toast({ title: "更新しました。", status: "success", position: "top-right" });
+    toast({ title: "更新しました。", status: "success", position: "top-right", duration: 2_500 });
   };
 
   return (
