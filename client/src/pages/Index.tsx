@@ -26,9 +26,9 @@ export const IndexPage: FC = () => {
           <AppLink to={routes["/users/:userId/edit"].path({ userId: uid })}>Edit</AppLink>
           <AppLink
             to="#"
-            onClick={async (e) => {
+            onClick={(e) => {
               e.preventDefault();
-              await logOut();
+              logOut();
             }}
           >
             LogOut

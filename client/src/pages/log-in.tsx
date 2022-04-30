@@ -1,4 +1,4 @@
-import { Box, Container, HStack, Stack } from "@chakra-ui/react";
+import { Box, Container, Stack } from "@chakra-ui/react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,11 +22,10 @@ export const LogInPage: FC = () => {
           <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
             Matching!
           </Box>
+
           <LogInForm onSubmit={logIn} />
-          <HStack>
-            <AppLink to={routes["/sign-up"].path()}>サインアップ</AppLink>
-            <AppLink to={routes["/"].path()}>戻る</AppLink>
-          </HStack>
+
+          <AppLink to={routes["/sign-up"].path()}>サインアップはこちら</AppLink>
         </Stack>
       </Container>
     </Box>

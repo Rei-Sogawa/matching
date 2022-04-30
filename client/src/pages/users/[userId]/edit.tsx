@@ -39,10 +39,6 @@ export const UserEditPage: FC = () => {
           </Box>
 
           <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
-
-          <AppLink to={routes["/"].path()} maxW="max-content">
-            戻る
-          </AppLink>
         </Stack>
       </Container>
     </AppLayout>

@@ -44,10 +44,7 @@ export const SignUpPage: FC = () => {
 
           <SignUpForm onSubmit={signUp} />
 
-          <HStack>
-            <AppLink to={routes["/log-in"].path()}>ログイン</AppLink>
-            <AppLink to={routes["/"].path()}>戻る</AppLink>
-          </HStack>
+          <AppLink to={routes["/log-in"].path()}>ログインはこちら</AppLink>
         </Stack>
       </Container>
     </Box>
