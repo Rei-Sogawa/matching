@@ -1,4 +1,4 @@
-import { Button, Divider, FormControl, FormLabel, HStack, Radio, Stack } from "@chakra-ui/react";
+import { Button, Divider, FormControl, FormLabel, HStack, Radio, Stack, useToast } from "@chakra-ui/react";
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
@@ -30,6 +30,8 @@ export type UserProfileUpdateFormProps = {
 };
 
 export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialValues, onSubmit }) => {
+  const toast = useToast();
+
   const me = useMe();
 
   const finalInitialValues: FinalFormValues = useMemo(
@@ -82,6 +84,11 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   };
 
   const handleFinalSubmit = async (v: FinalFormValues) => {
+    if (photoPaths.length < 1) {
+      toast({ title: "プロフィール写真が設定されていません。", status: "error", position: "top-right" });
+      return;
+    }
+
     await onSubmit({ ...v, age: Number(v.age), photoPaths });
   };
 
@@ -98,8 +105,8 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
             </FormControl>
             <Field name="gender" label="性別" component={AdaptedRadioGroup}>
               <HStack>
-                {/* NOTE: Unable to preventDefault inside passive event listener invocation. エラーが発生する。公式でも発生する
-                          https://github.com/chakra-ui/chakra-ui/issues/2925 */}
+                {/* FIXME: Unable to preventDefault inside passive event listener invocation. が発生する。公式でも発生している
+                           https://github.com/chakra-ui/chakra-ui/issues/2925 */}
                 <Radio value="MALE">男性</Radio>
                 <Radio value="FEMALE">女性</Radio>
               </HStack>

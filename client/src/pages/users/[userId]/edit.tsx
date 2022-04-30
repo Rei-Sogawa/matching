@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Box, Container, Stack } from "@chakra-ui/react";
+import { Box, Container, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 
 import { AppLink } from "../../../components/base/AppLink";
@@ -19,12 +19,15 @@ gql`
 `;
 
 export const UserEditPage: FC = () => {
+  const toast = useToast();
+
   const me = useMe();
 
   const [updateUserMutation] = useUpdateUserMutation();
 
   const updateUser: UserProfileUpdateFormProps["onSubmit"] = async (values) => {
     await updateUserMutation({ variables: { input: values } });
+    toast({ title: "更新しました。", status: "success", position: "top-right" });
   };
 
   return (
