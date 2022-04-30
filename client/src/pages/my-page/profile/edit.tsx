@@ -35,26 +35,24 @@ export const MyPageProfileEditPage: FC = () => {
 
   return (
     <AppLayout>
-      <Container>
-        <Stack spacing="6">
-          <Flex w="full" position="relative" justifyContent="center" alignItems="center">
-            <IconButton
-              position="absolute"
-              left="0"
-              size="sm"
-              variant="ghost"
-              aria-label="back"
-              icon={<BiArrowBack fontSize="28px" />}
-              onClick={() => navigate(routes["/my-page"].path())}
-            />
-            <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-              プロフィール編集
-            </Box>
-          </Flex>
+      <Stack spacing="6">
+        <Flex w="full" position="relative" justifyContent="center" alignItems="center">
+          <IconButton
+            position="absolute"
+            left="0"
+            size="sm"
+            variant="ghost"
+            aria-label="back"
+            icon={<BiArrowBack fontSize="28px" />}
+            onClick={() => navigate(routes["/my-page"].path())}
+          />
+          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
+            プロフィール編集
+          </Box>
+        </Flex>
 
-          <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
-        </Stack>
-      </Container>
+        <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
+      </Stack>
     </AppLayout>
   );
 };

@@ -25,10 +25,12 @@ export const SignUpPage: FC = () => {
   const [signUpMutate] = useSignUpMutation();
 
   const signUp: SignUpFormProps["onSubmit"] = async ({ email, password }) => {
-    const { data } = await signUpMutate({ variables: { input: { email, password } } });
+    const { data } = await signUpMutate({
+      variables: { input: { email, password } },
+    });
 
     assertIsDefined(data);
-    const redirect = routes["/users/:userId/edit"].path({ userId: data.signUp.id });
+    const redirect = routes["/my-page/profile/edit"].path();
     setRedirect(redirect);
 
     await signInWithEmailAndPassword(getAuth(), email, password);

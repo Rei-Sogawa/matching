@@ -23,7 +23,7 @@ export const AppMenu: FC = () => {
         borderColor="gray.200"
         bg="gray.50"
       >
-        <Container h="full" bg="white">
+        <Container h="full">
           <HStack h="full" justifyContent="space-between" alignItems="center">
             <Flex direction="column" alignItems="center" cursor="pointer">
               <BiSearch fontSize="28px" />
