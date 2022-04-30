@@ -3,25 +3,26 @@ import { FC } from "react";
 import { BiLike, BiMessageRoundedDots, BiSearch, BiUser } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
-import { useMe } from "../contexts/Me";
 import { routes } from "../routes";
 
 export const AppMenu: FC = () => {
   const navigate = useNavigate();
 
-  const me = useMe();
-
   return (
     <Box h="16">
-      <Box w="full" h="16" position="fixed" bottom="0" zIndex={100} borderTopWidth="1px" borderColor="gray.200">
+      <Box
+        w="full"
+        h="16"
+        position="fixed"
+        bottom="0"
+        zIndex="100"
+        borderTopWidth="1px"
+        borderColor="gray.200"
+        bg="gray.50"
+      >
         <Container h="full" bg="white">
           <HStack h="full" justifyContent="space-between" alignItems="center">
-            <Flex
-              direction="column"
-              alignItems="center"
-              cursor="pointer"
-              onClick={() => navigate(routes["/users/:userId/edit"].path({ userId: me.id }))}
-            >
+            <Flex direction="column" alignItems="center" cursor="pointer">
               <BiSearch fontSize="28px" />
               <Box fontWeight="bold" fontSize="xs">
                 さがす
@@ -39,7 +40,12 @@ export const AppMenu: FC = () => {
                 メッセージ
               </Box>
             </Flex>
-            <Flex direction="column" alignItems="center" cursor="pointer">
+            <Flex
+              direction="column"
+              alignItems="center"
+              cursor="pointer"
+              onClick={() => navigate(routes["/my-page"].path())}
+            >
               <BiUser fontSize="28px" />
               <Box fontWeight="bold" fontSize="xs">
                 その他

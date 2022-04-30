@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
-import { Box, Container, Stack, useToast } from "@chakra-ui/react";
+import { Box, Container, Flex, IconButton, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
+import { BiArrowBack } from "react-icons/bi";
 
 import { AppLink } from "../../../components/base/AppLink";
 import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
@@ -34,9 +35,19 @@ export const UserEditPage: FC = () => {
     <AppLayout>
       <Container>
         <Stack>
-          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-            プロフィール編集
-          </Box>
+          <Flex w="full" position="relative" justifyContent="center" alignItems="center">
+            <IconButton
+              position="absolute"
+              left="0"
+              size="sm"
+              variant="ghost"
+              aria-label="back"
+              icon={<BiArrowBack fontSize="28px" />}
+            />
+            <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
+              プロフィール編集
+            </Box>
+          </Flex>
 
           <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
         </Stack>
