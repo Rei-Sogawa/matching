@@ -3,7 +3,7 @@ import { FC } from "react";
 
 export const AppMain: FC = ({ children }) => {
   return (
-    <Box py="6" overflow="auto">
+    <Box py="8" overflow="auto">
       <Container>{children}</Container>
     </Box>
   );

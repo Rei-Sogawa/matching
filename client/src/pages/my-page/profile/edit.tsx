@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Box, Container, Flex, IconButton, Stack, useToast } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";

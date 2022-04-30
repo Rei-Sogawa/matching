@@ -1,17 +1,21 @@
 import { Box, Container, Flex, HStack } from "@chakra-ui/react";
+import { head } from "lodash-es";
 import { FC } from "react";
 import { BiLike, BiMessageRoundedDots, BiSearch, BiUser } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useMe } from "../contexts/Me";
 import { routes } from "../routes";
 
 export const AppMenu: FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const rootPath = location.pathname.split("/")[1];
 
   return (
     <>
-      <Box flexShrink="0" w="full" h="16"></Box>
+      <Box flexShrink="0" w="full" h="16" />
 
       <Box
         w="full"
@@ -25,25 +29,41 @@ export const AppMenu: FC = () => {
       >
         <Container h="full">
           <HStack h="full" justifyContent="space-between" alignItems="center">
-            <Flex direction="column" alignItems="center" cursor="pointer">
+            <Flex
+              color={rootPath === "" ? "black" : "gray.500"}
+              direction="column"
+              alignItems="center"
+              cursor="pointer"
+            >
               <BiSearch fontSize="28px" />
               <Box fontWeight="bold" fontSize="xs">
                 さがす
               </Box>
             </Flex>
-            <Flex direction="column" alignItems="center" cursor="pointer">
+            <Flex
+              color={rootPath === "" ? "black" : "gray.500"}
+              direction="column"
+              alignItems="center"
+              cursor="pointer"
+            >
               <BiLike fontSize="28px" />
               <Box fontWeight="bold" fontSize="xs">
                 いいね
               </Box>
             </Flex>
-            <Flex direction="column" alignItems="center" cursor="pointer">
+            <Flex
+              color={rootPath === "" ? "black" : "gray.500"}
+              direction="column"
+              alignItems="center"
+              cursor="pointer"
+            >
               <BiMessageRoundedDots fontSize="28px" />
               <Box fontWeight="bold" fontSize="xs">
                 メッセージ
               </Box>
             </Flex>
             <Flex
+              color={rootPath === "my-page" ? "black" : "gray.500"}
               direction="column"
               alignItems="center"
               cursor="pointer"
