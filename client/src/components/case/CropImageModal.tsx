@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { FC, useEffect, useRef, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
@@ -84,10 +85,13 @@ type CropImageModalProps = {
 };
 
 export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose, onOk }) => {
+  const toast = useToast();
+
   const { imageRef, crop, setCrop, getCroppedImage } = useCropImage(file);
   const { objectURL, setObject } = useObjectURL(file);
 
   const handleOk = async () => {
+    if (!crop) toast({ title: "範囲が選択されていません。", status: "error", position: "top-right" });
     onOk(await getCroppedImage());
     onClose();
     setCrop(undefined);
@@ -101,7 +105,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Crop</ModalHeader>
+        <ModalHeader>切り抜き</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {objectURL ? (
@@ -114,7 +118,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
         </ModalBody>
         <ModalFooter>
           <Button onClick={handleOk} disabled={!crop}>
-            OK
+            完了
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -3,9 +3,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
     "source.addMissingImports": true
-  },
-  "workbench.colorCustomizations": {
-    "activityBar.background": "#e5e7eb",
-    "activityBar.foreground": "#000000"
   }
 }

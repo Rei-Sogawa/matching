@@ -11,7 +11,7 @@ type UserPhotoCardProps = { photoUrl: string; onUp: () => void; onDown: () => vo
 const UserPhotoCard: FC<UserPhotoCardProps> = ({ photoUrl, onUp, onDown, onRemove }) => {
   return (
     <Stack>
-      <Image src={photoUrl} rounded="md" htmlWidth="160px" htmlHeight="200px" />
+      <Image src={photoUrl} rounded="md" htmlWidth="160px" htmlHeight="200px" w="160px" h="200px" />
       <HStack justifyContent="center">
         <Button size="sm" onClick={onUp}>
           <ArrowBackIcon />
