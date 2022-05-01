@@ -28,6 +28,7 @@
     "firebase-admin": "^10.0.2",
     "graphql": "^16.3.0",
     "graphql-playground-middleware-express": "^1.7.23",
+    "lodash": "^4.17.21",
     "ramda": "^0.28.0",
     "uuid": "^8.3.2",
     "zod": "^3.14.4"
@@ -38,6 +39,7 @@
     "@graphql-codegen/typescript": "^2.4.8",
     "@graphql-codegen/typescript-resolvers": "^2.6.1",
     "@ngneat/falso": "^5.0.0",
+    "@types/lodash": "^4.14.182",
     "@types/ramda": "^0.28.7",
     "@types/request": "^2.48.8",
     "@typescript-eslint/eslint-plugin": "^5.17.0",

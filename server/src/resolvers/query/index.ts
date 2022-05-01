@@ -1,3 +1,5 @@
+import { shuffle, take, xor } from "lodash";
+
 import { authorize } from "../../authorize";
 import { Resolvers } from "../../graphql/generated";
 
@@ -11,19 +13,15 @@ export const Query: Resolvers["Query"] = {
     return usersCollection.findOneById(authContext.uid);
   },
 
-  usersStat: (_parent, _args, context) => {
+  randomUsers: async (_parent, args, context) => {
     authorize(context);
 
-    const { usersStatShards } = context.collections;
+    const { size, excludeIds } = args.input;
+    const { usersCollection, usersStatShards } = context.collections;
 
-    return usersStatShards.get();
-  },
+    const usersStat = await usersStatShards.get();
+    const randomUserIds = take(shuffle(xor(usersStat.userIds, excludeIds)), size);
 
-  users: (_parent, args, context) => {
-    authorize(context);
-
-    const { usersCollection } = context.collections;
-
-    return args.input.ids.map((id) => usersCollection.findOneById(id));
+    return randomUserIds.map((id) => usersCollection.findOneById(id));
   },
 };

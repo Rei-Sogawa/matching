@@ -25,8 +25,12 @@ type Mutation {
 
 type Query {
   me: Me!
-  users(input: UsersInput!): [User!]!
-  usersStat: UsersStat!
+  randomUsers(input: RandomUsersInput!): [User!]!
+}
+
+input RandomUsersInput {
+  excludeIds: [ID!]!
+  size: Int!
 }
 
 input SignUpInput {
@@ -49,13 +53,5 @@ type User {
   livingPref: String!
   nickName: String!
   photoUrls: [String!]!
-}
-
-input UsersInput {
-  ids: [String!]!
-}
-
-type UsersStat {
-  userIds: [String!]!
 }
 `;

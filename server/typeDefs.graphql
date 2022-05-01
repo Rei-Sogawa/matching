@@ -9,7 +9,7 @@ enum Gender {
 }
 
 #
-# ROOT
+# NODE
 #
 type Me {
   id: ID!
@@ -30,21 +30,17 @@ type User {
   photoUrls: [String!]!
 }
 
-type UsersStat {
-  userIds: [String!]!
-}
-
 #
 # QUERY
 #
-input UsersInput {
-  ids: [String!]!
+input RandomUsersInput {
+  size: Int!
+  excludeIds: [ID!]!
 }
 
 type Query {
   me: Me!
-  usersStat: UsersStat!
-  users(input: UsersInput!): [User!]!
+  randomUsers(input: RandomUsersInput!): [User!]!
 }
 
 #
