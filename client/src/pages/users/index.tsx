@@ -31,13 +31,21 @@ export const UsersPage: FC = () => {
 
   const users = data?.randomUsers;
 
+  const onLoadMore = () => {
+    fetchMore({
+      variables: { input: { size: SIZE, excludeIds: users?.map((user) => user.id) ?? [] } },
+    });
+  };
+
   return (
     <AppLayout>
       <Stack>
         <Box>UsersPage</Box>
         <Box>{JSON.stringify(users?.map((user) => user.livingPref))}</Box>
         <Flex justifyContent="center">
-          <Button>More</Button>
+          <Button variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+            もっと見る
+          </Button>
         </Flex>
       </Stack>
     </AppLayout>
