@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { FC } from "react";
 
 import { AppMain } from "./AppMain";
@@ -6,9 +6,9 @@ import { AppMenu } from "./AppMenu";
 
 export const AppLayout: FC = ({ children }) => {
   return (
-    <Stack h="full" spacing="0">
+    <Flex direction="column" h="full">
       <AppMain>{children}</AppMain>
       <AppMenu />
-    </Stack>
+    </Flex>
   );
 };

@@ -14,14 +14,12 @@ export const AppMenu: FC = () => {
   const isActive = (_rootPath: string) => _rootPath === rootPath;
 
   return (
-    <>
-      <Box flexShrink="0" w="full" h="16" />
-
+    <Box h="16">
       <Box
-        w="full"
-        h="16"
         position="fixed"
         bottom="0"
+        w="full"
+        h="16"
         zIndex="100"
         borderTopWidth="1px"
         borderColor="gray.200"
@@ -67,6 +65,6 @@ export const AppMenu: FC = () => {
           </HStack>
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };
