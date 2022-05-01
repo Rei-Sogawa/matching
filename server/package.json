@@ -10,10 +10,11 @@
     "dev": "ts-node-dev --respawn src/index",
     "gql": "graphql-codegen",
     "build": "rimraf dist && tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "deploy:firebase": "firebase deploy --only firestore,storage",
     "deploy:server": "gcloud builds submit",
-    "deploy": "yarn deploy:firebase && yarn deploy:server"
+    "deploy": "yarn deploy:firebase && yarn deploy:server",
+    "seed": "ts-node test/seed"
   },
   "dependencies": {
     "@rei-sogawa/unfireorm": "^1.0.8",
@@ -35,7 +36,9 @@
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/typescript": "^2.4.8",
     "@graphql-codegen/typescript-resolvers": "^2.6.1",
+    "@ngneat/falso": "^5.0.0",
     "@types/ramda": "^0.28.7",
+    "@types/request": "^2.48.8",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "eslint": "^8.12.0",
@@ -43,6 +46,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "prettier": "^2.6.2",
+    "request": "^2.88.2",
     "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8",
