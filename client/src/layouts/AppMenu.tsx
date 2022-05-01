@@ -1,10 +1,8 @@
 import { Box, Container, Flex, HStack } from "@chakra-ui/react";
-import { head } from "lodash-es";
 import { FC } from "react";
 import { BiLike, BiMessageRoundedDots, BiSearch, BiUser } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useMe } from "../contexts/Me";
 import { routes } from "../routes";
 
 export const AppMenu: FC = () => {
