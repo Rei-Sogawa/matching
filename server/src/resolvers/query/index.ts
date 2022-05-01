@@ -19,11 +19,11 @@ export const Query: Resolvers["Query"] = {
     return usersStatShards.get();
   },
 
-  users: (_parent, _args, context) => {
+  users: (_parent, args, context) => {
     authorize(context);
 
     const { usersCollection } = context.collections;
 
-    return usersCollection.findManyByQuery((ref) => ref.orderBy("createdAt", "desc"));
+    return args.input.ids.map((id) => usersCollection.findOneById(id));
   },
 };

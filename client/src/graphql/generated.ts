@@ -116,10 +116,19 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
+export type UserForUserCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
+
 export type UsersStatForUsersPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UsersStatForUsersPageQuery = { __typename?: 'Query', usersStat: { __typename?: 'UsersStat', userIds: Array<string> } };
+
+export type UsersForUsersPageQueryVariables = Exact<{
+  input: UsersInput;
+}>;
+
+
+export type UsersForUsersPageQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> }> };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
@@ -138,6 +147,15 @@ export const MeForMeFragmentDoc = gql`
   age
   livingPref
   photoPaths
+  photoUrls
+}
+    `;
+export const UserForUserCardFragmentDoc = gql`
+    fragment UserForUserCard on User {
+  id
+  gender
+  age
+  livingPref
   photoUrls
 }
     `;
@@ -278,3 +296,39 @@ export function useUsersStatForUsersPageLazyQuery(baseOptions?: Apollo.LazyQuery
 export type UsersStatForUsersPageQueryHookResult = ReturnType<typeof useUsersStatForUsersPageQuery>;
 export type UsersStatForUsersPageLazyQueryHookResult = ReturnType<typeof useUsersStatForUsersPageLazyQuery>;
 export type UsersStatForUsersPageQueryResult = Apollo.QueryResult<UsersStatForUsersPageQuery, UsersStatForUsersPageQueryVariables>;
+export const UsersForUsersPageDocument = gql`
+    query UsersForUsersPage($input: UsersInput!) {
+  users(input: $input) {
+    id
+    ...UserForUserCard
+  }
+}
+    ${UserForUserCardFragmentDoc}`;
+
+/**
+ * __useUsersForUsersPageQuery__
+ *
+ * To run a query within a React component, call `useUsersForUsersPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersForUsersPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersForUsersPageQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUsersForUsersPageQuery(baseOptions: Apollo.QueryHookOptions<UsersForUsersPageQuery, UsersForUsersPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersForUsersPageQuery, UsersForUsersPageQueryVariables>(UsersForUsersPageDocument, options);
+      }
+export function useUsersForUsersPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersForUsersPageQuery, UsersForUsersPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersForUsersPageQuery, UsersForUsersPageQueryVariables>(UsersForUsersPageDocument, options);
+        }
+export type UsersForUsersPageQueryHookResult = ReturnType<typeof useUsersForUsersPageQuery>;
+export type UsersForUsersPageLazyQueryHookResult = ReturnType<typeof useUsersForUsersPageLazyQuery>;
+export type UsersForUsersPageQueryResult = Apollo.QueryResult<UsersForUsersPageQuery, UsersForUsersPageQueryVariables>;
