@@ -11,6 +11,14 @@ export const Query: Resolvers["Query"] = {
     return usersCollection.findOneById(authContext.uid);
   },
 
+  usersStat: (_parent, _args, context) => {
+    authorize(context);
+
+    const { usersStatShards } = context.collections;
+
+    return usersStatShards.get();
+  },
+
   users: (_parent, _args, context) => {
     authorize(context);
 

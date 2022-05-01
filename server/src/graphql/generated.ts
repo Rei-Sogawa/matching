@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { UserDoc } from '../fire/docs/index';
+import { UsersStat } from '../fire/collections/users-stat';
 import { Context } from '../context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -54,6 +55,7 @@ export type Query = {
   __typename?: 'Query';
   me: Me;
   users: Array<User>;
+  usersStat: UsersStat;
 };
 
 export type SignUpInput = {
@@ -77,6 +79,11 @@ export type User = {
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
+};
+
+export type UsersStat = {
+  __typename?: 'UsersStat';
+  userIds: Array<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -161,6 +168,7 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserDoc>;
+  UsersStat: ResolverTypeWrapper<UsersStat>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -176,6 +184,7 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   UpdateUserInput: UpdateUserInput;
   User: UserDoc;
+  UsersStat: UsersStat;
 }>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -201,6 +210,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  usersStat?: Resolver<ResolversTypes['UsersStat'], ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -213,11 +223,17 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UsersStatResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsersStat'] = ResolversParentTypes['UsersStat']> = ResolversObject<{
+  userIds?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = Context> = ResolversObject<{
   DateTime?: GraphQLScalarType;
   Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UsersStat?: UsersStatResolvers<ContextType>;
 }>;
 

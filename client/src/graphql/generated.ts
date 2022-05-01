@@ -53,6 +53,7 @@ export type Query = {
   __typename?: 'Query';
   me: Me;
   users: Array<User>;
+  usersStat: UsersStat;
 };
 
 export type SignUpInput = {
@@ -78,6 +79,11 @@ export type User = {
   photoUrls: Array<Scalars['String']>;
 };
 
+export type UsersStat = {
+  __typename?: 'UsersStat';
+  userIds: Array<Scalars['String']>;
+};
+
 export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
@@ -92,6 +98,13 @@ export type UsersForLikesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UsersForLikesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
+export type UpdateUserMutationVariables = Exact<{
+  input: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
 }>;
@@ -99,12 +112,10 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
-export type UpdateUserMutationVariables = Exact<{
-  input: UpdateUserInput;
-}>;
+export type UsersStatForUsersPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type UsersStatForUsersPageQuery = { __typename?: 'Query', usersStat: { __typename?: 'UsersStat', userIds: Array<string> } };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
@@ -196,40 +207,6 @@ export function useUsersForLikesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type UsersForLikesQueryHookResult = ReturnType<typeof useUsersForLikesQuery>;
 export type UsersForLikesLazyQueryHookResult = ReturnType<typeof useUsersForLikesLazyQuery>;
 export type UsersForLikesQueryResult = Apollo.QueryResult<UsersForLikesQuery, UsersForLikesQueryVariables>;
-export const SignUpDocument = gql`
-    mutation SignUp($input: SignUpInput!) {
-  signUp(input: $input) {
-    id
-    ...MeForMe
-  }
-}
-    ${MeForMeFragmentDoc}`;
-export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
-
-/**
- * __useSignUpMutation__
- *
- * To run a mutation, you first call `useSignUpMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSignUpMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [signUpMutation, { data, loading, error }] = useSignUpMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignUpMutation, SignUpMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument, options);
-      }
-export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
-export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
-export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($input: UpdateUserInput!) {
   updateUser(input: $input) {
@@ -264,3 +241,71 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const SignUpDocument = gql`
+    mutation SignUp($input: SignUpInput!) {
+  signUp(input: $input) {
+    id
+    ...MeForMe
+  }
+}
+    ${MeForMeFragmentDoc}`;
+export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
+
+/**
+ * __useSignUpMutation__
+ *
+ * To run a mutation, you first call `useSignUpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpMutation, { data, loading, error }] = useSignUpMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignUpMutation, SignUpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument, options);
+      }
+export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
+export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
+export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const UsersStatForUsersPageDocument = gql`
+    query UsersStatForUsersPage {
+  usersStat {
+    userIds
+  }
+}
+    `;
+
+/**
+ * __useUsersStatForUsersPageQuery__
+ *
+ * To run a query within a React component, call `useUsersStatForUsersPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersStatForUsersPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersStatForUsersPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersStatForUsersPageQuery(baseOptions?: Apollo.QueryHookOptions<UsersStatForUsersPageQuery, UsersStatForUsersPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersStatForUsersPageQuery, UsersStatForUsersPageQueryVariables>(UsersStatForUsersPageDocument, options);
+      }
+export function useUsersStatForUsersPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersStatForUsersPageQuery, UsersStatForUsersPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersStatForUsersPageQuery, UsersStatForUsersPageQueryVariables>(UsersStatForUsersPageDocument, options);
+        }
+export type UsersStatForUsersPageQueryHookResult = ReturnType<typeof useUsersStatForUsersPageQuery>;
+export type UsersStatForUsersPageLazyQueryHookResult = ReturnType<typeof useUsersStatForUsersPageLazyQuery>;
+export type UsersStatForUsersPageQueryResult = Apollo.QueryResult<UsersStatForUsersPageQuery, UsersStatForUsersPageQueryVariables>;

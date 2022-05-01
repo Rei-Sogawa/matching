@@ -6,9 +6,10 @@ export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
     const { auth } = context;
-    const { usersCollection } = context.collections;
+    const { usersCollection, usersStatShards } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
+    await usersStatShards.insert({ userIds: [uid] });
     const userData = UserDoc.create({
       gender: "MALE",
       nickName: "ニックネーム",

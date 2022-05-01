@@ -26,6 +26,7 @@ type Mutation {
 type Query {
   me: Me!
   users: [User!]!
+  usersStat: UsersStat!
 }
 
 input SignUpInput {
@@ -48,5 +49,9 @@ type User {
   livingPref: String!
   nickName: String!
   photoUrls: [String!]!
+}
+
+type UsersStat {
+  userIds: [String!]!
 }
 `;
