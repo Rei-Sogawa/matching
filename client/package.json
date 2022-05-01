@@ -36,7 +36,6 @@
     "react-router-dom": "6",
     "react-spring": "^9.4.4",
     "react-use": "^17.3.2",
-    "swiper": "^8.0.7",
     "unstated-next": "^1.1.0",
     "uuid": "^8.3.2"
   },
