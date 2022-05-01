@@ -7,12 +7,14 @@ import { LogInPage } from "./pages/log-in";
 import { MyPagePage } from "./pages/my-page";
 import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
 import { SignUpPage } from "./pages/sign-up";
+import { UsersPage } from "./pages/users";
 
 const INDEX_PATH = "/";
 const SIGN_UP_PATH = "/sign-up";
 const LOG_IN_PATH = "/log-in";
 const MY_PAGE = "/my-page";
 const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
+const USERS_PATH = "/users";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -38,6 +40,11 @@ export const routes = {
   [MY_PAGE_PROFILE_EDIT]: {
     path: pathBuilder(MY_PAGE_PROFILE_EDIT),
     Component: MyPageProfileEditPage,
+    middleware: [Authenticated],
+  },
+  [USERS_PATH]: {
+    path: pathBuilder(USERS_PATH),
+    Component: UsersPage,
     middleware: [Authenticated],
   },
 };

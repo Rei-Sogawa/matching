@@ -35,6 +35,8 @@ type User {
 #
 type Query {
   me: Me!
+
+  randomUserIds: [String!]!
   users: [User!]!
 }
 

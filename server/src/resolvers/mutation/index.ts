@@ -9,7 +9,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
-    const userData = UserDoc.createData({
+    const userData = UserDoc.create({
       gender: "MALE",
       nickName: "ニックネーム",
       age: 30,
