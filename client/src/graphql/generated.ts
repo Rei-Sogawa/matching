@@ -56,6 +56,11 @@ export type Query = {
   usersStat: UsersStat;
 };
 
+
+export type QueryUsersArgs = {
+  input: UsersInput;
+};
+
 export type SignUpInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -79,6 +84,10 @@ export type User = {
   photoUrls: Array<Scalars['String']>;
 };
 
+export type UsersInput = {
+  ids: Array<Scalars['String']>;
+};
+
 export type UsersStat = {
   __typename?: 'UsersStat';
   userIds: Array<Scalars['String']>;
@@ -92,11 +101,6 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
-
-export type UsersForLikesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UsersForLikesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
@@ -172,41 +176,6 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const UsersForLikesDocument = gql`
-    query UsersForLikes {
-  users {
-    id
-    ...UserForUserSwipeCard
-  }
-}
-    ${UserForUserSwipeCardFragmentDoc}`;
-
-/**
- * __useUsersForLikesQuery__
- *
- * To run a query within a React component, call `useUsersForLikesQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersForLikesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUsersForLikesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUsersForLikesQuery(baseOptions?: Apollo.QueryHookOptions<UsersForLikesQuery, UsersForLikesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersForLikesQuery, UsersForLikesQueryVariables>(UsersForLikesDocument, options);
-      }
-export function useUsersForLikesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersForLikesQuery, UsersForLikesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersForLikesQuery, UsersForLikesQueryVariables>(UsersForLikesDocument, options);
-        }
-export type UsersForLikesQueryHookResult = ReturnType<typeof useUsersForLikesQuery>;
-export type UsersForLikesLazyQueryHookResult = ReturnType<typeof useUsersForLikesLazyQuery>;
-export type UsersForLikesQueryResult = Apollo.QueryResult<UsersForLikesQuery, UsersForLikesQueryVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($input: UpdateUserInput!) {
   updateUser(input: $input) {

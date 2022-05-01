@@ -58,6 +58,11 @@ export type Query = {
   usersStat: UsersStat;
 };
 
+
+export type QueryUsersArgs = {
+  input: UsersInput;
+};
+
 export type SignUpInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -79,6 +84,10 @@ export type User = {
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
+};
+
+export type UsersInput = {
+  ids: Array<Scalars['String']>;
 };
 
 export type UsersStat = {
@@ -168,6 +177,7 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserDoc>;
+  UsersInput: UsersInput;
   UsersStat: ResolverTypeWrapper<UsersStat>;
 }>;
 
@@ -184,6 +194,7 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   UpdateUserInput: UpdateUserInput;
   User: UserDoc;
+  UsersInput: UsersInput;
   UsersStat: UsersStat;
 }>;
 
@@ -209,7 +220,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
   usersStat?: Resolver<ResolversTypes['UsersStat'], ParentType, ContextType>;
 }>;
 

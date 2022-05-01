@@ -37,10 +37,14 @@ type UsersStat {
 #
 # QUERY
 #
+input UsersInput {
+  ids: [String!]!
+}
+
 type Query {
   me: Me!
   usersStat: UsersStat!
-  users: [User!]!
+  users(input: UsersInput!): [User!]!
 }
 
 #
