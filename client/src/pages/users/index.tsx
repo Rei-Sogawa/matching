@@ -1,8 +1,9 @@
 import { gql } from "@apollo/client";
-import { Box, Button, Flex, Stack } from "@chakra-ui/react";
-import { FC } from "react";
+import { Avatar, Box, Button, HStack, Stack, VStack, Wrap, WrapItem } from "@chakra-ui/react";
+import { head } from "lodash-es";
+import { FC, useState } from "react";
 
-import { useRandomUsersQuery } from "../../graphql/generated";
+import { useRandomUsersQuery, UserForUserCardFragment } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 
 gql`
@@ -15,6 +16,22 @@ gql`
   }
 `;
 
+type UserCardProps = {
+  user: UserForUserCardFragment;
+};
+
+const UserCard: FC<UserCardProps> = ({ user }) => {
+  return (
+    <VStack cursor="pointer">
+      <Avatar src={head(user.photoUrls)} w="36" h="36" />
+      <HStack>
+        <Box fontWeight="bold">{user.age}歳</Box>
+        <Box fontWeight="bold">{user.livingPref}</Box>
+      </HStack>
+    </VStack>
+  );
+};
+
 gql`
   query RandomUsers($input: RandomUsersInput!) {
     randomUsers(input: $input) {
@@ -24,29 +41,42 @@ gql`
   }
 `;
 
-const SIZE = 4;
+const SIZE = 6;
 
 export const UsersPage: FC = () => {
+  const [hasMore, setHasMore] = useState(true);
+
   const { data, fetchMore } = useRandomUsersQuery({ variables: { input: { size: SIZE, excludeIds: [] } } });
 
-  const users = data?.randomUsers;
+  const users = data?.randomUsers ?? [];
 
-  const onLoadMore = () => {
-    fetchMore({
-      variables: { input: { size: SIZE, excludeIds: users?.map((user) => user.id) ?? [] } },
+  const onLoadMore = async () => {
+    const res = await fetchMore({
+      variables: { input: { size: SIZE, excludeIds: users.map((user) => user.id) } },
     });
+    if (res.data.randomUsers.length < SIZE) setHasMore(false);
   };
 
   return (
     <AppLayout>
-      <Stack>
-        <Box>UsersPage</Box>
-        <Box>{JSON.stringify(users?.map((user) => user.livingPref))}</Box>
-        <Flex justifyContent="center">
-          <Button variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+      <Stack spacing="8">
+        <Box fontWeight="bold" fontSize="2xl">
+          さがす
+        </Box>
+
+        <Wrap justify="center" spacing="6">
+          {users.map((user) => (
+            <WrapItem key={user.id}>
+              <UserCard user={user} />
+            </WrapItem>
+          ))}
+        </Wrap>
+
+        {hasMore && (
+          <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
             もっと見る
           </Button>
-        </Flex>
+        )}
       </Stack>
     </AppLayout>
   );
