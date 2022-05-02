@@ -2,7 +2,7 @@ import { Button, Divider, FormControl, FormLabel, HStack, Radio, Stack, useToast
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { FC, useEffect, useMemo, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { v4 } from "uuid";
@@ -62,8 +62,8 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   };
 
   const onRemove = async (index: number) => {
-    const photoPath = photoPaths[index];
-    await deleteObject(ref(getStorage(), photoPath));
+    // const photoPath = photoPaths[index];
+    // await deleteObject(ref(getStorage(), photoPath));
     setPhotoPaths((prev) => prev.filter((_, _index) => _index !== index));
   };
 
