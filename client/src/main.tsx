@@ -14,7 +14,7 @@ const extendedTheme = extendTheme({
       500: theme.colors.green["400"],
       600: theme.colors.green["500"],
     },
-    danger: {
+    secondary: {
       500: theme.colors.red["400"],
       600: theme.colors.red["500"],
     },
