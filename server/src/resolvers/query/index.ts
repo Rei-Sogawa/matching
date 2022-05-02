@@ -20,7 +20,7 @@ export const Query: Resolvers["Query"] = {
     const { usersCollection, usersStatShards } = context.collections;
 
     const usersStat = await usersStatShards.get();
-    const randomUserIds = take(shuffle(xor(usersStat.userIds, excludeIds)), size);
+    const randomUserIds = take(shuffle(xor(usersStat.userIds, excludeIds, [context.authContext.uid])), size);
 
     return randomUserIds.map((id) => usersCollection.findOneById(id));
   },
