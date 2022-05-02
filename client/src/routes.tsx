@@ -8,6 +8,7 @@ import { MyPagePage } from "./pages/my-page";
 import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
 import { SignUpPage } from "./pages/sign-up";
 import { UsersPage } from "./pages/users";
+import { UserPage } from "./pages/users/[userId]";
 
 const INDEX_PATH = "/";
 const SIGN_UP_PATH = "/sign-up";
@@ -15,6 +16,7 @@ const LOG_IN_PATH = "/log-in";
 const MY_PAGE = "/my-page";
 const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
 const USERS_PATH = "/users";
+const USER_PATH = "/users/:userId";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -45,6 +47,11 @@ export const routes = {
   [USERS_PATH]: {
     path: pathBuilder(USERS_PATH),
     Component: UsersPage,
+    middleware: [Authenticated],
+  },
+  [USER_PATH]: {
+    path: pathBuilder(USER_PATH),
+    Component: UserPage,
     middleware: [Authenticated],
   },
 };

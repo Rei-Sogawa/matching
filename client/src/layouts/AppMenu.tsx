@@ -26,7 +26,7 @@ export const AppMenu: FC = () => {
         bg="gray.50"
       >
         <Container h="full">
-          <HStack h="full" justifyContent="space-between" alignItems="center">
+          <HStack h="full" justifyContent="space-around" alignItems="center">
             <AppLink to={routes["/users"].path()} color={isActive("users") ? "black" : "gray.500"}>
               <Flex direction="column" alignItems="center">
                 <BiSearch fontSize="28px" />

@@ -1,9 +1,8 @@
 import { createCollections } from "../src/fire/create-collections";
 import { UserDoc } from "../src/fire/docs";
 import { prefs } from "../src/utils/contants";
-import { getAuth, getDb, randomInt } from "./script-utils";
+import { getDb, id, randomInt } from "./script-utils";
 
-const auth = getAuth();
 const db = getDb();
 
 const collections = createCollections(db);
@@ -12,7 +11,8 @@ const { usersCollection, usersStatShards } = collections;
 const main = async () => {
   const fakeAuthUsers = await Promise.all(
     Array.from({ length: 25 }).map((_, i) => {
-      return auth.createUser({ email: `fake-user-${i}@example.com`, password: "password" });
+      return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
+      // return auth.createUser({ email: `fake-user-${i}@example.com`, password: "password" });
     })
   );
 

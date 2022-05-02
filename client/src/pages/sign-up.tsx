@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Box, Container, HStack, Stack } from "@chakra-ui/react";
+import { Box, Container, Stack } from "@chakra-ui/react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 

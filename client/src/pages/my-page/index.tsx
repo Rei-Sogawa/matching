@@ -17,7 +17,7 @@ export const MyPagePage: FC = () => {
   };
 
   return (
-    <AppLayout>
+    <AppLayout footer={true}>
       <Stack spacing="6">
         <HStack spacing="8" px="10">
           <Avatar src={head(me.photoUrls)} size="xl" ring="4px" ringColor="primary.500" />

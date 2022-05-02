@@ -3,8 +3,10 @@ import { Avatar, Box, Button, HStack, Stack, VStack, Wrap, WrapItem } from "@cha
 import { head } from "lodash-es";
 import { FC, useState } from "react";
 
+import { AppLink } from "../../components/base/AppLink";
 import { useRandomUsersQuery, UserForUserCardFragment } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
+import { routes } from "../../routes";
 
 gql`
   fragment UserForUserCard on User {
@@ -22,13 +24,15 @@ type UserCardProps = {
 
 const UserCard: FC<UserCardProps> = ({ user }) => {
   return (
-    <VStack cursor="pointer">
-      <Avatar src={head(user.photoUrls)} w="36" h="36" />
-      <HStack>
-        <Box fontWeight="bold">{user.age}歳</Box>
-        <Box fontWeight="bold">{user.livingPref}</Box>
-      </HStack>
-    </VStack>
+    <AppLink to={routes["/users/:userId"].path({ userId: user.id })}>
+      <VStack>
+        <Avatar src={head(user.photoUrls)} w="36" h="36" />
+        <HStack>
+          <Box fontWeight="bold">{user.age}歳</Box>
+          <Box fontWeight="bold">{user.livingPref}</Box>
+        </HStack>
+      </VStack>
+    </AppLink>
   );
 };
 
@@ -58,7 +62,7 @@ export const UsersPage: FC = () => {
   };
 
   return (
-    <AppLayout>
+    <AppLayout footer={true}>
       <Stack spacing="8">
         <Box fontWeight="bold" fontSize="2xl">
           さがす

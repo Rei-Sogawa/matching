@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "gql": "graphql-codegen",
+    "prebuild": "yarn gql",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "predeploy": "yarn build",
