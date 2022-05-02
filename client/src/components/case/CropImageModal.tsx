@@ -110,7 +110,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
         <ModalBody>
           {objectURL ? (
             <Center>
-              <ReactCrop crop={crop} onChange={setCrop} aspect={4 / 5}>
+              <ReactCrop crop={crop} onChange={setCrop} aspect={1 / 1}>
                 <Image ref={imageRef} src={objectURL} w="full" h="auto" />
               </ReactCrop>
             </Center>
