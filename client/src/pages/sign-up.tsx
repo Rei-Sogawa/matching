@@ -8,7 +8,7 @@ import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
 import { useSignUpMutation } from "../graphql/generated";
 import { routes } from "../routes";
-import { assertIsDefined } from "../utils/assert-is-defined";
+import { assertDefined } from "../utils/assert-defined";
 
 gql`
   mutation SignUp($input: SignUpInput!) {
@@ -29,7 +29,7 @@ export const SignUpPage: FC = () => {
       variables: { input: { email, password } },
     });
 
-    assertIsDefined(data);
+    assertDefined(data);
     const redirect = routes["/my-page/profile/edit"].path();
     setRedirect(redirect);
 

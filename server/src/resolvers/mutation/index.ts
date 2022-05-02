@@ -1,5 +1,3 @@
-import { compact, pickBy } from "lodash";
-
 import { authorize } from "../../authorize";
 import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";

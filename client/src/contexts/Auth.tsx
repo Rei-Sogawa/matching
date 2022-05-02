@@ -2,7 +2,7 @@ import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
 import { createContext, FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { assertIsDefined } from "../utils/assert-is-defined";
+import { assertDefined } from "../utils/assert-defined";
 import { useGlobal } from "./Global";
 
 type State = { initialized: boolean; uid: string | undefined; token: string | undefined };
@@ -47,6 +47,6 @@ export const AuthProvider: FC = ({ children }) => {
 
 export const useAuth = () => {
   const state = useContext(AuthContext);
-  assertIsDefined(state);
+  assertDefined(state);
   return state;
 };

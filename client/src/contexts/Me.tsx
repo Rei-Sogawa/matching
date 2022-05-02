@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { createContext, FC, useContext } from "react";
 
 import { MeForMeFragment, useMeQuery } from "../graphql/generated";
-import { assertIsDefined } from "../utils/assert-is-defined";
+import { assertDefined } from "../utils/assert-defined";
 import { useAuth } from "./Auth";
 
 gql`
@@ -41,6 +41,6 @@ export const MeProvider: FC = ({ children }) => {
 
 export const useMe = () => {
   const me = useContext(MeContext);
-  assertIsDefined(me);
+  assertDefined(me);
   return me;
 };
