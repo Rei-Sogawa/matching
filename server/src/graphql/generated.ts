@@ -54,11 +54,17 @@ export type Query = {
   __typename?: 'Query';
   me: Me;
   randomUsers: Array<User>;
+  user: User;
 };
 
 
 export type QueryRandomUsersArgs = {
   input: RandomUsersInput;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['ID'];
 };
 
 export type RandomUsersInput = {
@@ -213,6 +219,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   randomUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryRandomUsersArgs, 'input'>>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{

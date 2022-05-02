@@ -53,11 +53,17 @@ export type Query = {
   __typename?: 'Query';
   me: Me;
   randomUsers: Array<User>;
+  user: User;
 };
 
 
 export type QueryRandomUsersArgs = {
   input: RandomUsersInput;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['ID'];
 };
 
 export type RandomUsersInput = {
@@ -111,6 +117,8 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
+export type UserForUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
 export type UserForUserCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type RandomUsersQueryVariables = Exact<{
@@ -137,6 +145,16 @@ export const MeForMeFragmentDoc = gql`
   age
   livingPref
   photoPaths
+  photoUrls
+}
+    `;
+export const UserForUserPageFragmentDoc = gql`
+    fragment UserForUserPage on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
   photoUrls
 }
     `;

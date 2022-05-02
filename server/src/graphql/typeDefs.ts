@@ -26,6 +26,7 @@ type Mutation {
 type Query {
   me: Me!
   randomUsers(input: RandomUsersInput!): [User!]!
+  user(id: ID!): User!
 }
 
 input RandomUsersInput {

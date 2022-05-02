@@ -41,9 +41,9 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
     return UserSchema.parse({ ...newData, createdAt, updatedAt: createdAt });
   }
 
-  edit(editData: Omit<UserData, "createdAt" | "updatedAt">) {
+  edit(editData: Partial<Omit<UserData, "createdAt" | "updatedAt">>) {
     const updatedAt = now();
-    UserSchema.parse(this.toData());
     Object.assign(this, { ...editData, updatedAt });
+    UserSchema.parse(this.toData());
   }
 }

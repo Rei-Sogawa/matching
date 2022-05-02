@@ -1,3 +1,5 @@
+import { compact, pickBy } from "lodash";
+
 import { authorize } from "../../authorize";
 import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";
@@ -9,7 +11,9 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection, usersStatShards } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
+
     await usersStatShards.insert({ userIds: [uid] });
+
     const userData = UserDoc.create({
       gender: "MALE",
       nickName: "ニックネーム",

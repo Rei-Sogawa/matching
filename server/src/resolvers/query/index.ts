@@ -24,4 +24,13 @@ export const Query: Resolvers["Query"] = {
 
     return randomUserIds.map((id) => usersCollection.findOneById(id));
   },
+
+  user: (_parent, args, context) => {
+    authorize(context);
+
+    const { id } = args;
+    const { usersCollection } = context.collections;
+
+    return usersCollection.findOneById(id);
+  },
 };
