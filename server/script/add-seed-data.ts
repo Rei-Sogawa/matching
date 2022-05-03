@@ -6,7 +6,7 @@ import { getDb, id, randomInt } from "./script-utils";
 const db = getDb();
 
 const collections = createCollections(db);
-const { usersCollection, usersStatShards } = collections;
+const { usersCollection, usersStatsCollection } = collections;
 
 const main = async () => {
   const fakeAuthUsers = await Promise.all(
@@ -33,7 +33,7 @@ const main = async () => {
   );
 
   for (const fakeUser of fakeUsers) {
-    await usersStatShards.insert({ userIds: [fakeUser.id] });
+    await usersStatsCollection.merge({ userIds: [fakeUser.id] });
   }
 };
 

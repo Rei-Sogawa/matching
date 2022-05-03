@@ -1,16 +1,16 @@
 import { Firestore } from "firebase-admin/firestore";
 
 import { UsersCollection } from "./collections/users";
-import { UsersStatShardsCollection } from "./collections/users-stats";
+import { UsersStatsCollection } from "./collections/users-stats";
 
 export const createCollections = (db: Firestore) => {
   const usersRef = db.collection("users");
-  const usersStatShardsRef = db.collection("usersStatShards");
+  const usersStatsRef = db.collection("usersStats");
 
   const usersCollection = new UsersCollection(usersRef);
-  const usersStatShards = new UsersStatShardsCollection(usersStatShardsRef);
+  const usersStatsCollection = new UsersStatsCollection(usersStatsRef);
 
-  return { usersCollection, usersStatShards };
+  return { usersCollection, usersStatsCollection };
 };
 
 export type Collections = ReturnType<typeof createCollections>;

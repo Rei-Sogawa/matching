@@ -7,7 +7,7 @@ const auth = getAuth();
 const db = getDb();
 
 const collections = createCollections(db);
-const { usersCollection, usersStatShards } = collections;
+const { usersCollection, usersStatsCollection } = collections;
 
 const main = async () => {
   await clearAuth();
@@ -36,7 +36,7 @@ const main = async () => {
   );
 
   for (const fakeUser of fakeUsers) {
-    await usersStatShards.insert({ userIds: [fakeUser.id] });
+    await usersStatsCollection.merge({ userIds: [fakeUser.id] });
   }
 };
 
