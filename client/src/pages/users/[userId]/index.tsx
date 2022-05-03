@@ -62,10 +62,18 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const [liked, setLiked] = useState(false);
   const [skipped, setSkipped] = useState(false);
 
+  const resetAnimation = () => {
+    setLiked(false);
+    setSkipped(false);
+    imageStylesApi.start({ opacity: 0 });
+  };
+
   const onLike = () => {
     setLiked(true);
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
+
     setTimeout(() => {
+      resetAnimation();
       redirect();
     }, 1_500);
   };
@@ -73,7 +81,9 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const onSkip = () => {
     setSkipped(true);
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
+
     setTimeout(() => {
+      resetAnimation();
       redirect();
     }, 1_500);
   };
