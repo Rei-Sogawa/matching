@@ -1,8 +1,7 @@
 import { FireCollection } from "@rei-sogawa/unfireorm";
 import { CollectionReference } from "firebase-admin/firestore";
 
-import { UserData, UserDoc } from "../docs/user";
-import { userConverter } from "./../docs/user";
+import { userConverter, UserData, UserDoc } from "../docs/user";
 
 export class UsersCollection extends FireCollection<UserData, UserDoc> {
   constructor(ref: CollectionReference) {
