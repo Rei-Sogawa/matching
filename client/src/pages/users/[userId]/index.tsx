@@ -2,10 +2,12 @@ import { gql } from "@apollo/client";
 import { Box, BoxProps, Center, HStack, IconButton, Stack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 
+import { Loading } from "../../../components/case/Loading";
 import { BackButton } from "../../../components/common/BackButton";
+import { useGlobal } from "../../../contexts/Global";
 import { UserForUserPageFragment, useUserQuery } from "../../../graphql/generated";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
@@ -29,6 +31,20 @@ gql`
 type UserPageTemplateProps = { user: UserForUserPageFragment };
 
 const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
+  const navigate = useNavigate();
+
+  const { users } = useGlobal();
+
+  const redirect = () => {
+    const currIndex = users.findIndex((u) => u.id === user.id);
+    const nextUser = users[currIndex + 1];
+    if (nextUser) {
+      navigate(routes["/users/:userId"].path({ userId: nextUser.id }));
+    } else {
+      navigate(routes["/users"].path());
+    }
+  };
+
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const onClickRight = () => {
@@ -36,7 +52,6 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
       setActiveImageIndex((prev) => prev + 1);
     }
   };
-
   const onClickLeft = () => {
     if (activeImageIndex > 0) {
       setActiveImageIndex((prev) => prev - 1);
@@ -44,9 +59,23 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   };
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
+  const [liked, setLiked] = useState(false);
+  const [skipped, setSkipped] = useState(false);
 
   const onLike = () => {
+    setLiked(true);
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
+    setTimeout(() => {
+      redirect();
+    }, 1_500);
+  };
+
+  const onSkip = () => {
+    setSkipped(true);
+    imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
+    setTimeout(() => {
+      redirect();
+    }, 1_500);
   };
 
   return (
@@ -64,14 +93,27 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
               position="relative"
             >
               <animated.div style={{ height: "100%", ...imageStyles }}>
-                <Center h="full" bg="pink.50">
-                  <VStack color="red.400">
-                    <BiLike fontSize="64px" />
-                    <Box fontWeight="bold" fontSize="2xl">
-                      いいね！
-                    </Box>
-                  </VStack>
-                </Center>
+                {liked && (
+                  <Center position="absolute" h="full" w="full" bg="pink.50">
+                    <VStack color="red.400">
+                      <BiLike fontSize="64px" />
+                      <Box fontWeight="bold" fontSize="2xl">
+                        いいね！
+                      </Box>
+                    </VStack>
+                  </Center>
+                )}
+
+                {skipped && (
+                  <Center position="absolute" h="full" w="full" bg="gray.50">
+                    <VStack color="gray.400">
+                      <BiShare fontSize="64px" />
+                      <Box fontWeight="bold" fontSize="2xl">
+                        スキップ
+                      </Box>
+                    </VStack>
+                  </Center>
+                )}
               </animated.div>
 
               <HStack position="absolute" bottom="2" w="full" px="2">
@@ -105,7 +147,16 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
       </VStack>
 
       <HStack spacing="8" position="absolute" bottom="16" left="50%" transform="translateX(-50%)">
-        <IconButton h="16" w="16" isRound boxShadow="md" aria-label="skip" icon={<BiShare fontSize="28px" />} />
+        <IconButton
+          h="16"
+          w="16"
+          isRound
+          boxShadow="md"
+          aria-label="skip"
+          icon={<BiShare fontSize="28px" />}
+          onClick={onSkip}
+          disabled={liked || skipped}
+        />
         <IconButton
           colorScheme="secondary"
           h="16"
@@ -115,6 +166,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
           aria-label="like"
           icon={<BiLike fontSize="28px" />}
           onClick={onLike}
+          disabled={liked || skipped}
         />
       </HStack>
     </AppLayout>
@@ -135,5 +187,5 @@ export const UserPage: FC = () => {
   assertDefined(userId);
   const { data } = useUserQuery({ variables: { id: userId } });
 
-  return data ? <UserPageTemplate user={data.user} /> : null;
+  return data ? <UserPageTemplate user={data.user} /> : <Loading />;
 };

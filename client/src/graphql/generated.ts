@@ -126,7 +126,7 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
-export type UserForUserCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
+export type UserForUsersPageUserCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type RandomUsersQueryVariables = Exact<{
   input: RandomUsersInput;
@@ -165,8 +165,8 @@ export const UserForUserPageFragmentDoc = gql`
   photoUrls
 }
     `;
-export const UserForUserCardFragmentDoc = gql`
-    fragment UserForUserCard on User {
+export const UserForUsersPageUserCardFragmentDoc = gql`
+    fragment UserForUsersPageUserCard on User {
   id
   gender
   age
@@ -317,10 +317,10 @@ export const RandomUsersDocument = gql`
     query RandomUsers($input: RandomUsersInput!) {
   randomUsers(input: $input) {
     id
-    ...UserForUserCard
+    ...UserForUsersPageUserCard
   }
 }
-    ${UserForUserCardFragmentDoc}`;
+    ${UserForUsersPageUserCardFragmentDoc}`;
 
 /**
  * __useRandomUsersQuery__

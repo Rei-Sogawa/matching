@@ -1,15 +1,16 @@
 import { gql } from "@apollo/client";
 import { Avatar, Box, Button, HStack, Stack, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { head } from "lodash-es";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { AppLink } from "../../components/base/AppLink";
-import { useRandomUsersQuery, UserForUserCardFragment } from "../../graphql/generated";
+import { useGlobal } from "../../contexts/Global";
+import { useRandomUsersQuery, UserForUsersPageUserCardFragment } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
 
 gql`
-  fragment UserForUserCard on User {
+  fragment UserForUsersPageUserCard on User {
     id
     gender
     age
@@ -19,7 +20,7 @@ gql`
 `;
 
 type UserCardProps = {
-  user: UserForUserCardFragment;
+  user: UserForUsersPageUserCardFragment;
 };
 
 const UserCard: FC<UserCardProps> = ({ user }) => {
@@ -40,7 +41,7 @@ gql`
   query RandomUsers($input: RandomUsersInput!) {
     randomUsers(input: $input) {
       id
-      ...UserForUserCard
+      ...UserForUsersPageUserCard
     }
   }
 `;
@@ -60,6 +61,12 @@ export const UsersPage: FC = () => {
     });
     if (res.data.randomUsers.length < SIZE) setHasMore(false);
   };
+
+  const { setUsers } = useGlobal();
+
+  useEffect(() => {
+    setUsers(users);
+  }, [users]);
 
   return (
     <AppLayout footer={true}>
