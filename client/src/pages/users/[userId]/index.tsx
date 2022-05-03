@@ -158,8 +158,8 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
 
       <HStack spacing="8" position="absolute" bottom="16" left="50%" transform="translateX(-50%)">
         <IconButton
-          h="16"
-          w="16"
+          h="20"
+          w="20"
           isRound
           boxShadow="md"
           aria-label="skip"
@@ -169,8 +169,8 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
         />
         <IconButton
           colorScheme="secondary"
-          h="16"
-          w="16"
+          h="20"
+          w="20"
           isRound
           boxShadow="md"
           aria-label="like"
