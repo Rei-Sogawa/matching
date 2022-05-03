@@ -86,7 +86,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     setTimeout(() => {
       resetAnimation();
       redirect();
-    }, 500);
+    }, 1_500);
   };
 
   const onSkip = () => {
