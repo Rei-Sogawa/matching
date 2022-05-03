@@ -11,6 +11,12 @@ enum Gender {
   FEMALE
 }
 
+enum LikeStatus {
+  PENDING
+  MATCHED
+  SKIPPED
+}
+
 #
 # NODE
 #

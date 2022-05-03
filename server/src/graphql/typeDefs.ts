@@ -8,6 +8,12 @@ enum Gender {
   MALE
 }
 
+enum LikeStatus {
+  MATCHED
+  PENDING
+  SKIPPED
+}
+
 type Me {
   age: Int!
   gender: Gender!

@@ -22,6 +22,13 @@ export const Gender = {
 } as const;
 
 export type Gender = typeof Gender[keyof typeof Gender];
+export const LikeStatus = {
+  Matched: 'MATCHED',
+  Pending: 'PENDING',
+  Skipped: 'SKIPPED'
+} as const;
+
+export type LikeStatus = typeof LikeStatus[keyof typeof LikeStatus];
 export type Me = {
   __typename?: 'Me';
   age: Scalars['Int'];
