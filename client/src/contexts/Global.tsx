@@ -5,13 +5,13 @@ import { UserForUsersPageUserCardFragment } from "../graphql/generated";
 
 const useGlobalContainer = () => {
   const [redirect, setRedirect] = useState<string | null>(null);
-  const [users, setUsers] = useState<UserForUsersPageUserCardFragment[]>([]);
+  const [searchedUsers, setSearchedUsers] = useState<UserForUsersPageUserCardFragment[]>([]);
 
   return {
     redirect,
     setRedirect,
-    users,
-    setUsers,
+    searchedUsers,
+    setSearchedUsers,
   };
 };
 

@@ -33,11 +33,11 @@ type UserPageTemplateProps = { user: UserForUserPageFragment };
 const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const navigate = useNavigate();
 
-  const { users } = useGlobal();
+  const { searchedUsers } = useGlobal();
 
   const redirect = () => {
-    const currIndex = users.findIndex((u) => u.id === user.id);
-    const nextUser = users[currIndex + 1];
+    const currIndex = searchedUsers.findIndex((u) => u.id === user.id);
+    const nextUser = searchedUsers[currIndex + 1];
     if (nextUser) {
       navigate(routes["/users/:userId"].path({ userId: nextUser.id }));
     } else {

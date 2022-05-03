@@ -62,10 +62,10 @@ export const UsersPage: FC = () => {
     if (res.data.randomUsers.length < SIZE) setHasMore(false);
   };
 
-  const { setUsers } = useGlobal();
+  const { setSearchedUsers } = useGlobal();
 
   useEffect(() => {
-    setUsers(users);
+    setSearchedUsers(users);
   }, [users]);
 
   return (
