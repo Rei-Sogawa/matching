@@ -7,7 +7,7 @@ import { Collections, createCollections } from "./fire/create-collections";
 import { getAuth, getDb, getStorage } from "./firebase-app";
 
 export type ServerContext = {
-  authContext: DecodedIdToken | undefined;
+  decodedIdToken: DecodedIdToken | undefined;
   auth: admin.auth.Auth;
   db: admin.firestore.Firestore;
   storage: admin.storage.Storage;
@@ -22,10 +22,10 @@ export const serverContext: Config<ExpressContext>["context"] = async ({ req }):
   const collections = createCollections(db);
 
   const idToken = req.header("authorization")?.split("Bearer ")[1];
-  if (!idToken) return { authContext: undefined, auth, db, storage, collections };
+  if (!idToken) return { decodedIdToken: undefined, auth, db, storage, collections };
 
   const decodedIdToken = await getAuth().verifyIdToken(idToken);
-  return { authContext: decodedIdToken, auth, db, storage, collections };
+  return { decodedIdToken: decodedIdToken, auth, db, storage, collections };
 };
 
 export type Context = ServerContext;

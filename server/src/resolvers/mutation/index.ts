@@ -17,10 +17,10 @@ export const Mutation: Resolvers["Mutation"] = {
   async updateUser(_parent, args, context) {
     authorize(context);
 
-    const { authContext } = context;
+    const { uid } = context.decodedIdToken;
     const { usersCollection } = context.collections;
 
-    const user = await usersCollection.findOneById(authContext.uid);
+    const user = await usersCollection.findOneById(uid);
     user.edit(args.input);
     return user.update();
   },
@@ -29,11 +29,11 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { userId: targetUserId } = args;
-    const { uid: actionUserId } = context.authContext;
+    const { uid: actionUserId } = context.decodedIdToken;
     const { usersCollection, likesCollection } = context.collections;
 
     const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
-    if (sentLike) throw new Error("Already liked");
+    if (sentLike) throw new Error("sentLike found");
 
     const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
     if (receivedLike) {
