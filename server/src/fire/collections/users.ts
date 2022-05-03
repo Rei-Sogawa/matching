@@ -7,4 +7,8 @@ export class UsersCollection extends FireCollection<UserData, UserDoc> {
   constructor(ref: CollectionReference) {
     super(ref, (snap) => new UserDoc(snap), userConverter);
   }
+
+  create(id: string) {
+    return this.insert({ id, ...UserDoc.createData() });
+  }
 }

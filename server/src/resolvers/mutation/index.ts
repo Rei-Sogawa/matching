@@ -1,9 +1,4 @@
-import { FieldValue } from "firebase-admin/firestore";
-import { head } from "lodash";
-
 import { authorize } from "../../authorize";
-import { LikeDoc, UserStatDoc } from "../../fire/docs";
-import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";
 
 export const Mutation: Resolvers["Mutation"] = {
@@ -15,23 +10,8 @@ export const Mutation: Resolvers["Mutation"] = {
     const { uid } = await auth.createUser({ email, password });
 
     await allUsersStatsCollection.merge({ userIds: [uid] });
-
-    const userStatData = UserStatDoc.create({
-      sendLikeUserIds: [],
-      receiveLikeUserIds: [],
-      skipLikeUserIds: [],
-      matchUserIds: [],
-    });
-    await userStatsCollection.insert({ id: uid, ...userStatData });
-
-    const userData = UserDoc.create({
-      gender: "MALE",
-      nickName: "ニックネーム",
-      age: 30,
-      livingPref: "東京",
-      photoPaths: [],
-    });
-    return usersCollection.insert({ id: uid, ...userData });
+    await userStatsCollection.create(uid);
+    return usersCollection.create(uid);
   },
 
   async updateUser(_parent, args, context) {
@@ -48,36 +28,30 @@ export const Mutation: Resolvers["Mutation"] = {
   async like(_parent, args, context) {
     authorize(context);
 
-    const { userId } = args;
-    const { uid } = context.authContext;
+    const { userId: targetUserId } = args;
+    const { uid: actionUserId } = context.authContext;
     const { usersCollection, userStatsCollection, likesCollection } = context.collections;
 
-    const _sendedLike = await likesCollection.findManyByQuery((ref) => ref.where("senderId", "==", uid));
-    const sendedLike = head(_sendedLike);
-    if (sendedLike) throw new Error("Already liked");
+    const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
+    const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
 
-    const _receivedLike = await likesCollection.findManyByQuery((ref) => ref.where("receiverId", "==", uid));
-    const receivedLike = head(_receivedLike);
+    const actionUserStat = await userStatsCollection.findOneById(actionUserId);
+    const targetUserStat = await userStatsCollection.findOneById(targetUserId);
 
-    if (receivedLike) {
-      receivedLike.edit({ status: "MATCHED" });
-      await receivedLike.update();
-    } else {
-      const likeData = LikeDoc.create({ senderId: uid, receiverId: userId, status: "PENDING" });
-      await likesCollection.insert(likeData);
-    }
-
-    const likeUserStat = await userStatsCollection.findOneById(uid);
-    const likedUserStat = await userStatsCollection.findOneById(userId);
+    if (sentLike) throw new Error("Already liked");
 
     if (receivedLike) {
-      await likeUserStat.ref.update({ matchUserIds: FieldValue.arrayUnion(userId) });
-      await likedUserStat.ref.update({ matchUserIds: FieldValue.arrayUnion(uid) });
+      await receivedLike.match();
+
+      await actionUserStat.match(targetUserId);
+      await targetUserStat.match(actionUserId);
     } else {
-      await likeUserStat.ref.update({ sendLikeUserIds: FieldValue.arrayUnion(userId) });
-      await likedUserStat.ref.update({ receiveLikeUserIds: FieldValue.arrayUnion(uid) });
+      await likesCollection.create({ senderId: actionUserId, receiverId: targetUserId });
+
+      await actionUserStat.sendLike(targetUserId);
+      await targetUserStat.receiveLike(actionUserId);
     }
 
-    return usersCollection.findOneById(args.userId);
+    return usersCollection.findOneById(targetUserId);
   },
 };

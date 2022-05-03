@@ -1,4 +1,5 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
+import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { createConverter } from "../helpers/create-converter";
@@ -31,13 +32,25 @@ export class UserStatDoc extends FireDocument<UserStatData> implements UserStatD
     return UserStatSchema.parse(data);
   }
 
-  static create(data: UserStatData) {
-    return UserStatSchema.parse(data);
+  static createData() {
+    return UserStatSchema.parse({ sendLikeUserIds: [], receiveLikeUserIds: [], skipLikeUserIds: [], matchUserIds: [] });
   }
 
   edit(data: Partial<UserStatData>) {
     Object.assign(this, data);
     UserStatSchema.parse(this.toData());
     return this;
+  }
+
+  match(userId: string) {
+    return this.ref.update({ matchUserIds: FieldValue.arrayUnion(userId) });
+  }
+
+  sendLike(userId: string) {
+    return this.ref.update({ sendLikeUserIds: FieldValue.arrayUnion(userId) });
+  }
+
+  receiveLike(userId: string) {
+    return this.ref.update({ receiveLikeUserIds: FieldValue.arrayUnion(userId) });
   }
 }

@@ -35,9 +35,9 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     return LikeSchema.parse(data);
   }
 
-  static create(data: Omit<LikeData, "createdAt" | "updatedAt">) {
+  static createData(data: Omit<LikeData, "status" | "createdAt" | "updatedAt">) {
     const createdAt = now();
-    return LikeSchema.parse({ ...data, createdAt, updateAt: createdAt });
+    return LikeSchema.parse({ ...data, status: "PENDING", createdAt, updateAt: createdAt });
   }
 
   edit(data: Partial<Omit<LikeData, "createdAt" | "updatedAt">>) {
@@ -45,5 +45,10 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     Object.assign(this, { ...data, updatedAt });
     LikeSchema.parse(this.toData());
     return this;
+  }
+
+  match() {
+    this.edit({ status: "MATCHED" });
+    return this.update();
   }
 }
