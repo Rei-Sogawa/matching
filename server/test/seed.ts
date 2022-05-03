@@ -42,13 +42,19 @@ const main = async () => {
   }
 
   // NOTE: メインユーザー
-  const authUser = await auth.createUser({ email: "user-1@example.com", password: "password" });
-  const user = await usersCollection.create(authUser.uid);
-  const storagePath = `users/${authUser.uid}/profilePhotos/${id()}`;
-  await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
-  await user.edit({ photoPaths: [storagePath] }).update();
+  const cr7Auth = await auth.createUser({ email: "user-1@example.com", password: "password" });
+  const cr7 = await usersCollection.create(cr7Auth.uid);
+  const cr7StoragePath = `users/${cr7.id}/profilePhotos/${id()}`;
+  await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: cr7StoragePath });
+  await cr7.edit({ nickName: "CR7", photoPaths: [cr7StoragePath] }).update();
 
-  await allUsersStatsCollection.merge({ userIds: [authUser.uid] });
+  const messiAuth = await auth.createUser({ email: "user-2@example.com", password: "password" });
+  const messi = await usersCollection.create(messiAuth.uid);
+  const messiStoragePath = `users/${messi.id}/profilePhotos/${id()}`;
+  await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: messiStoragePath });
+  await messi.edit({ nickName: "Messi", photoPaths: [messiStoragePath] }).update();
+
+  await allUsersStatsCollection.merge({ userIds: [cr7Auth.uid, messiAuth.uid] });
 };
 
 main();
