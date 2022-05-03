@@ -40,7 +40,7 @@ export const AppMenu: FC = () => {
               <Flex direction="column" alignItems="center">
                 <BiLike fontSize="28px" />
                 <Box fontWeight="bold" fontSize="xs">
-                  いいね
+                  お相手から
                 </Box>
               </Flex>
             </AppLink>
