@@ -27,7 +27,9 @@ process.env.FIREBASE_AUTH_EMULATOR_HOST = FIREBASE_AUTH_EMULATOR_HOST;
 process.env.FIRESTORE_EMULATOR_HOST = FIRESTORE_EMULATOR_HOST;
 process.env.FIREBASE_STORAGE_EMULATOR_HOST = FIREBASE_STORAGE_EMULATOR_HOST;
 
-admin.initializeApp();
+admin.initializeApp({
+  storageBucket: "playground-abc-firebase.appspot.com",
+});
 const auth = admin.auth();
 const db = admin.firestore();
 const storage = admin.storage();

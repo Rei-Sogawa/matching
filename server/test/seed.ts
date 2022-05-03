@@ -1,10 +1,12 @@
 import { createCollections } from "../src/fire/create-collections";
 import { UserData } from "../src/fire/docs";
 import { prefs } from "../src/utils/contants";
-import { now } from "../src/utils/now";
-import { clearAuth, clearFirestore, getDb, id, randomInt } from "./test-utils";
+import { getNow } from "../src/utils/get-now";
+import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
 
+const auth = getAuth();
 const db = getDb();
+const storage = getStorage();
 
 const collections = createCollections(db);
 const { usersCollection, allUsersStatsCollection } = collections;
@@ -21,7 +23,7 @@ const main = async () => {
 
   const fakeUsers = await Promise.all(
     fakeAuthUsers.map((authUser, i) => {
-      const createdAt = now();
+      const createdAt = getNow();
       const userData: UserData = {
         gender: ["MALE", "FEMALE"][randomInt(1)] as "MALE" | "FEMALE",
         nickName: `fake-user-${i}`,
@@ -38,6 +40,15 @@ const main = async () => {
   for (const fakeUser of fakeUsers) {
     await allUsersStatsCollection.merge({ userIds: [fakeUser.id] });
   }
+
+  // NOTE: メインユーザー
+  const authUser = await auth.createUser({ email: "user-1@example.com", password: "password" });
+  const user = await usersCollection.create(authUser.uid);
+  const storagePath = `users/${authUser.uid}/profilePhotos/${id()}`;
+  await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
+  await user.edit({ photoPaths: [storagePath] }).update();
+
+  await allUsersStatsCollection.merge({ userIds: [authUser.uid] });
 };
 
 main();

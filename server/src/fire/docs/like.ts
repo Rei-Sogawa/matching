@@ -1,8 +1,8 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
-import { now } from "lodash";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
+import { getNow } from "../../utils/get-now";
 import { createConverter } from "../helpers/create-converter";
 
 const LikeSchema = z
@@ -36,12 +36,12 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   }
 
   static createData(data: Omit<LikeData, "status" | "createdAt" | "updatedAt">) {
-    const createdAt = now();
-    return LikeSchema.parse({ ...data, status: "PENDING", createdAt, updateAt: createdAt });
+    const createdAt = getNow();
+    return LikeSchema.parse({ ...data, status: "PENDING", createdAt, updatedAt: createdAt });
   }
 
   edit(data: Partial<Omit<LikeData, "createdAt" | "updatedAt">>) {
-    const updatedAt = now();
+    const updatedAt = getNow();
     Object.assign(this, { ...data, updatedAt });
     LikeSchema.parse(this.toData());
     return this;

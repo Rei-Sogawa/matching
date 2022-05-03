@@ -42,8 +42,14 @@ export type Me = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  like: User;
   signUp: Me;
   updateUser: Me;
+};
+
+
+export type MutationLikeArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -123,6 +129,13 @@ export type SignUpMutationVariables = Exact<{
 
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+
+export type LikeMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type LikeMutation = { __typename?: 'Mutation', like: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
 export type UserForUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -284,6 +297,40 @@ export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignU
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const LikeDocument = gql`
+    mutation Like($userId: ID!) {
+  like(userId: $userId) {
+    id
+    ...UserForUserPage
+  }
+}
+    ${UserForUserPageFragmentDoc}`;
+export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
+
+/**
+ * __useLikeMutation__
+ *
+ * To run a mutation, you first call `useLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeMutation, { data, loading, error }] = useLikeMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useLikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeMutation, LikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
+      }
+export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
+export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
+export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
 export const UserDocument = gql`
     query User($id: ID!) {
   user(id: $id) {

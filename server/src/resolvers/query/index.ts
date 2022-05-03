@@ -17,10 +17,10 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { size, excludeIds } = args.input;
-    const { usersCollection, usersStatsCollection } = context.collections;
+    const { allUsersStatsCollection, usersCollection } = context.collections;
 
-    const usersStat = await usersStatsCollection.get();
-    const randomUserIds = take(shuffle(xor(usersStat.userIds, excludeIds, [context.authContext.uid])), size);
+    const allUsersStat = await allUsersStatsCollection.get();
+    const randomUserIds = take(shuffle(xor(allUsersStat.userIds, excludeIds, [context.authContext.uid])), size);
 
     return randomUserIds.map((id) => usersCollection.findOneById(id));
   },

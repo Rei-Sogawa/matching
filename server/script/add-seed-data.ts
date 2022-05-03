@@ -1,7 +1,7 @@
 import { createCollections } from "../src/fire/create-collections";
 import { UserData } from "../src/fire/docs";
 import { prefs } from "../src/utils/contants";
-import { now } from "../src/utils/now";
+import { getNow } from "../src/utils/get-now";
 import { getDb, id, randomInt } from "./script-utils";
 
 const db = getDb();
@@ -18,7 +18,7 @@ const main = async () => {
 
   const fakeUsers = await Promise.all(
     fakeAuthUsers.map((authUser, i) => {
-      const createdAt = now();
+      const createdAt = getNow();
       const userData: UserData = {
         gender: ["MALE", "FEMALE"][randomInt(1)] as "MALE" | "FEMALE",
         nickName: `fake-user-${i}`,

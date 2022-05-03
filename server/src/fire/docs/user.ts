@@ -2,7 +2,7 @@ import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
-import { now } from "../../utils/now";
+import { getNow } from "../../utils/get-now";
 import { createConverter } from "../helpers/create-converter";
 
 const UserSchema = z
@@ -40,7 +40,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   }
 
   static createData(): UserData {
-    const createdAt = now();
+    const createdAt = getNow();
     return UserSchema.parse({
       gender: "MALE",
       nickName: "ニックネーム",
@@ -53,7 +53,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   }
 
   edit(data: Partial<Omit<UserData, "createdAt" | "updatedAt">>) {
-    const updatedAt = now();
+    const updatedAt = getNow();
     Object.assign(this, { ...data, updatedAt });
     UserSchema.parse(this.toData());
     return this;

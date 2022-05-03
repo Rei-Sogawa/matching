@@ -8,7 +8,7 @@ import { animated, useSpring } from "react-spring";
 import { Loading } from "../../../components/case/Loading";
 import { BackButton } from "../../../components/common/BackButton";
 import { useGlobal } from "../../../contexts/Global";
-import { UserForUserPageFragment, useUserQuery } from "../../../graphql/generated";
+import { useLikeMutation, UserForUserPageFragment, useUserQuery } from "../../../graphql/generated";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 import { assertDefined } from "../../../utils/assert-defined";
@@ -16,6 +16,15 @@ import { assertDefined } from "../../../utils/assert-defined";
 const Card: FC<BoxProps> = (props) => {
   return <Box w={{ base: "full", md: "lg" }} p="4" rounded="md" boxShadow="md" bg="white" {...props} />;
 };
+
+gql`
+  mutation Like($userId: ID!) {
+    like(userId: $userId) {
+      id
+      ...UserForUserPage
+    }
+  }
+`;
 
 gql`
   fragment UserForUserPage on User {
@@ -32,7 +41,6 @@ type UserPageTemplateProps = { user: UserForUserPageFragment };
 
 const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const navigate = useNavigate();
-
   const { searchedUsers } = useGlobal();
 
   const redirect = () => {
@@ -58,6 +66,8 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     }
   };
 
+  const [like] = useLikeMutation({ variables: { userId: user.id } });
+
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
   const [liked, setLiked] = useState(false);
   const [skipped, setSkipped] = useState(false);
@@ -68,14 +78,15 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     imageStylesApi.start({ opacity: 0 });
   };
 
-  const onLike = () => {
+  const onLike = async () => {
     setLiked(true);
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
+    await like();
 
     setTimeout(() => {
       resetAnimation();
       redirect();
-    }, 1_500);
+    }, 500);
   };
 
   const onSkip = () => {
