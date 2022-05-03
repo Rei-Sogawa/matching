@@ -9,6 +9,6 @@ export class UsersCollection extends FireCollection<UserData, UserDoc> {
   }
 
   create(id: string) {
-    return this.insert({ id, ...UserDoc.createData() });
+    return this.insert({ id, ...UserDoc.create() });
   }
 }

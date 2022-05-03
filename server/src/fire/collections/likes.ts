@@ -17,6 +17,6 @@ export class LikesCollection extends FireCollection<LikeData, LikeDoc> {
   }
 
   create({ senderId, receiverId }: { senderId: string; receiverId: string }) {
-    return this.insert(LikeDoc.createData({ senderId, receiverId }));
+    return this.insert(LikeDoc.create({ senderId, receiverId }));
   }
 }

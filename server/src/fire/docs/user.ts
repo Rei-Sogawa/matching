@@ -22,7 +22,7 @@ export type UserData = z.infer<typeof UserSchema>;
 export const userConverter = createConverter<UserData>();
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
-  static createData(): UserData {
+  static create(): UserData {
     const createdAt = getNow();
     return UserSchema.parse({
       gender: "MALE",

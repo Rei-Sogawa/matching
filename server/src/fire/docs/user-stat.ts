@@ -18,7 +18,7 @@ export type UserStatData = z.infer<typeof UserStatSchema>;
 export const userStatConverter = createConverter<UserStatData>();
 
 export class UserStatDoc extends FireDocument<UserStatData> implements UserStatData {
-  static createData() {
+  static create() {
     return UserStatSchema.parse({ sendLikeUserIds: [], receiveLikeUserIds: [], skipLikeUserIds: [], matchUserIds: [] });
   }
 
@@ -52,17 +52,5 @@ export class UserStatDoc extends FireDocument<UserStatData> implements UserStatD
 
   receiveLike(userId: string) {
     return this.ref.update({ receiveLikeUserIds: FieldValue.arrayUnion(userId) });
-  }
-
-  matchData(userId: string) {
-    return { matchUserIds: FieldValue.arrayUnion(userId) };
-  }
-
-  sendLikeData(userId: string) {
-    return { sendLikeUserIds: FieldValue.arrayUnion(userId) };
-  }
-
-  receiveLikeData(userId: string) {
-    return { receiveLikeUserIds: FieldValue.arrayUnion(userId) };
   }
 }

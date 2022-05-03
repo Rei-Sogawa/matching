@@ -30,26 +30,16 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { userId: targetUserId } = args;
     const { uid: actionUserId } = context.authContext;
-    const { usersCollection, userStatsCollection, likesCollection } = context.collections;
+    const { usersCollection, likesCollection } = context.collections;
 
     const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
-    const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
-
-    const actionUserStat = await userStatsCollection.findOneById(actionUserId);
-    const targetUserStat = await userStatsCollection.findOneById(targetUserId);
-
     if (sentLike) throw new Error("Already liked");
 
+    const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
     if (receivedLike) {
       await receivedLike.match();
-
-      await actionUserStat.match(targetUserId);
-      await targetUserStat.match(actionUserId);
     } else {
       await likesCollection.create({ senderId: actionUserId, receiverId: targetUserId });
-
-      await actionUserStat.sendLike(targetUserId);
-      await targetUserStat.receiveLike(actionUserId);
     }
 
     return usersCollection.findOneById(targetUserId);
