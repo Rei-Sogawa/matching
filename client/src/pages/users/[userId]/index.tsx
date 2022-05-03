@@ -156,7 +156,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
         </Card>
       </VStack>
 
-      <HStack spacing="8" position="absolute" bottom="16" left="50%" transform="translateX(-50%)">
+      <HStack spacing="8" position="absolute" bottom="10" left="50%" transform="translateX(-50%)">
         <IconButton
           h="20"
           w="20"

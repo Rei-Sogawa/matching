@@ -2,6 +2,7 @@ import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
 import { createContext, FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Loading } from "../components/case/Loading";
 import { assertDefined } from "../utils/assert-defined";
 import { useGlobal } from "./Global";
 
@@ -42,7 +43,7 @@ const AuthContext = createContext<State | undefined>(undefined);
 
 export const AuthProvider: FC = ({ children }) => {
   const state = useAuthProvider();
-  return state.initialized ? <AuthContext.Provider value={state}>{children}</AuthContext.Provider> : null;
+  return state.initialized ? <AuthContext.Provider value={state}>{children}</AuthContext.Provider> : <Loading />;
 };
 
 export const useAuth = () => {

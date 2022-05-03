@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { createContext, FC, useContext } from "react";
 
+import { Loading } from "../components/case/Loading";
 import { MeForMeFragment, useMeQuery } from "../graphql/generated";
 import { assertDefined } from "../utils/assert-defined";
 import { useAuth } from "./Auth";
@@ -33,7 +34,7 @@ export const MeProvider: FC = ({ children }) => {
   const { data, loading } = useMeQuery({ skip: !uid });
 
   if (!uid) return <>{children}</>;
-  if (loading) return null;
+  if (loading) return <Loading />;
   if (!data) throw new Error("Not found me");
 
   return <MeContext.Provider value={data.me}>{children}</MeContext.Provider>;
