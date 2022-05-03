@@ -22,6 +22,19 @@ export type UserData = z.infer<typeof UserSchema>;
 export const userConverter = createConverter<UserData>();
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
+  static createData(): UserData {
+    const createdAt = getNow();
+    return UserSchema.parse({
+      gender: "MALE",
+      nickName: "ニックネーム",
+      age: 30,
+      livingPref: "東京",
+      photoPaths: [],
+      createdAt,
+      updatedAt: createdAt,
+    });
+  }
+
   gender!: Gender;
   nickName!: string;
   age!: number;
@@ -37,19 +50,6 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   toData() {
     const { id, ref, ...data } = this;
     return UserSchema.parse(data);
-  }
-
-  static createData(): UserData {
-    const createdAt = getNow();
-    return UserSchema.parse({
-      gender: "MALE",
-      nickName: "ニックネーム",
-      age: 30,
-      livingPref: "東京",
-      photoPaths: [],
-      createdAt,
-      updatedAt: createdAt,
-    });
   }
 
   edit(data: Partial<Omit<UserData, "createdAt" | "updatedAt">>) {

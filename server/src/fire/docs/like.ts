@@ -20,6 +20,11 @@ export type LikeData = z.infer<typeof LikeSchema>;
 export const likeConverter = createConverter<LikeData>();
 
 export class LikeDoc extends FireDocument<LikeData> implements LikeData {
+  static createData(data: Omit<LikeData, "status" | "createdAt" | "updatedAt">) {
+    const createdAt = getNow();
+    return LikeSchema.parse({ ...data, status: "PENDING", createdAt, updatedAt: createdAt });
+  }
+
   senderId!: string;
   receiverId!: string;
   status!: LikeStatus;
@@ -35,11 +40,6 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     return LikeSchema.parse(data);
   }
 
-  static createData(data: Omit<LikeData, "status" | "createdAt" | "updatedAt">) {
-    const createdAt = getNow();
-    return LikeSchema.parse({ ...data, status: "PENDING", createdAt, updatedAt: createdAt });
-  }
-
   edit(data: Partial<Omit<LikeData, "createdAt" | "updatedAt">>) {
     const updatedAt = getNow();
     Object.assign(this, { ...data, updatedAt });
@@ -50,5 +50,9 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   match() {
     this.edit({ status: "MATCHED" });
     return this.update();
+  }
+
+  matchData() {
+    return { status: "MATCHED" };
   }
 }
