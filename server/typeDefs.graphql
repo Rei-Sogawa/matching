@@ -72,4 +72,5 @@ input UpdateUserInput {
 type Mutation {
   signUp(input: SignUpInput!): Me!
   updateUser(input: UpdateUserInput!): Me!
+  like(userId: ID!): User!
 }

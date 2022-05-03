@@ -43,8 +43,14 @@ export type Me = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  like: User;
   signUp: Me;
   updateUser: Me;
+};
+
+
+export type MutationLikeArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -220,6 +226,7 @@ export type MeResolvers<ContextType = Context, ParentType extends ResolversParen
 }>;
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  like?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLikeArgs, 'userId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
   updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
 }>;

@@ -25,6 +25,7 @@ type Me {
 }
 
 type Mutation {
+  like(userId: ID!): User!
   signUp(input: SignUpInput!): Me!
   updateUser(input: UpdateUserInput!): Me!
 }

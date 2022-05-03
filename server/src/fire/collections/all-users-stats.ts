@@ -1,19 +1,19 @@
 import deepmerge from "deepmerge";
 import { CollectionReference } from "firebase-admin/firestore";
 
-export type UsersStatData = {
+export type AllUsersStatData = {
   userIds: string[];
 };
 
-export class UsersStatsCollection {
+export class AllUsersStatsCollection {
   docId = "0";
-  ref: CollectionReference<UsersStatData>;
+  ref: CollectionReference<AllUsersStatData>;
 
   constructor(ref: CollectionReference) {
-    this.ref = ref as CollectionReference<UsersStatData>;
+    this.ref = ref as CollectionReference<AllUsersStatData>;
   }
 
-  async merge(data: UsersStatData) {
+  async merge(data: AllUsersStatData) {
     const doc = await this.ref.doc(this.docId).get();
     const prevData = doc.data();
     if (!prevData) {
