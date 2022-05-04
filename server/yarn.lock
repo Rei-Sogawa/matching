@@ -1172,10 +1172,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@rei-sogawa/unfireorm@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@rei-sogawa/unfireorm/-/unfireorm-1.0.10.tgz#3a437a34c335a5ce137ace33c75b46d07c19ef19"
-  integrity sha512-Sb0gQMqDxW8yBDKDJeGkFNQ9DSf8IS8rz4ikOhKfxIMXPfIQI9bbTyz4wHBWtWu0xw7Bdodv4vm6Pn1OjgcfFA==
+"@rei-sogawa/unfireorm@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@rei-sogawa/unfireorm/-/unfireorm-1.0.12.tgz#3b6b4766d00b3874e8c776fda80457ee6ccd6fa3"
+  integrity sha512-AOhsZ8CJBhsEg6wO5WJm/mnhfWpv3yINcj37VhoW5zJsV3U58UR3gResfm0z5+SgBvO63FW4QCked7EFvtq4Vw==
   dependencies:
     dataloader "^2.0.0"
 

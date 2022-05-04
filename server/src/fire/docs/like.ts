@@ -1,4 +1,5 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
+import { CollectionReference } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
@@ -20,13 +21,32 @@ export type LikeData = z.infer<typeof LikeSchema>;
 export const likeConverter = createConverter<LikeData>();
 
 export class LikeDoc extends FireDocument<LikeData> implements LikeData {
+  static create(
+    collection: CollectionReference<LikeData>,
+    { senderId, receiverId }: Pick<LikeData, "senderId" | "receiverId">
+  ) {
+    const docRef = collection.doc();
+    const createdAt = getNow();
+    return new LikeDoc({
+      id: docRef.id,
+      ref: docRef,
+      data: () => ({
+        senderId,
+        receiverId,
+        status: "PENDING",
+        createdAt,
+        updatedAt: createdAt,
+      }),
+    });
+  }
+
   senderId!: string;
   receiverId!: string;
   status!: LikeStatus;
   createdAt!: Date;
   updatedAt!: Date;
 
-  constructor(snap: FireDocumentInput<LikeData>) {
+  constructor(snap: FireDocumentInput) {
     super(snap, likeConverter);
   }
 

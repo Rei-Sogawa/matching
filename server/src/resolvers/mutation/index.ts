@@ -1,4 +1,5 @@
 import { authorize } from "../../authorize";
+import { UserDoc, UserStatDoc } from "../../fire/docs";
 import { Resolvers } from "./../../graphql/generated";
 
 export const Mutation: Resolvers["Mutation"] = {
@@ -9,10 +10,10 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { uid } = await auth.createUser({ email, password });
 
-    const user = await usersCollection.create(uid);
+    const user = UserDoc.create(usersCollection.ref);
+    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: uid });
 
     await allUsersStatsCollection.merge({ userIds: [uid] });
-    await userStatsCollection.create(uid);
 
     return user;
   },
@@ -24,7 +25,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection } = context.collections;
 
     const user = await usersCollection.findOneById(uid);
-    return user.edit(args.input).update();
+    return user.edit(args.input).set();
   },
 
   async like(_parent, args, context) {
@@ -39,7 +40,7 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
     if (receivedLike) {
-      await receivedLike.match().update();
+      await receivedLike.match().set();
     } else {
       await likesCollection.create({ senderId: actionUserId, receiverId: targetUserId });
     }

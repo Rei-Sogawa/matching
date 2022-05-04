@@ -1,7 +1,9 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
+import { CollectionReference } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
+import { getNow } from "../../utils/get-now";
 import { createConverter } from "../helpers/create-converter";
 
 const UserSchema = z
@@ -21,6 +23,24 @@ export type UserData = z.infer<typeof UserSchema>;
 export const userConverter = createConverter<UserData>();
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
+  static create(collection: CollectionReference<UserData>) {
+    const docRef = collection.doc();
+    const createdAt = getNow();
+    return new UserDoc({
+      id: docRef.id,
+      ref: docRef,
+      data: () => ({
+        gender: "MALE",
+        nickName: "ニックネーム",
+        age: 30,
+        livingPref: "東京都",
+        photoPaths: [],
+        createdAt,
+        updatedAt: createdAt,
+      }),
+    });
+  }
+
   gender!: Gender;
   nickName!: string;
   age!: number;
@@ -29,7 +49,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   createdAt!: Date;
   updatedAt!: Date;
 
-  constructor(snap: FireDocumentInput<UserData>) {
+  constructor(snap: FireDocumentInput) {
     super(snap, userConverter);
   }
 
