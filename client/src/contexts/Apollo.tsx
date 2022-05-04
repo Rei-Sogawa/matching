@@ -36,7 +36,7 @@ const getClient = (token?: string) => {
   return new ApolloClient({
     link: getAuthLink(token).concat(httpLink),
     cache,
-    // connectToDevTools: import.meta.env.DEV,
+    connectToDevTools: import.meta.env.DEV,
   });
 };
 

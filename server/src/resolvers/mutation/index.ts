@@ -8,17 +8,17 @@ export const Mutation: Resolvers["Mutation"] = {
     const { auth, db } = context;
     const { allUsersStatsCollection, usersCollection, userStatsCollection } = context.collections;
 
-    const allUsersStat = await allUsersStatsCollection.get();
-
     const { uid } = await auth.createUser({ email, password });
+
     const user = UserDoc.create(usersCollection.ref, { id: uid });
     const userStat = UserStatDoc.create(userStatsCollection.ref, { id: uid });
+    const allUsersStat = await allUsersStatsCollection.get();
+    allUsersStat.signUp(uid);
 
     const batch = db.batch();
     batch.set(...user.toBatch());
     batch.set(...userStat.toBatch());
-    batch.set(...allUsersStat.signUp(uid).toBatch());
-
+    batch.set(...allUsersStat.toBatch());
     await batch.commit();
 
     return user;
@@ -31,7 +31,8 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection } = context.collections;
 
     const user = await usersCollection.findOneById(uid);
-    return user.edit(args.input).set();
+    user.edit(args.input);
+    return user.set();
   },
 
   async like(_parent, args, context) {
@@ -52,16 +53,16 @@ export const Mutation: Resolvers["Mutation"] = {
 
     if (receivedLike) {
       receivedLike.match();
-      batch.set(...receivedLike.toBatch());
-
       actionUserStat.match(targetUserId);
       targetUserStat.match(actionUserId);
+
+      batch.set(...receivedLike.toBatch());
     } else {
       const like = LikeDoc.create(likesCollection.ref, { senderId: actionUserId, receiverId: targetUserId });
-      batch.set(...like.toBatch());
-
       actionUserStat.sendLike(targetUserId);
       targetUserStat.receiveLike(actionUserId);
+
+      batch.set(...like.toBatch());
     }
 
     batch.set(...actionUserStat.toBatch());
