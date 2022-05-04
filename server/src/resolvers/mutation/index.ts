@@ -24,8 +24,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection } = context.collections;
 
     const user = await usersCollection.findOneById(uid);
-    user.edit(args.input);
-    return user.update();
+    return user.edit(args.input).update();
   },
 
   async like(_parent, args, context) {
