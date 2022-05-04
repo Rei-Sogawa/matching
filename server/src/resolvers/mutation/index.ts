@@ -1,19 +1,25 @@
 import { authorize } from "../../authorize";
-import { UserDoc, UserStatDoc } from "../../fire/docs";
+import { LikeDoc, UserDoc, UserStatDoc } from "../../fire/docs";
 import { Resolvers } from "./../../graphql/generated";
 
 export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
-    const { auth } = context;
+    const { auth, db } = context;
     const { usersCollection, userStatsCollection, allUsersStatsCollection } = context.collections;
 
-    const { uid } = await auth.createUser({ email, password });
+    const allUsersStat = await allUsersStatsCollection.get();
 
+    const { uid } = await auth.createUser({ email, password });
     const user = UserDoc.create(usersCollection.ref);
     const userStat = UserStatDoc.create(userStatsCollection.ref, { id: uid });
 
-    await allUsersStatsCollection.merge({ userIds: [uid] });
+    const batch = db.batch();
+    batch.set(...user.toBatch());
+    batch.set(...userStat.toBatch());
+    batch.set(...allUsersStat.signUp(uid).toBatch());
+
+    await batch.commit();
 
     return user;
   },
@@ -33,17 +39,35 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { userId: targetUserId } = args;
     const { uid: actionUserId } = context.decodedIdToken;
-    const { usersCollection, likesCollection } = context.collections;
+    const { db } = context;
+    const { usersCollection, userStatsCollection, likesCollection } = context.collections;
 
     const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
     if (sentLike) throw new Error("sentLike exists");
-
     const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
+    const actionUserStat = await userStatsCollection.findOneById(actionUserId);
+    const targetUserStat = await userStatsCollection.findOneById(targetUserId);
+
+    const batch = db.batch();
+
     if (receivedLike) {
-      await receivedLike.match().set();
+      receivedLike.match();
+      batch.set(...receivedLike.toBatch());
+
+      actionUserStat.match(targetUserId);
+      targetUserStat.match(actionUserId);
     } else {
-      await likesCollection.create({ senderId: actionUserId, receiverId: targetUserId });
+      const like = LikeDoc.create(likesCollection.ref, { senderId: actionUserId, receiverId: targetUserId });
+      batch.set(...like.toBatch());
+
+      actionUserStat.sendLike(targetUserId);
+      targetUserStat.receiveLike(actionUserId);
     }
+
+    batch.set(...actionUserStat.toBatch());
+    batch.set(...targetUserStat.toBatch());
+
+    await batch.commit();
 
     return usersCollection.findOneById(targetUserId);
   },
