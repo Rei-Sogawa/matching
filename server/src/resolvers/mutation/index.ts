@@ -40,7 +40,7 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
     if (receivedLike) {
-      await receivedLike.match();
+      await receivedLike.match().update();
     } else {
       await likesCollection.create({ senderId: actionUserId, receiverId: targetUserId });
     }
