@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Box, BoxProps, Center, HStack, IconButton, Stack, VStack } from "@chakra-ui/react";
-import { PartialWithFieldValue } from "firebase/firestore";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
