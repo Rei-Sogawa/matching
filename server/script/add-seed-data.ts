@@ -1,18 +1,14 @@
 import { createCollections } from "../src/fire/create-collections";
 import { UserDoc, UserStatDoc } from "../src/fire/docs";
 import { prefs } from "../src/utils/contants";
-import { getAuth, getDb, getStorage, id, randomInt } from "./script-utils";
+import { getDb, id, randomInt } from "./script-utils";
 
-const auth = getAuth();
 const db = getDb();
-const storage = getStorage();
 
 const collections = createCollections(db);
 const { allUsersStatsCollection, usersCollection, userStatsCollection } = collections;
 
 const main = async () => {
-  const allUsersStat = await allUsersStatsCollection.get();
-
   const fakeAuthUsers = await Promise.all(
     Array.from({ length: 10 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
@@ -34,9 +30,15 @@ const main = async () => {
       })
       .set();
     await userStat.set();
-    await allUsersStat.signUp(user.id).set();
     i++;
   }
+
+  const allUsersStat = await allUsersStatsCollection.get();
+  await allUsersStat
+    .edit({
+      userIds: fakeAuthUsers.map(({ uid }) => uid),
+    })
+    .set();
 };
 
 main();

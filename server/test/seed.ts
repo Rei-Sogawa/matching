@@ -14,8 +14,6 @@ const main = async () => {
   await clearAuth();
   await clearFirestore();
 
-  const allUsersStat = await allUsersStatsCollection.get();
-
   const fakeAuthUsers = await Promise.all(
     Array.from({ length: 10 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
@@ -37,11 +35,13 @@ const main = async () => {
       })
       .set();
     await userStat.set();
-    await allUsersStat.signUp(user.id).set();
     i++;
   }
 
   // NOTE: メインユーザー
+  let user1;
+  let user2;
+
   {
     const authUser = await auth.createUser({
       email: "user-1@example.com",
@@ -55,7 +55,8 @@ const main = async () => {
 
     await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).set();
     await userStat.set();
-    await allUsersStat.signUp(user.id).set();
+
+    user1 = user;
   }
 
   {
@@ -71,8 +72,16 @@ const main = async () => {
 
     await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).set();
     await userStat.set();
-    await allUsersStat.signUp(user.id).set();
+
+    user2 = user;
   }
+
+  const allUsersStat = await allUsersStatsCollection.get();
+  await allUsersStat
+    .edit({
+      userIds: [user1.id, user2.id, ...fakeAuthUsers.map(({ uid }) => uid)],
+    })
+    .set();
 };
 
 main();
