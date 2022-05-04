@@ -11,7 +11,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const allUsersStat = await allUsersStatsCollection.get();
 
     const { uid } = await auth.createUser({ email, password });
-    const user = UserDoc.create(usersCollection.ref);
+    const user = UserDoc.create(usersCollection.ref, { id: uid });
     const userStat = UserStatDoc.create(userStatsCollection.ref, { id: uid });
 
     const batch = db.batch();

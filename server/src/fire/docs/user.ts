@@ -23,8 +23,8 @@ export type UserData = z.infer<typeof UserSchema>;
 export const userConverter = createConverter<UserData>();
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
-  static create(collection: CollectionReference<UserData>) {
-    const docRef = collection.doc();
+  static create(collection: CollectionReference<UserData>, { id }: { id: string }) {
+    const docRef = collection.doc(id);
     const createdAt = getNow();
     return new UserDoc({
       id: docRef.id,
