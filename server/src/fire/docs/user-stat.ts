@@ -55,11 +55,26 @@ export class UserStatDoc extends FireDocument<UserStatData> implements UserStatD
     return this.edit({ sendLikeUserIds: [...this.sendLikeUserIds, userId] });
   }
 
+  undoSendLike(userId: string) {
+    return this.edit({ sendLikeUserIds: this.sendLikeUserIds.filter((id) => id !== userId) });
+  }
+
   receiveLike(userId: string) {
     return this.edit({ receiveLikeUserIds: [...this.receiveLikeUserIds, userId] });
   }
 
+  undoReceiveLike(userId: string) {
+    return this.edit({ receiveLikeUserIds: this.receiveLikeUserIds.filter((id) => id !== userId) });
+  }
+
+  skipLike(userId: string) {
+    return this.edit({ skipLikeUserIds: [...this.skipLikeUserIds, userId] });
+  }
+
   match(userId: string) {
-    return this.edit({ matchUserIds: [...this.matchUserIds, userId] });
+    return this.edit({
+      skipLikeUserIds: this.skipLikeUserIds.filter((id) => id !== userId),
+      matchUserIds: [...this.matchUserIds, userId],
+    });
   }
 }
