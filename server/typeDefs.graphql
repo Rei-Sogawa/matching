@@ -47,9 +47,14 @@ input RandomUsersInput {
   excludeIds: [ID!]!
 }
 
+type RandomUsersResult {
+  users: [User!]!
+  hasMore: Boolean!
+}
+
 type Query {
   me: Me!
-  randomUsers(input: RandomUsersInput!): [User!]!
+  randomUsers(input: RandomUsersInput!): RandomUsersResult!
   user(id: ID!): User!
 }
 

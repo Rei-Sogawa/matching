@@ -32,13 +32,18 @@ type Mutation {
 
 type Query {
   me: Me!
-  randomUsers(input: RandomUsersInput!): [User!]!
+  randomUsers(input: RandomUsersInput!): RandomUsersResult!
   user(id: ID!): User!
 }
 
 input RandomUsersInput {
   excludeIds: [ID!]!
   size: Int!
+}
+
+type RandomUsersResult {
+  hasMore: Boolean!
+  users: [User!]!
 }
 
 input SignUpInput {

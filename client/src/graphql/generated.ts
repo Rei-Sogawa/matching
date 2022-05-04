@@ -65,7 +65,7 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
-  randomUsers: Array<User>;
+  randomUsers: RandomUsersResult;
   user: User;
 };
 
@@ -82,6 +82,12 @@ export type QueryUserArgs = {
 export type RandomUsersInput = {
   excludeIds: Array<Scalars['ID']>;
   size: Scalars['Int'];
+};
+
+export type RandomUsersResult = {
+  __typename?: 'RandomUsersResult';
+  hasMore: Scalars['Boolean'];
+  users: Array<User>;
 };
 
 export type SignUpInput = {
@@ -153,7 +159,7 @@ export type RandomUsersQueryVariables = Exact<{
 }>;
 
 
-export type RandomUsersQuery = { __typename?: 'Query', randomUsers: Array<{ __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> }> };
+export type RandomUsersQuery = { __typename?: 'Query', randomUsers: { __typename?: 'RandomUsersResult', hasMore: boolean, users: Array<{ __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> }> } };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
@@ -370,8 +376,11 @@ export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const RandomUsersDocument = gql`
     query RandomUsers($input: RandomUsersInput!) {
   randomUsers(input: $input) {
-    id
-    ...UserForUsersPageUserCard
+    users {
+      id
+      ...UserForUsersPageUserCard
+    }
+    hasMore
   }
 }
     ${UserForUsersPageUserCardFragmentDoc}`;

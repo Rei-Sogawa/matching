@@ -72,7 +72,10 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
       cache.modify({
         fields: {
           randomUsers(existing, { readField }) {
-            return existing.filter((u: Reference) => readField("id", u) !== user.id);
+            return {
+              ...existing,
+              users: existing.users.filter((u: Reference) => readField("id", u) !== user.id),
+            };
           },
         },
       });

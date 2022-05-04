@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { Avatar, Box, Button, HStack, Stack, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { head } from "lodash-es";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 
 import { AppLink } from "../../components/base/AppLink";
 import { useGlobal } from "../../contexts/Global";
@@ -40,8 +40,11 @@ const UserCard: FC<UserCardProps> = ({ user }) => {
 gql`
   query RandomUsers($input: RandomUsersInput!) {
     randomUsers(input: $input) {
-      id
-      ...UserForUsersPageUserCard
+      users {
+        id
+        ...UserForUsersPageUserCard
+      }
+      hasMore
     }
   }
 `;
@@ -49,17 +52,15 @@ gql`
 const SIZE = 6;
 
 export const UsersPage: FC = () => {
-  const [hasMore, setHasMore] = useState(true);
-
   const { data, fetchMore } = useRandomUsersQuery({ variables: { input: { size: SIZE, excludeIds: [] } } });
 
-  const users = data?.randomUsers ?? [];
+  const users = data?.randomUsers.users ?? [];
+  const hasMore = data?.randomUsers.hasMore ?? false;
 
   const onLoadMore = async () => {
-    const res = await fetchMore({
+    await fetchMore({
       variables: { input: { size: SIZE, excludeIds: users.map((user) => user.id) } },
     });
-    if (res.data.randomUsers.length < SIZE) setHasMore(false);
   };
 
   const { setSearchedUsers } = useGlobal();

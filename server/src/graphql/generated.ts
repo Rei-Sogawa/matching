@@ -6,6 +6,7 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -66,7 +67,7 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
-  randomUsers: Array<User>;
+  randomUsers: RandomUsersResult;
   user: User;
 };
 
@@ -83,6 +84,12 @@ export type QueryUserArgs = {
 export type RandomUsersInput = {
   excludeIds: Array<Scalars['ID']>;
   size: Scalars['Int'];
+};
+
+export type RandomUsersResult = {
+  __typename?: 'RandomUsersResult';
+  hasMore: Scalars['Boolean'];
+  users: Array<User>;
 };
 
 export type SignUpInput = {
@@ -188,6 +195,7 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   RandomUsersInput: RandomUsersInput;
+  RandomUsersResult: ResolverTypeWrapper<Omit<RandomUsersResult, 'users'> & { users: Array<ResolversTypes['User']> }>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateUserInput: UpdateUserInput;
@@ -204,6 +212,7 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   Query: {};
   RandomUsersInput: RandomUsersInput;
+  RandomUsersResult: Omit<RandomUsersResult, 'users'> & { users: Array<ResolversParentTypes['User']> };
   SignUpInput: SignUpInput;
   String: Scalars['String'];
   UpdateUserInput: UpdateUserInput;
@@ -233,8 +242,14 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
-  randomUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryRandomUsersArgs, 'input'>>;
+  randomUsers?: Resolver<ResolversTypes['RandomUsersResult'], ParentType, ContextType, RequireFields<QueryRandomUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+}>;
+
+export type RandomUsersResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RandomUsersResult'] = ResolversParentTypes['RandomUsersResult']> = ResolversObject<{
+  hasMore?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -252,6 +267,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  RandomUsersResult?: RandomUsersResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 

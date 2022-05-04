@@ -26,7 +26,10 @@ export const Query: Resolvers["Query"] = {
     const userIds = xor(excludeIds, allUsersStat.userIds, userStat.sendLikeUserIds, userStat.skipLikeUserIds, [uid]);
     const randomUserIds = take(shuffle(userIds), size);
 
-    return randomUserIds.map((id) => usersCollection.findOneById(id));
+    return {
+      users: randomUserIds.map((id) => usersCollection.findOneById(id)),
+      hasMore: randomUserIds.length === size,
+    };
   },
 
   user: (_parent, args, context) => {

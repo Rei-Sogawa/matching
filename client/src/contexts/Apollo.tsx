@@ -25,7 +25,7 @@ const getClient = (token?: string) => {
             keyArgs: false,
             merge: (existing, incoming) => {
               if (!existing) return incoming;
-              return [...existing, ...incoming];
+              return { ...incoming, users: [...existing.users, ...incoming.users] };
             },
           },
         },
