@@ -9,6 +9,6 @@ export class UserStatsCollection extends FireCollection<UserStatData, UserStatDo
   }
 
   create(id: string) {
-    return this.insert({ id, ...UserStatDoc.create() });
+    return this.insert({ id, sendLikeUserIds: [], receiveLikeUserIds: [], skipLikeUserIds: [], matchUserIds: [] });
   }
 }

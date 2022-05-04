@@ -9,9 +9,12 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { uid } = await auth.createUser({ email, password });
 
+    const user = await usersCollection.create(uid);
+
     await allUsersStatsCollection.merge({ userIds: [uid] });
     await userStatsCollection.create(uid);
-    return usersCollection.create(uid);
+
+    return user;
   },
 
   async updateUser(_parent, args, context) {
@@ -33,7 +36,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const { usersCollection, likesCollection } = context.collections;
 
     const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
-    if (sentLike) throw new Error("sentLike found");
+    if (sentLike) throw new Error("sentLike exists");
 
     const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
     if (receivedLike) {

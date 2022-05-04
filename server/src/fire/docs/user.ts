@@ -2,7 +2,6 @@ import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
-import { getNow } from "../../utils/get-now";
 import { createConverter } from "../helpers/create-converter";
 
 const UserSchema = z
@@ -22,19 +21,6 @@ export type UserData = z.infer<typeof UserSchema>;
 export const userConverter = createConverter<UserData>();
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
-  static create(): UserData {
-    const createdAt = getNow();
-    return UserSchema.parse({
-      gender: "MALE",
-      nickName: "ニックネーム",
-      age: 30,
-      livingPref: "東京",
-      photoPaths: [],
-      createdAt,
-      updatedAt: createdAt,
-    });
-  }
-
   gender!: Gender;
   nickName!: string;
   age!: number;
@@ -49,13 +35,11 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
 
   toData() {
     const { id, ref, ...data } = this;
-    return UserSchema.parse(data);
+    return data;
   }
 
-  edit(data: Partial<Omit<UserData, "createdAt" | "updatedAt">>) {
-    const updatedAt = getNow();
-    Object.assign(this, { ...data, updatedAt });
-    UserSchema.parse(this.toData());
-    return this;
+  toBatch() {
+    const { id, ref, ...data } = this;
+    return [ref, data] as const;
   }
 }
