@@ -1,4 +1,4 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, Reference } from "@apollo/client";
 import { Box, BoxProps, Center, HStack, IconButton, Stack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
@@ -8,12 +8,7 @@ import { animated, useSpring } from "react-spring";
 import { Loading } from "../../../components/case/Loading";
 import { BackButton } from "../../../components/common/BackButton";
 import { useGlobal } from "../../../contexts/Global";
-import {
-  RandomUsersDocument,
-  useLikeMutation,
-  UserForUserPageFragment,
-  useUserQuery,
-} from "../../../graphql/generated";
+import { useLikeMutation, UserForUserPageFragment, useUserQuery } from "../../../graphql/generated";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 import { assertDefined } from "../../../utils/assert-defined";
@@ -71,9 +66,17 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     }
   };
 
-  const client = useApolloClient();
   const [like] = useLikeMutation({
     variables: { userId: user.id },
+    update(cache) {
+      cache.modify({
+        fields: {
+          randomUsers(existing, { readField }) {
+            return existing.filter((u: Reference) => readField("id", u) !== user.id);
+          },
+        },
+      });
+    },
   });
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
@@ -87,10 +90,6 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   };
 
   const onLike = async () => {
-    client.cache.updateQuery({ query: RandomUsersDocument }, (data) => {
-      return { randomUsers: data.randomUsers.filter((u: { id: string }) => u.id !== user.id) };
-    });
-
     setLiked(true);
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
     await like();
