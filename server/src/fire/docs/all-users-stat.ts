@@ -1,5 +1,4 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
-import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { createConverter } from "../helpers/create-converter";
@@ -30,6 +29,6 @@ export class AllUsersStatDoc extends FireDocument<AllUsersStatData> implements A
   }
 
   signUp(userId: string) {
-    return this.edit({ userIds: FieldValue.arrayUnion(userId) });
+    return this.edit({ userIds: [...this.userIds, userId] });
   }
 }

@@ -66,7 +66,9 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     }
   };
 
-  const [like] = useLikeMutation({ variables: { userId: user.id } });
+  const [like] = useLikeMutation({
+    variables: { userId: user.id },
+  });
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
   const [liked, setLiked] = useState(false);

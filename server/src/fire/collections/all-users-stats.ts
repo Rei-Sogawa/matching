@@ -15,6 +15,12 @@ export class AllUsersStatsCollection extends FireCollection<AllUsersStatData, Al
   }
 
   get() {
-    return this.findOneById(this.docId);
+    return this.ref
+      .doc(this.docId)
+      .get()
+      .then((snap) => {
+        const data = snap.data() ?? { userIds: [] };
+        return new AllUsersStatDoc({ id: snap.id, ref: snap.ref, data: () => data });
+      });
   }
 }

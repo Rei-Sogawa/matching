@@ -6,7 +6,7 @@ export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
     const { auth, db } = context;
-    const { usersCollection, userStatsCollection, allUsersStatsCollection } = context.collections;
+    const { allUsersStatsCollection, usersCollection, userStatsCollection } = context.collections;
 
     const allUsersStat = await allUsersStatsCollection.get();
 

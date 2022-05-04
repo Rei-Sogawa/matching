@@ -18,10 +18,13 @@ export const Query: Resolvers["Query"] = {
 
     const { size, excludeIds } = args.input;
     const { uid } = context.decodedIdToken;
-    const { allUsersStatsCollection, usersCollection } = context.collections;
+    const { allUsersStatsCollection, usersCollection, userStatsCollection } = context.collections;
 
     const allUsersStat = await allUsersStatsCollection.get();
-    const randomUserIds = take(shuffle(xor(allUsersStat.userIds, excludeIds, [uid])), size);
+    const userStat = await userStatsCollection.findOneById(uid);
+
+    const userIds = xor(excludeIds, allUsersStat.userIds, userStat.sendLikeUserIds, userStat.skipLikeUserIds, [uid]);
+    const randomUserIds = take(shuffle(userIds), size);
 
     return randomUserIds.map((id) => usersCollection.findOneById(id));
   },

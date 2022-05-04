@@ -1,7 +1,6 @@
 import { createCollections } from "../src/fire/create-collections";
-import { UserData, UserDoc, UserStatDoc } from "../src/fire/docs";
+import { UserDoc, UserStatDoc } from "../src/fire/docs";
 import { prefs } from "../src/utils/contants";
-import { getNow } from "../src/utils/get-now";
 import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
 
 const auth = getAuth();
@@ -15,51 +14,65 @@ const main = async () => {
   await clearAuth();
   await clearFirestore();
 
+  const allUsersStat = await allUsersStatsCollection.get();
+
   const fakeAuthUsers = await Promise.all(
     Array.from({ length: 10 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
     })
   );
 
-  const fakeUsers = await Promise.all(
-    fakeAuthUsers.map((authUser, i) => {
-      const createdAt = getNow();
-      const userData: UserData = {
+  let i = 0;
+  for (const fakeAuthUser of fakeAuthUsers) {
+    const user = UserDoc.create(usersCollection.ref, { id: fakeAuthUser.uid });
+    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: fakeAuthUser.uid });
+
+    await user
+      .edit({
         gender: ["MALE", "FEMALE"][randomInt(1)] as "MALE" | "FEMALE",
         nickName: `fake-user-${i}`,
         age: randomInt(65, 18),
         livingPref: prefs[randomInt(46)],
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
-        createdAt,
-        updatedAt: createdAt,
-      };
-      return usersCollection.insert({ id: authUser.uid, ...userData });
-    })
-  );
-
-  const allUsersStat = await allUsersStatsCollection.get();
-
-  for (const fakeUser of fakeUsers) {
-    await allUsersStat.signUp(fakeUser.id).set();
-
-    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: fakeUser.id });
+      })
+      .set();
     await userStat.set();
+    await allUsersStat.signUp(user.id).set();
+    i++;
   }
 
   // NOTE: メインユーザー
-  const cr7Auth = await auth.createUser({ email: "user-1@example.com", password: "password" });
-  const cr7 = UserDoc.create(usersCollection.ref, { id: cr7Auth.uid });
-  const cr7StoragePath = `users/${cr7.id}/profilePhotos/${id()}`;
-  await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: cr7StoragePath });
-  await cr7.edit({ nickName: "CR7", photoPaths: [cr7StoragePath] }).set();
-  await allUsersStat.signUp(cr7Auth.uid).set();
+  {
+    const authUser = await auth.createUser({
+      email: "user-1@example.com",
+      password: "password",
+    });
+    const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
+    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: authUser.uid });
 
-  const messiAuth = await auth.createUser({ email: "user-2@example.com", password: "password" });
-  const messi = UserDoc.create(usersCollection.ref, { id: messiAuth.uid });
-  const messiStoragePath = `users/${messi.id}/profilePhotos/${id()}`;
-  await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: messiStoragePath });
-  await messi.edit({ nickName: "Messi", photoPaths: [messiStoragePath] }).set();
-  await allUsersStat.signUp(messiAuth.uid).set();
+    const storagePath = `users/${user.id}/profilePhotos/${id()}`;
+    await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
+
+    await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).set();
+    await userStat.set();
+    await allUsersStat.signUp(user.id).set();
+  }
+
+  {
+    const authUser = await auth.createUser({
+      email: "user-2@example.com",
+      password: "password",
+    });
+    const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
+    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: authUser.uid });
+
+    const storagePath = `users/${user.id}/profilePhotos/${id()}`;
+    await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: storagePath });
+
+    await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).set();
+    await userStat.set();
+    await allUsersStat.signUp(user.id).set();
+  }
 };
 
 main();
