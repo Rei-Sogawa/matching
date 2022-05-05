@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { UserDoc } from '../fire/docs/index';
 import { Context } from '../context';
+import { Timestamp } from 'firebase-admin/firestore'
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -15,7 +16,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: Date;
+  DateTime: Timestamp;
 };
 
 export const Gender = {

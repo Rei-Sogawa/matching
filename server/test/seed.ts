@@ -1,5 +1,5 @@
 import { createCollections } from "../src/fire/create-collections";
-import { UserDoc } from "../src/fire/docs";
+import { UserDoc } from "../src/fire/docs/user";
 import { prefs } from "../src/utils/contants";
 import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
 

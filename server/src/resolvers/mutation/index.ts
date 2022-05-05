@@ -1,5 +1,6 @@
 import { authorize } from "../../authorize";
-import { LikeDoc, UserDoc } from "../../fire/docs";
+import { LikeDoc } from "../../fire/docs/like";
+import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";
 
 export const Mutation: Resolvers["Mutation"] = {
