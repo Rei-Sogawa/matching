@@ -33,6 +33,7 @@ export const Query: Resolvers["Query"] = {
     const userIds = await userIndexShardsCollection.userIds({
       first: input.first,
       after: input.after,
+      uid,
       sendLikeUserIds,
     });
 

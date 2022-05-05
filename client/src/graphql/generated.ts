@@ -45,6 +45,7 @@ export type Mutation = {
   access: Me;
   like: User;
   signUp: Me;
+  unlike: User;
   updateUser: Me;
 };
 
@@ -56,6 +57,11 @@ export type MutationLikeArgs = {
 
 export type MutationSignUpArgs = {
   input: SignUpInput;
+};
+
+
+export type MutationUnlikeArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -139,6 +145,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+
+export type UnlikeMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
 export type UserForSendLikeUserCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -294,6 +307,40 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const UnlikeDocument = gql`
+    mutation Unlike($userId: ID!) {
+  unlike(userId: $userId) {
+    id
+    ...UserForSendLikeUserCard
+  }
+}
+    ${UserForSendLikeUserCardFragmentDoc}`;
+export type UnlikeMutationFn = Apollo.MutationFunction<UnlikeMutation, UnlikeMutationVariables>;
+
+/**
+ * __useUnlikeMutation__
+ *
+ * To run a mutation, you first call `useUnlikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnlikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unlikeMutation, { data, loading, error }] = useUnlikeMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUnlikeMutation(baseOptions?: Apollo.MutationHookOptions<UnlikeMutation, UnlikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnlikeMutation, UnlikeMutationVariables>(UnlikeDocument, options);
+      }
+export type UnlikeMutationHookResult = ReturnType<typeof useUnlikeMutation>;
+export type UnlikeMutationResult = Apollo.MutationResult<UnlikeMutation>;
+export type UnlikeMutationOptions = Apollo.BaseMutationOptions<UnlikeMutation, UnlikeMutationVariables>;
 export const SendLikeUsersDocument = gql`
     query SendLikeUsers {
   sendLikeUsers {

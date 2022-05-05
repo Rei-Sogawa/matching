@@ -48,6 +48,7 @@ export type Mutation = {
   access: Me;
   like: User;
   signUp: Me;
+  unlike: User;
   updateUser: Me;
 };
 
@@ -59,6 +60,11 @@ export type MutationLikeArgs = {
 
 export type MutationSignUpArgs = {
   input: SignUpInput;
+};
+
+
+export type MutationUnlikeArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -258,6 +264,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   access?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   like?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLikeArgs, 'userId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
+  unlike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUnlikeArgs, 'userId'>>;
   updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
 }>;
 

@@ -28,6 +28,7 @@ type Mutation {
   access: Me!
   like(userId: ID!): User!
   signUp(input: SignUpInput!): Me!
+  unlike(userId: ID!): User!
   updateUser(input: UpdateUserInput!): Me!
 }
 

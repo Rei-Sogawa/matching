@@ -1,13 +1,22 @@
-import { gql } from "@apollo/client";
+import { gql, Reference } from "@apollo/client";
 import { Box, Button, Divider, Flex, HStack, Image, Stack } from "@chakra-ui/react";
 import { head } from "lodash-es";
 import { FC } from "react";
 
 import { Loading } from "../../components/case/Loading";
 import { BackButton } from "../../components/common/BackButton";
-import { UserForSendLikeUserFragment, useSendLikeUsersQuery } from "../../graphql/generated";
+import { UserForSendLikeUserCardFragment, useSendLikeUsersQuery, useUnlikeMutation } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
+
+gql`
+  mutation Unlike($userId: ID!) {
+    unlike(userId: $userId) {
+      id
+      ...UserForSendLikeUserCard
+    }
+  }
+`;
 
 gql`
   fragment UserForSendLikeUserCard on User {
@@ -21,10 +30,27 @@ gql`
 `;
 
 type UserCardProps = {
-  user: UserForSendLikeUserFragment;
+  user: UserForSendLikeUserCardFragment;
 };
 
 const UserCard: FC<UserCardProps> = ({ user }) => {
+  const [unlike] = useUnlikeMutation({
+    variables: { userId: user.id },
+    update(cache) {
+      cache.modify({
+        fields: {
+          sendLikeUsers(existing, { readField }) {
+            return existing.filter((u: Reference) => readField("id", u) !== user.id);
+          },
+        },
+      });
+    },
+  });
+
+  const onUnlike = async () => {
+    await unlike();
+  };
+
   return (
     <Stack spacing="4" w={{ base: "full", md: "lg" }} p="4">
       <Image src={head(user.photoUrls)} rounded="md" />
@@ -46,7 +72,7 @@ const UserCard: FC<UserCardProps> = ({ user }) => {
         </HStack>
       </Box>
 
-      <Button>いいねを取り消す</Button>
+      <Button onClick={onUnlike}>いいねを取り消す</Button>
     </Stack>
   );
 };
@@ -61,7 +87,7 @@ gql`
 `;
 
 type MyPageLikesPageTemplateProps = {
-  users: UserForSendLikeUserFragment[];
+  users: UserForSendLikeUserCardFragment[];
 };
 
 const MyPageLikesPageTemplate: FC<MyPageLikesPageTemplateProps> = ({ users }) => {
