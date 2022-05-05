@@ -6,11 +6,11 @@ import { getDb, id, randomInt } from "./script-utils";
 const db = getDb();
 
 const collections = createCollections(db);
-const { allUsersStatsCollection, usersCollection, userStatsCollection } = collections;
+const { usersCollection } = collections;
 
 const main = async () => {
   const fakeAuthUsers = await Promise.all(
-    Array.from({ length: 10 }).map((_, i) => {
+    Array.from({ length: 70 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
     })
   );
@@ -18,7 +18,6 @@ const main = async () => {
   let i = 0;
   for (const fakeAuthUser of fakeAuthUsers) {
     const user = UserDoc.create(usersCollection.ref, { id: fakeAuthUser.uid });
-    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: fakeAuthUser.uid });
 
     await user
       .edit({
@@ -29,16 +28,8 @@ const main = async () => {
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
       .set();
-    await userStat.set();
     i++;
   }
-
-  const allUsersStat = await allUsersStatsCollection.get();
-  await allUsersStat
-    .edit({
-      userIds: fakeAuthUsers.map(({ uid }) => uid),
-    })
-    .set();
 };
 
 main();

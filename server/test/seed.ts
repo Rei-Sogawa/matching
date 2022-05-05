@@ -1,5 +1,5 @@
 import { createCollections } from "../src/fire/create-collections";
-import { UserDoc, UserStatDoc } from "../src/fire/docs";
+import { UserDoc } from "../src/fire/docs";
 import { prefs } from "../src/utils/contants";
 import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
 
@@ -8,7 +8,7 @@ const db = getDb();
 const storage = getStorage();
 
 const collections = createCollections(db);
-const { usersCollection, userStatsCollection, allUsersStatsCollection } = collections;
+const { usersCollection } = collections;
 
 const main = async () => {
   await clearAuth();
@@ -23,7 +23,6 @@ const main = async () => {
   let i = 0;
   for (const fakeAuthUser of fakeAuthUsers) {
     const user = UserDoc.create(usersCollection.ref, { id: fakeAuthUser.uid });
-    // const userStat = UserStatDoc.create(userStatsCollection.ref, { id: fakeAuthUser.uid });
 
     await user
       .edit({
@@ -34,7 +33,6 @@ const main = async () => {
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
       .set();
-    // await userStat.set();
     i++;
   }
 
@@ -48,13 +46,11 @@ const main = async () => {
       password: "password",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
-    // const userStat = UserStatDoc.create(userStatsCollection.ref, { id: authUser.uid });
 
     const storagePath = `users/${user.id}/profilePhotos/${id()}`;
     await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
 
     await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).set();
-    // await userStat.set();
 
     user1 = user;
   }
@@ -65,23 +61,14 @@ const main = async () => {
       password: "password",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
-    // const userStat = UserStatDoc.create(userStatsCollection.ref, { id: authUser.uid });
 
     const storagePath = `users/${user.id}/profilePhotos/${id()}`;
     await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: storagePath });
 
     await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).set();
-    // await userStat.set();
 
     user2 = user;
   }
-
-  // const allUsersStat = await allUsersStatsCollection.get();
-  // await allUsersStat
-  //   .edit({
-  //     userIds: [user1.id, user2.id, ...fakeAuthUsers.map(({ uid }) => uid)],
-  //   })
-  //   .set();
 };
 
 main();
