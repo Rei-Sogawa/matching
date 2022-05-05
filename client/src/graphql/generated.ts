@@ -42,6 +42,7 @@ export type Me = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  access: Me;
   like: User;
   signUp: Me;
   updateUser: Me;
@@ -62,16 +63,26 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['DateTime']>;
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['DateTime']>;
+};
+
+export type PaginateInput = {
+  after?: InputMaybe<Scalars['DateTime']>;
+  before?: InputMaybe<Scalars['DateTime']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   me: Me;
-  randomUsers: RandomUsersResult;
   user: User;
-};
-
-
-export type QueryRandomUsersArgs = {
-  input: RandomUsersInput;
+  users: UserConnection;
 };
 
 
@@ -79,15 +90,9 @@ export type QueryUserArgs = {
   id: Scalars['ID'];
 };
 
-export type RandomUsersInput = {
-  excludeIds: Array<Scalars['ID']>;
-  size: Scalars['Int'];
-};
 
-export type RandomUsersResult = {
-  __typename?: 'RandomUsersResult';
-  hasMore: Scalars['Boolean'];
-  users: Array<User>;
+export type QueryUsersArgs = {
+  input: PaginateInput;
 };
 
 export type SignUpInput = {
@@ -111,6 +116,18 @@ export type User = {
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  edges: Array<UserEdge>;
+  pageInfo: PageInfo;
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  cursor: Scalars['DateTime'];
+  node: User;
 };
 
 export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
@@ -154,12 +171,12 @@ export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id:
 
 export type UserForUsersPageUserCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type RandomUsersQueryVariables = Exact<{
-  input: RandomUsersInput;
+export type UsersQueryVariables = Exact<{
+  input: PaginateInput;
 }>;
 
 
-export type RandomUsersQuery = { __typename?: 'Query', randomUsers: { __typename?: 'RandomUsersResult', hasMore: boolean, users: Array<{ __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> }> } };
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
@@ -373,42 +390,48 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
-export const RandomUsersDocument = gql`
-    query RandomUsers($input: RandomUsersInput!) {
-  randomUsers(input: $input) {
-    users {
-      id
-      ...UserForUsersPageUserCard
+export const UsersDocument = gql`
+    query Users($input: PaginateInput!) {
+  users(input: $input) {
+    edges {
+      node {
+        id
+        ...UserForUsersPageUserCard
+      }
+      cursor
     }
-    hasMore
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
   }
 }
     ${UserForUsersPageUserCardFragmentDoc}`;
 
 /**
- * __useRandomUsersQuery__
+ * __useUsersQuery__
  *
- * To run a query within a React component, call `useRandomUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useRandomUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useRandomUsersQuery({
+ * const { data, loading, error } = useUsersQuery({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useRandomUsersQuery(baseOptions: Apollo.QueryHookOptions<RandomUsersQuery, RandomUsersQueryVariables>) {
+export function useUsersQuery(baseOptions: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RandomUsersQuery, RandomUsersQueryVariables>(RandomUsersDocument, options);
+        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
       }
-export function useRandomUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RandomUsersQuery, RandomUsersQueryVariables>) {
+export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RandomUsersQuery, RandomUsersQueryVariables>(RandomUsersDocument, options);
+          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
         }
-export type RandomUsersQueryHookResult = ReturnType<typeof useRandomUsersQuery>;
-export type RandomUsersLazyQueryHookResult = ReturnType<typeof useRandomUsersLazyQuery>;
-export type RandomUsersQueryResult = Apollo.QueryResult<RandomUsersQuery, RandomUsersQueryVariables>;
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;

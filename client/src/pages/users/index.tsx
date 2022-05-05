@@ -5,7 +5,7 @@ import { FC, useEffect } from "react";
 
 import { AppLink } from "../../components/base/AppLink";
 import { useGlobal } from "../../contexts/Global";
-import { useRandomUsersQuery, UserForUsersPageUserCardFragment } from "../../graphql/generated";
+import { UserForUsersPageUserCardFragment, useUsersQuery } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
 
@@ -38,13 +38,19 @@ const UserCard: FC<UserCardProps> = ({ user }) => {
 };
 
 gql`
-  query RandomUsers($input: RandomUsersInput!) {
-    randomUsers(input: $input) {
-      users {
-        id
-        ...UserForUsersPageUserCard
+  query Users($input: PaginateInput!) {
+    users(input: $input) {
+      edges {
+        node {
+          id
+          ...UserForUsersPageUserCard
+        }
+        cursor
       }
-      hasMore
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
     }
   }
 `;
@@ -52,22 +58,16 @@ gql`
 const SIZE = 6;
 
 export const UsersPage: FC = () => {
-  const { data, fetchMore } = useRandomUsersQuery({ variables: { input: { size: SIZE, excludeIds: [] } } });
+  const { data, fetchMore } = useUsersQuery({ variables: { input: { first: SIZE } } });
 
-  const users = data?.randomUsers.users ?? [];
-  const hasMore = data?.randomUsers.hasMore ?? false;
+  const users = data?.users.edges.map((v) => v.node) ?? [];
+  const hasMore = data?.users.pageInfo.hasNextPage ?? false;
 
   const onLoadMore = async () => {
     await fetchMore({
-      variables: { input: { size: SIZE, excludeIds: users.map((user) => user.id) } },
+      variables: { input: { first: SIZE, after: data?.users.pageInfo.endCursor } },
     });
   };
-
-  const { setSearchedUsers } = useGlobal();
-
-  useEffect(() => {
-    setSearchedUsers(users);
-  }, [users]);
 
   return (
     <AppLayout footer={true}>

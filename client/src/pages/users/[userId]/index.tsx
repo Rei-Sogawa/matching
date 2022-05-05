@@ -1,4 +1,4 @@
-import { gql, Reference } from "@apollo/client";
+import { gql, Reference, useApolloClient } from "@apollo/client";
 import { Box, BoxProps, Center, HStack, IconButton, Stack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
@@ -7,8 +7,13 @@ import { animated, useSpring } from "react-spring";
 
 import { Loading } from "../../../components/case/Loading";
 import { BackButton } from "../../../components/common/BackButton";
-import { useGlobal } from "../../../contexts/Global";
-import { useLikeMutation, UserForUserPageFragment, useUserQuery } from "../../../graphql/generated";
+import {
+  useLikeMutation,
+  UserForUserPageFragment,
+  UsersDocument,
+  UsersQueryResult,
+  useUserQuery,
+} from "../../../graphql/generated";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 import { assertDefined } from "../../../utils/assert-defined";
@@ -41,11 +46,16 @@ type UserPageTemplateProps = { user: UserForUserPageFragment };
 
 const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const navigate = useNavigate();
-  const { searchedUsers } = useGlobal();
+
+  const client = useApolloClient();
 
   const redirect = () => {
-    const currIndex = searchedUsers.findIndex((u) => u.id === user.id);
-    const nextUser = searchedUsers[currIndex + 1];
+    const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
+    const users = data?.users.edges.map((u) => u.node) ?? [];
+
+    const currIndex = users.findIndex((u) => u.id === user.id);
+    const nextUser = users[currIndex + 1];
+
     if (nextUser) {
       navigate(routes["/users/:userId"].path({ userId: nextUser.id }));
     } else {
@@ -71,10 +81,10 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     update(cache) {
       cache.modify({
         fields: {
-          randomUsers(existing, { readField }) {
+          users(existing, { readField }) {
             return {
               ...existing,
-              users: existing.users.filter((u: Reference) => readField("id", u) !== user.id),
+              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== user.id),
             };
           },
         },
@@ -207,15 +217,6 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     </AppLayout>
   );
 };
-
-gql`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      ...UserForUserPage
-    }
-  }
-`;
 
 export const UserPage: FC = () => {
   const { userId } = useParams();

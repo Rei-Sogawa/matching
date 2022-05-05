@@ -21,11 +21,11 @@ const getClient = (token?: string) => {
     typePolicies: {
       Query: {
         fields: {
-          randomUsers: {
+          users: {
             keyArgs: false,
             merge: (existing, incoming) => {
               if (!existing) return incoming;
-              return { ...incoming, users: [...existing.users, ...incoming.users] };
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
             },
           },
         },
