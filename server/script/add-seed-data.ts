@@ -1,12 +1,12 @@
 import { createCollections } from "../src/fire/create-collections";
-import { UserDoc, UserStatDoc } from "../src/fire/docs";
+import { UserDoc } from "../src/fire/docs/user";
 import { prefs } from "../src/utils/contants";
 import { getDb, id, randomInt } from "./script-utils";
 
 const db = getDb();
 
 const collections = createCollections(db);
-const { usersCollection } = collections;
+const { usersCollection, userIndexShardsCollection } = collections;
 
 const main = async () => {
   const fakeAuthUsers = await Promise.all(
@@ -28,6 +28,8 @@ const main = async () => {
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
       .set();
+    const userIndexShard = await userIndexShardsCollection.get();
+    await userIndexShard.addIndex(...user.toIndex()).set();
     i++;
   }
 };
