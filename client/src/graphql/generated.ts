@@ -130,6 +130,11 @@ export type UserEdge = {
   node: User;
 };
 
+export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+
 export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
@@ -217,6 +222,39 @@ export const UserForUsersPageUserCardFragmentDoc = gql`
   photoUrls
 }
     `;
+export const AccessDocument = gql`
+    mutation Access {
+  access {
+    id
+    ...MeForMe
+  }
+}
+    ${MeForMeFragmentDoc}`;
+export type AccessMutationFn = Apollo.MutationFunction<AccessMutation, AccessMutationVariables>;
+
+/**
+ * __useAccessMutation__
+ *
+ * To run a mutation, you first call `useAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [accessMutation, { data, loading, error }] = useAccessMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAccessMutation(baseOptions?: Apollo.MutationHookOptions<AccessMutation, AccessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AccessMutation, AccessMutationVariables>(AccessDocument, options);
+      }
+export type AccessMutationHookResult = ReturnType<typeof useAccessMutation>;
+export type AccessMutationResult = Apollo.MutationResult<AccessMutation>;
+export type AccessMutationOptions = Apollo.BaseMutationOptions<AccessMutation, AccessMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {

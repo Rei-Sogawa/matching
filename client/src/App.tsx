@@ -1,14 +1,30 @@
-import { FC } from "react";
+import { gql } from "@apollo/client";
+import { FC, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Apollo } from "./contexts/Apollo";
 import { AuthProvider } from "./contexts/Auth";
 import { GlobalProvider } from "./contexts/Global";
 import { MeProvider } from "./contexts/Me";
+import { useAccessMutation } from "./graphql/generated";
 import { Compose } from "./middleware/Compose";
 import { paths, routes } from "./routes";
 
+gql`
+  mutation Access {
+    access {
+      id
+      ...MeForMe
+    }
+  }
+`;
+
 const Pages: FC = () => {
+  const [access] = useAccessMutation();
+  useEffect(() => {
+    access();
+  }, []);
+
   return (
     <Routes>
       {paths.map((path) => {

@@ -220,6 +220,15 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   );
 };
 
+gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      id
+      ...UserForUserPage
+    }
+  }
+`;
+
 export const UserPage: FC = () => {
   const { userId } = useParams();
   assertDefined(userId);
