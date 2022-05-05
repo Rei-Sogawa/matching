@@ -49,7 +49,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
 
   const client = useApolloClient();
 
-  const redirect = () => {
+  const getRedirectPath = () => {
     const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
     const users = data?.users.edges.map((u) => u.node) ?? [];
 
@@ -57,9 +57,9 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     const nextUser = users[currIndex + 1];
 
     if (nextUser) {
-      navigate(routes["/users/:userId"].path({ userId: nextUser.id }));
+      return routes["/users/:userId"].path({ userId: nextUser.id });
     } else {
-      navigate(routes["/users"].path());
+      return routes["/users"].path();
     }
   };
 
@@ -105,21 +105,23 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const onLike = async () => {
     setLiked(true);
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
+    const redirectPath = getRedirectPath();
     await like();
 
     setTimeout(() => {
       resetAnimation();
-      redirect();
+      navigate(redirectPath);
     }, 1_500);
   };
 
   const onSkip = () => {
     setSkipped(true);
+    const redirectPath = getRedirectPath();
     imageStylesApi.start({ opacity: 0.85, config: { duration: 1_000 } });
 
     setTimeout(() => {
       resetAnimation();
-      redirect();
+      navigate(redirectPath);
     }, 1_500);
   };
 

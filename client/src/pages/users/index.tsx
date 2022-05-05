@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
 import { Avatar, Box, Button, HStack, Stack, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { head } from "lodash-es";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import { AppLink } from "../../components/base/AppLink";
-import { useGlobal } from "../../contexts/Global";
 import { UserForUsersPageUserCardFragment, useUsersQuery } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
