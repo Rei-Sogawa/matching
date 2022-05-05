@@ -1,10 +1,8 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
-import { CollectionReference } from "firebase-admin/firestore";
+import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
-import { getNow } from "../../utils/get-now";
-import { createConverter } from "../helpers/create-converter";
 
 const UserSchema = z
   .object({
@@ -13,20 +11,18 @@ const UserSchema = z
     age: z.number().int().min(18),
     livingPref: z.string().min(1),
     photoPaths: z.array(z.string()),
-    lastAccessedAt: z.date(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    lastAccessedAt: z.instanceof(Timestamp),
+    createdAt: z.instanceof(Timestamp),
+    updatedAt: z.instanceof(Timestamp),
   })
   .strict();
 
 export type UserData = z.infer<typeof UserSchema>;
 
-export const userConverter = createConverter<UserData>();
-
 export class UserDoc extends FireDocument<UserData> implements UserData {
   static create(collection: CollectionReference<UserData>, { id }: { id: string }) {
     const docRef = collection.doc(id);
-    const createdAt = getNow();
+    const createdAt = Timestamp.now();
     return new UserDoc({
       id: docRef.id,
       ref: docRef,
@@ -48,12 +44,12 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   age!: number;
   livingPref!: string;
   photoPaths!: string[];
-  lastAccessedAt!: Date;
-  createdAt!: Date;
-  updatedAt!: Date;
+  lastAccessedAt!: Timestamp;
+  createdAt!: Timestamp;
+  updatedAt!: Timestamp;
 
   constructor(snap: FireDocumentInput) {
-    super(snap, userConverter);
+    super(snap);
   }
 
   toData() {
@@ -67,6 +63,6 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   }
 
   access() {
-    return this.edit({ lastAccessedAt: getNow() });
+    return this.edit({ lastAccessedAt: Timestamp.now() });
   }
 }

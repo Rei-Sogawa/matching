@@ -1,24 +1,20 @@
 import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
-import { CollectionReference } from "firebase-admin/firestore";
+import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
-import { getNow } from "../../utils/get-now";
-import { createConverter } from "../helpers/create-converter";
 
 const LikeSchema = z
   .object({
     senderId: z.string().min(1),
     receiverId: z.string().min(1),
     status: z.enum(["PENDING", "MATCHED", "SKIPPED"]),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: z.instanceof(Timestamp),
+    updatedAt: z.instanceof(Timestamp),
   })
   .strict();
 
 export type LikeData = z.infer<typeof LikeSchema>;
-
-export const likeConverter = createConverter<LikeData>();
 
 export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   static create(
@@ -26,7 +22,7 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     { senderId, receiverId }: Pick<LikeData, "senderId" | "receiverId">
   ) {
     const docRef = collection.doc();
-    const createdAt = getNow();
+    const createdAt = Timestamp.now();
     return new LikeDoc({
       id: docRef.id,
       ref: docRef,
@@ -43,11 +39,11 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   senderId!: string;
   receiverId!: string;
   status!: LikeStatus;
-  createdAt!: Date;
-  updatedAt!: Date;
+  createdAt!: Timestamp;
+  updatedAt!: Timestamp;
 
   constructor(snap: FireDocumentInput) {
-    super(snap, likeConverter);
+    super(snap);
   }
 
   toData() {
@@ -61,10 +57,10 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   }
 
   skip() {
-    return this.edit({ status: "SKIPPED", updatedAt: getNow() });
+    return this.edit({ status: "SKIPPED", updatedAt: Timestamp.now() });
   }
 
   match() {
-    return this.edit({ status: "MATCHED", updatedAt: getNow() });
+    return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
   }
 }
