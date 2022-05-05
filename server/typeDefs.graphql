@@ -42,14 +42,18 @@ type User {
 #
 # QUERY
 #
-input UsersPageInput {
-  first: Int!
-  after: DateTime!
+type PageInfo {
+  startCursor: DateTime
+  endCursor: DateTime
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
 }
 
-type UsersPageInfo {
-  endCursor: DateTime!
-  hasNextPage: Boolean!
+input PaginateInput {
+  first: Int
+  after: DateTime
+  last: Int
+  before: DateTime
 }
 
 type UserEdge {
@@ -59,13 +63,13 @@ type UserEdge {
 
 type UserConnection {
   edges: [UserEdge!]!
-  pageInfo: UsersPageInfo!
+  pageInfo: PageInfo!
 }
 
 type Query {
   me: Me!
   user(id: ID!): User!
-  users(input: UsersPageInput!): UserConnection!
+  users(input: PaginateInput!): UserConnection!
 }
 
 #

@@ -19,7 +19,7 @@
     "seed": "ts-node test/seed"
   },
   "dependencies": {
-    "@rei-sogawa/unfireorm": "^1.0.12",
+    "@rei-sogawa/unfireorm": "^1.0.13",
     "@types/uuid": "^8.3.4",
     "apollo-server-core": "^3.6.7",
     "apollo-server-express": "^3.6.7",
