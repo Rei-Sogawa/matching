@@ -1,6 +1,6 @@
 import { FireCollection } from "@rei-sogawa/unfireorm";
 import { CollectionReference } from "firebase-admin/firestore";
-import { has, merge, shuffle } from "lodash";
+import { filter, has, map, merge, shuffle, toPairs } from "lodash";
 
 import { LikeIndexShardData, LikeIndexShardDoc } from "../docs/like-index-shard";
 
@@ -28,5 +28,12 @@ export class LikeIndexShardsCollection extends FireCollection<LikeIndexShardData
     const snap = await this.ref.doc(docId).get();
     const data = snap.data() ?? ({} as LikeIndexShardData);
     return new LikeIndexShardDoc({ id: snap.id, ref: snap.ref, data: () => data });
+  }
+
+  async sendLikeUserIds(userId: string) {
+    return this.getIndex()
+      .then((likeIndex) => toPairs(likeIndex))
+      .then((pairs) => filter(pairs, ([, data]) => data.senderId === userId))
+      .then((pairs) => map(pairs, ([, data]) => data.receiverId));
   }
 }

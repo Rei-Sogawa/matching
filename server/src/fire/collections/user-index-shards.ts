@@ -1,6 +1,6 @@
 import { FireCollection } from "@rei-sogawa/unfireorm";
-import { CollectionReference } from "firebase-admin/firestore";
-import { has, merge, shuffle } from "lodash";
+import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { filter, has, includes, map, merge, orderBy, shuffle, take, toPairs } from "lodash";
 
 import { UserIndexShardData, UserIndexShardDoc } from "../docs/user-index-shard";
 
@@ -28,5 +28,23 @@ export class UserIndexShardsCollection extends FireCollection<UserIndexShardData
     const snap = await this.ref.doc(docId).get();
     const data = snap.data() ?? ({} as UserIndexShardData);
     return new UserIndexShardDoc({ id: snap.id, ref: snap.ref, data: () => data });
+  }
+
+  async userIds({
+    first,
+    after,
+    sendLikeUserIds,
+  }: {
+    first: number;
+    after: Timestamp | null | undefined;
+    sendLikeUserIds: string[];
+  }) {
+    return this.getIndex()
+      .then((userIndex) => toPairs(userIndex))
+      .then((pairs) => orderBy(pairs, ([, data]) => data.lastAccessedAt, "desc"))
+      .then((pairs) => filter(pairs, ([, data]) => (after ? after > data.lastAccessedAt : true)))
+      .then((pairs) => filter(pairs, ([id]) => !includes(sendLikeUserIds, id)))
+      .then((pairs) => take(pairs, first))
+      .then((pairs) => map(pairs, ([id]) => id));
   }
 }
