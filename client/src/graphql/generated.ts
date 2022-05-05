@@ -66,6 +66,8 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  receiveLikeUsers: Array<User>;
+  sendLikeUsers: Array<User>;
   user: User;
   users: UserConnection;
 };
@@ -131,14 +133,19 @@ export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
-export type UserForUserSwipeCardFragment = { __typename?: 'User', id: string, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
-
 export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+
+export type UserForSendLikeUserCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
+export type SendLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
@@ -179,15 +186,6 @@ export type UsersQueryVariables = Exact<{
 
 export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'UsersPageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
-export const UserForUserSwipeCardFragmentDoc = gql`
-    fragment UserForUserSwipeCard on User {
-  id
-  nickName
-  age
-  livingPref
-  photoUrls
-}
-    `;
 export const MeForMeFragmentDoc = gql`
     fragment MeForMe on Me {
   id
@@ -196,6 +194,16 @@ export const MeForMeFragmentDoc = gql`
   age
   livingPref
   photoPaths
+  photoUrls
+}
+    `;
+export const UserForSendLikeUserCardFragmentDoc = gql`
+    fragment UserForSendLikeUserCard on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
   photoUrls
 }
     `;
@@ -286,6 +294,41 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const SendLikeUsersDocument = gql`
+    query SendLikeUsers {
+  sendLikeUsers {
+    id
+    ...UserForSendLikeUserCard
+  }
+}
+    ${UserForSendLikeUserCardFragmentDoc}`;
+
+/**
+ * __useSendLikeUsersQuery__
+ *
+ * To run a query within a React component, call `useSendLikeUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSendLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSendLikeUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSendLikeUsersQuery(baseOptions?: Apollo.QueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
+      }
+export function useSendLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
+        }
+export type SendLikeUsersQueryHookResult = ReturnType<typeof useSendLikeUsersQuery>;
+export type SendLikeUsersLazyQueryHookResult = ReturnType<typeof useSendLikeUsersLazyQuery>;
+export type SendLikeUsersQueryResult = Apollo.QueryResult<SendLikeUsersQuery, SendLikeUsersQueryVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($input: UpdateUserInput!) {
   updateUser(input: $input) {

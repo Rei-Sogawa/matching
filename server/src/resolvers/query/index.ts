@@ -47,4 +47,15 @@ export const Query: Resolvers["Query"] = {
       },
     };
   },
+
+  sendLikeUsers: async (_parent, _args, context) => {
+    authorize(context);
+
+    const { uid } = context.decodedIdToken;
+    const { usersCollection, likeIndexShardsCollection } = context.collections;
+
+    const sendLikeUserIds = await likeIndexShardsCollection.sendLikeUserIds(uid);
+
+    return Promise.all(sendLikeUserIds.map((id) => usersCollection.findOneById(id)));
+  },
 };

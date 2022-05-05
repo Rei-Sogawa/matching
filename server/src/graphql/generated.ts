@@ -69,6 +69,8 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  receiveLikeUsers: Array<User>;
+  sendLikeUsers: Array<User>;
   user: User;
   users: UserConnection;
 };
@@ -261,6 +263,8 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  sendLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
 }>;

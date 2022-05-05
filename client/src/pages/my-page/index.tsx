@@ -34,10 +34,10 @@ export const MyPagePage: FC = () => {
         <Divider />
 
         <Stack>
-          <AppLink to="#">
+          <AppLink to={routes["/my-page/likes"].path()}>
             <HStack px="6" py="4">
               <BiLike fontSize="28px" />
-              <Box fontWeight="bold">あなたから</Box>
+              <Box fontWeight="bold">あなたからのいいね！</Box>
             </HStack>
           </AppLink>
 

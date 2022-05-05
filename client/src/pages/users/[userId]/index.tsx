@@ -133,6 +133,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
         <Card>
           <Stack spacing="4">
             <Box
+              rounded="md"
               sx={{ aspectRatio: "1 / 1 " }}
               backgroundImage={`url(${user.photoUrls[activeImageIndex]})`}
               backgroundSize="cover"

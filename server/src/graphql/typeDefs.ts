@@ -33,6 +33,8 @@ type Mutation {
 
 type Query {
   me: Me!
+  receiveLikeUsers: [User!]!
+  sendLikeUsers: [User!]!
   user(id: ID!): User!
   users(input: UsersInput!): UserConnection!
 }

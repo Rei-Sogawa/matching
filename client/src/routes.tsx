@@ -5,6 +5,7 @@ import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
 import { IndexPage } from "./pages/Index";
 import { LogInPage } from "./pages/log-in";
 import { MyPagePage } from "./pages/my-page";
+import { MyPageLikesPage } from "./pages/my-page/likes";
 import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
 import { SignUpPage } from "./pages/sign-up";
 import { UsersPage } from "./pages/users";
@@ -14,6 +15,7 @@ const INDEX_PATH = "/";
 const SIGN_UP_PATH = "/sign-up";
 const LOG_IN_PATH = "/log-in";
 const MY_PAGE = "/my-page";
+const MY_PAGE_LIKES = "/my-page/likes";
 const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
 const USERS_PATH = "/users";
 const USER_PATH = "/users/:userId";
@@ -37,6 +39,11 @@ export const routes = {
   [MY_PAGE]: {
     path: pathBuilder(MY_PAGE),
     Component: MyPagePage,
+    middleware: [Authenticated],
+  },
+  [MY_PAGE_LIKES]: {
+    path: pathBuilder(MY_PAGE_LIKES),
+    Component: MyPageLikesPage,
     middleware: [Authenticated],
   },
   [MY_PAGE_PROFILE_EDIT]: {
