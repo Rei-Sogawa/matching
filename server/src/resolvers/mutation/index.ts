@@ -56,7 +56,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const { userId: targetUserId } = args;
     const { uid: actionUserId } = context.decodedIdToken;
     const { db } = context;
-    const { usersCollection, likesCollection } = context.collections;
+    const { usersCollection, likesCollection, likeIndexShardsCollection } = context.collections;
 
     const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
     if (sentLike) throw new Error("sentLike exists");
@@ -65,11 +65,21 @@ export const Mutation: Resolvers["Mutation"] = {
     const batch = db.batch();
 
     if (receivedLike) {
+      const likeIndexShard = await likeIndexShardsCollection.getById(receivedLike.id);
+
       receivedLike.match();
+      likeIndexShard.editIndex(receivedLike.id, receivedLike.toData());
+
       batch.set(...receivedLike.toBatch());
+      batch.set(...likeIndexShard.toBatch());
     } else {
       const like = LikeDoc.create(likesCollection.ref, { senderId: actionUserId, receiverId: targetUserId });
+      const likeIndexShard = await likeIndexShardsCollection.get();
+
+      likeIndexShard.addIndex(like.id, like.toData());
+
       batch.set(...like.toBatch());
+      batch.set(...likeIndexShard.toBatch());
     }
 
     await batch.commit();

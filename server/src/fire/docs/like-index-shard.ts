@@ -3,14 +3,14 @@ import { merge, omit } from "lodash";
 
 import { LikeData } from "./like";
 
-export type LikeIndexData = {
-  root: {
+export type LikeIndexShardData = {
+  shard: {
     [id in string]: LikeData;
   };
 };
 
-export class LikeIndexDoc extends FireDocument<LikeIndexData> {
-  root!: {
+export class LikeIndexShardDoc extends FireDocument<LikeIndexShardData> {
+  shard!: {
     [id in string]: LikeData;
   };
 
@@ -21,18 +21,18 @@ export class LikeIndexDoc extends FireDocument<LikeIndexData> {
 
   toBatch() {
     const { id, ref, ...data } = this;
-    return [ref, data];
+    return [ref, data] as const;
   }
 
   addIndex(id: string, data: LikeData) {
-    return this.edit({ root: merge(this.root, { [id]: data }) });
+    return this.edit({ shard: merge(this.shard, { [id]: data }) });
   }
 
   editIndex(id: string, data: LikeData) {
-    return this.edit({ root: merge(this.root, { [id]: data }) });
+    return this.edit({ shard: merge(this.shard, { [id]: data }) });
   }
 
   removeIndex(id: string) {
-    return this.edit({ root: omit(this.root, [id]) });
+    return this.edit({ shard: omit(this.shard, [id]) });
   }
 }
