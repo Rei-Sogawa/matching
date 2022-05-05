@@ -8,7 +8,7 @@ const db = getDb();
 const storage = getStorage();
 
 const collections = createCollections(db);
-const { usersCollection } = collections;
+const { usersCollection, userIndexShardsCollection } = collections;
 
 const main = async () => {
   await clearAuth();
@@ -33,6 +33,8 @@ const main = async () => {
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
       .set();
+    const userIndexShard = await userIndexShardsCollection.get();
+    await userIndexShard.addIndex(...user.toIndex()).set();
     i++;
   }
 
@@ -51,6 +53,8 @@ const main = async () => {
     await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
 
     await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).set();
+    const userIndexShard = await userIndexShardsCollection.get();
+    await userIndexShard.addIndex(...user.toIndex()).set();
 
     user1 = user;
   }
@@ -66,6 +70,8 @@ const main = async () => {
     await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: storagePath });
 
     await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).set();
+    const userIndexShard = await userIndexShardsCollection.get();
+    await userIndexShard.addIndex(...user.toIndex()).set();
 
     user2 = user;
   }

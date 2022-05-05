@@ -56,6 +56,11 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     return [ref, data] as const;
   }
 
+  toIndex() {
+    const { id, ref, ...data } = this;
+    return [id, data] as const;
+  }
+
   skip() {
     return this.edit({ status: "SKIPPED", updatedAt: Timestamp.now() });
   }

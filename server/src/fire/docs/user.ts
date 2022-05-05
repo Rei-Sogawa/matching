@@ -3,6 +3,7 @@ import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
+import { UserIndexData } from "./user-index-shard";
 
 const UserSchema = z
   .object({
@@ -60,6 +61,12 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   toBatch() {
     const { id, ref, ...data } = this;
     return [ref, data] as const;
+  }
+
+  toIndex() {
+    const { id, ref, ...data } = this;
+    const { gender, age, livingPref, lastAccessedAt }: UserIndexData = data;
+    return [id, { gender, age, livingPref, lastAccessedAt }] as const;
   }
 
   access() {

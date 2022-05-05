@@ -7,15 +7,17 @@ export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
     const { auth, db } = context;
-    const { usersCollection } = context.collections;
+    const { usersCollection, userIndexShardsCollection } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
 
-    const batch = db.batch();
-
     const user = UserDoc.create(usersCollection.ref, { id: uid });
+    const userIndexShard = await userIndexShardsCollection.get();
+    userIndexShard.addIndex(...user.toIndex());
 
+    const batch = db.batch();
     batch.set(...user.toBatch());
+    batch.set(...userIndexShard.toBatch());
     await batch.commit();
 
     return user;
@@ -28,11 +30,10 @@ export const Mutation: Resolvers["Mutation"] = {
     const { db } = context;
     const { usersCollection } = context.collections;
 
-    const batch = db.batch();
-
     const user = await usersCollection.findOneById(uid);
     user.access();
 
+    const batch = db.batch();
     batch.set(...user.toBatch());
     await batch.commit();
 
@@ -68,7 +69,7 @@ export const Mutation: Resolvers["Mutation"] = {
       const likeIndexShard = await likeIndexShardsCollection.getById(receivedLike.id);
 
       receivedLike.match();
-      likeIndexShard.editIndex(receivedLike.id, receivedLike.toData());
+      likeIndexShard.editIndex(...receivedLike.toIndex());
 
       batch.set(...receivedLike.toBatch());
       batch.set(...likeIndexShard.toBatch());
@@ -76,7 +77,7 @@ export const Mutation: Resolvers["Mutation"] = {
       const like = LikeDoc.create(likesCollection.ref, { senderId: actionUserId, receiverId: targetUserId });
       const likeIndexShard = await likeIndexShardsCollection.get();
 
-      likeIndexShard.addIndex(like.id, like.toData());
+      likeIndexShard.addIndex(...like.toIndex());
 
       batch.set(...like.toBatch());
       batch.set(...likeIndexShard.toBatch());
