@@ -25,6 +25,7 @@ type Me {
 }
 
 type Mutation {
+  access: Me!
   like(userId: ID!): User!
   signUp(input: SignUpInput!): Me!
   updateUser(input: UpdateUserInput!): Me!
@@ -32,18 +33,8 @@ type Mutation {
 
 type Query {
   me: Me!
-  randomUsers(input: RandomUsersInput!): RandomUsersResult!
   user(id: ID!): User!
-}
-
-input RandomUsersInput {
-  excludeIds: [ID!]!
-  size: Int!
-}
-
-type RandomUsersResult {
-  hasMore: Boolean!
-  users: [User!]!
+  users(input: UsersPageInput!): UserConnection!
 }
 
 input SignUpInput {
@@ -66,5 +57,25 @@ type User {
   livingPref: String!
   nickName: String!
   photoUrls: [String!]!
+}
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: UsersPageInfo!
+}
+
+type UserEdge {
+  cursor: DateTime!
+  node: User!
+}
+
+type UsersPageInfo {
+  endCursor: DateTime!
+  hasNextPage: Boolean!
+}
+
+input UsersPageInput {
+  after: DateTime!
+  first: Int!
 }
 `;

@@ -42,20 +42,30 @@ type User {
 #
 # QUERY
 #
-input RandomUsersInput {
-  size: Int!
-  excludeIds: [ID!]!
+input UsersPageInput {
+  first: Int!
+  after: DateTime!
 }
 
-type RandomUsersResult {
-  users: [User!]!
-  hasMore: Boolean!
+type UsersPageInfo {
+  endCursor: DateTime!
+  hasNextPage: Boolean!
+}
+
+type UserEdge {
+  node: User!
+  cursor: DateTime!
+}
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: UsersPageInfo!
 }
 
 type Query {
   me: Me!
-  randomUsers(input: RandomUsersInput!): RandomUsersResult!
   user(id: ID!): User!
+  users(input: UsersPageInput!): UserConnection!
 }
 
 #
@@ -76,6 +86,7 @@ input UpdateUserInput {
 
 type Mutation {
   signUp(input: SignUpInput!): Me!
+  access: Me!
   updateUser(input: UpdateUserInput!): Me!
   like(userId: ID!): User!
 }

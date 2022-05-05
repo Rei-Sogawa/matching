@@ -1,24 +1,38 @@
 import { authorize } from "../../authorize";
-import { LikeDoc, UserDoc, UserStatDoc } from "../../fire/docs";
+import { LikeDoc, UserDoc } from "../../fire/docs";
 import { Resolvers } from "./../../graphql/generated";
 
 export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
     const { auth, db } = context;
-    const { allUsersStatsCollection, usersCollection, userStatsCollection } = context.collections;
+    const { usersCollection } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
 
+    const batch = db.batch();
+
     const user = UserDoc.create(usersCollection.ref, { id: uid });
-    const userStat = UserStatDoc.create(userStatsCollection.ref, { id: uid });
-    const allUsersStat = await allUsersStatsCollection.get();
-    allUsersStat.signUp(uid);
+
+    batch.set(...user.toBatch());
+    await batch.commit();
+
+    return user;
+  },
+
+  async access(_parent, _args, context) {
+    authorize(context);
+
+    const { uid } = context.decodedIdToken;
+    const { db } = context;
+    const { usersCollection } = context.collections;
 
     const batch = db.batch();
+
+    const user = await usersCollection.findOneById(uid);
+    user.access();
+
     batch.set(...user.toBatch());
-    batch.set(...userStat.toBatch());
-    batch.set(...allUsersStat.toBatch());
     await batch.commit();
 
     return user;
@@ -41,32 +55,21 @@ export const Mutation: Resolvers["Mutation"] = {
     const { userId: targetUserId } = args;
     const { uid: actionUserId } = context.decodedIdToken;
     const { db } = context;
-    const { usersCollection, userStatsCollection, likesCollection } = context.collections;
+    const { usersCollection, likesCollection } = context.collections;
 
     const sentLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
     if (sentLike) throw new Error("sentLike exists");
     const receivedLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
-    const actionUserStat = await userStatsCollection.findOneById(actionUserId);
-    const targetUserStat = await userStatsCollection.findOneById(targetUserId);
 
     const batch = db.batch();
 
     if (receivedLike) {
       receivedLike.match();
-      actionUserStat.match(targetUserId);
-      targetUserStat.match(actionUserId);
-
       batch.set(...receivedLike.toBatch());
     } else {
       const like = LikeDoc.create(likesCollection.ref, { senderId: actionUserId, receiverId: targetUserId });
-      actionUserStat.sendLike(targetUserId);
-      targetUserStat.receiveLike(actionUserId);
-
       batch.set(...like.toBatch());
     }
-
-    batch.set(...actionUserStat.toBatch());
-    batch.set(...targetUserStat.toBatch());
 
     await batch.commit();
 

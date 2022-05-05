@@ -13,6 +13,7 @@ const UserSchema = z
     age: z.number().int().min(18),
     livingPref: z.string().min(1),
     photoPaths: z.array(z.string()),
+    lastAccessedAt: z.date(),
     createdAt: z.date(),
     updatedAt: z.date(),
   })
@@ -35,6 +36,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
         age: 30,
         livingPref: "東京都",
         photoPaths: [],
+        lastAccessedAt: createdAt,
         createdAt,
         updatedAt: createdAt,
       }),
@@ -46,6 +48,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   age!: number;
   livingPref!: string;
   photoPaths!: string[];
+  lastAccessedAt!: Date;
   createdAt!: Date;
   updatedAt!: Date;
 
@@ -61,5 +64,9 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   toBatch() {
     const { id, ref, ...data } = this;
     return [ref, data] as const;
+  }
+
+  access() {
+    return this.edit({ lastAccessedAt: getNow() });
   }
 }

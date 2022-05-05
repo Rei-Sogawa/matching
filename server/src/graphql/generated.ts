@@ -44,6 +44,7 @@ export type Me = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  access: Me;
   like: User;
   signUp: Me;
   updateUser: Me;
@@ -67,13 +68,8 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
-  randomUsers: RandomUsersResult;
   user: User;
-};
-
-
-export type QueryRandomUsersArgs = {
-  input: RandomUsersInput;
+  users: UserConnection;
 };
 
 
@@ -81,15 +77,9 @@ export type QueryUserArgs = {
   id: Scalars['ID'];
 };
 
-export type RandomUsersInput = {
-  excludeIds: Array<Scalars['ID']>;
-  size: Scalars['Int'];
-};
 
-export type RandomUsersResult = {
-  __typename?: 'RandomUsersResult';
-  hasMore: Scalars['Boolean'];
-  users: Array<User>;
+export type QueryUsersArgs = {
+  input: UsersPageInput;
 };
 
 export type SignUpInput = {
@@ -113,6 +103,29 @@ export type User = {
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  edges: Array<UserEdge>;
+  pageInfo: UsersPageInfo;
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  cursor: Scalars['DateTime'];
+  node: User;
+};
+
+export type UsersPageInfo = {
+  __typename?: 'UsersPageInfo';
+  endCursor: Scalars['DateTime'];
+  hasNextPage: Scalars['Boolean'];
+};
+
+export type UsersPageInput = {
+  after: Scalars['DateTime'];
+  first: Scalars['Int'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -194,12 +207,14 @@ export type ResolversTypes = ResolversObject<{
   Me: ResolverTypeWrapper<UserDoc>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
-  RandomUsersInput: RandomUsersInput;
-  RandomUsersResult: ResolverTypeWrapper<Omit<RandomUsersResult, 'users'> & { users: Array<ResolversTypes['User']> }>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserDoc>;
+  UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<ResolversTypes['UserEdge']> }>;
+  UserEdge: ResolverTypeWrapper<Omit<UserEdge, 'node'> & { node: ResolversTypes['User'] }>;
+  UsersPageInfo: ResolverTypeWrapper<UsersPageInfo>;
+  UsersPageInput: UsersPageInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -211,12 +226,14 @@ export type ResolversParentTypes = ResolversObject<{
   Me: UserDoc;
   Mutation: {};
   Query: {};
-  RandomUsersInput: RandomUsersInput;
-  RandomUsersResult: Omit<RandomUsersResult, 'users'> & { users: Array<ResolversParentTypes['User']> };
   SignUpInput: SignUpInput;
   String: Scalars['String'];
   UpdateUserInput: UpdateUserInput;
   User: UserDoc;
+  UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserEdge']> };
+  UserEdge: Omit<UserEdge, 'node'> & { node: ResolversParentTypes['User'] };
+  UsersPageInfo: UsersPageInfo;
+  UsersPageInput: UsersPageInput;
 }>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -235,6 +252,7 @@ export type MeResolvers<ContextType = Context, ParentType extends ResolversParen
 }>;
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  access?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   like?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLikeArgs, 'userId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
   updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
@@ -242,14 +260,8 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
-  randomUsers?: Resolver<ResolversTypes['RandomUsersResult'], ParentType, ContextType, RequireFields<QueryRandomUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-}>;
-
-export type RandomUsersResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RandomUsersResult'] = ResolversParentTypes['RandomUsersResult']> = ResolversObject<{
-  hasMore?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -262,12 +274,32 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserConnection'] = ResolversParentTypes['UserConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['UserEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['UsersPageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UserEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserEdge'] = ResolversParentTypes['UserEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UsersPageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsersPageInfo'] = ResolversParentTypes['UsersPageInfo']> = ResolversObject<{
+  endCursor?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = Context> = ResolversObject<{
   DateTime?: GraphQLScalarType;
   Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  RandomUsersResult?: RandomUsersResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserConnection?: UserConnectionResolvers<ContextType>;
+  UserEdge?: UserEdgeResolvers<ContextType>;
+  UsersPageInfo?: UsersPageInfoResolvers<ContextType>;
 }>;
 
