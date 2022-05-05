@@ -14,8 +14,8 @@ generates:
         DateTime: Timestamp
       contextType: ../context#Context
       mappers:
-        Me: ../fire/docs/index#UserDoc
-        User: ../fire/docs/index#UserDoc
+        Me: ../fire/docs/user#UserDoc
+        User: ../fire/docs/user#UserDoc
   src/graphql/typeDefs.ts:
     plugins:
       - "typescript-type-defs.js"

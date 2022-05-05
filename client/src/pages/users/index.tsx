@@ -37,7 +37,7 @@ const UserCard: FC<UserCardProps> = ({ user }) => {
 };
 
 gql`
-  query Users($input: PaginateInput!) {
+  query Users($input: UsersInput!) {
     users(input: $input) {
       edges {
         node {

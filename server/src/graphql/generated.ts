@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { UserDoc } from '../fire/docs/index';
+import { UserDoc } from '../fire/docs/user';
 import { Context } from '../context';
 import { Timestamp } from 'firebase-admin/firestore'
 export type Maybe<T> = T | null;
@@ -66,21 +66,6 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['DateTime']>;
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  startCursor?: Maybe<Scalars['DateTime']>;
-};
-
-export type PaginateInput = {
-  after?: InputMaybe<Scalars['DateTime']>;
-  before?: InputMaybe<Scalars['DateTime']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   me: Me;
@@ -95,7 +80,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  input: PaginateInput;
+  input: UsersInput;
 };
 
 export type SignUpInput = {
@@ -124,13 +109,24 @@ export type User = {
 export type UserConnection = {
   __typename?: 'UserConnection';
   edges: Array<UserEdge>;
-  pageInfo: PageInfo;
+  pageInfo: UsersPageInfo;
 };
 
 export type UserEdge = {
   __typename?: 'UserEdge';
   cursor: Scalars['DateTime'];
   node: User;
+};
+
+export type UsersInput = {
+  after?: InputMaybe<Scalars['DateTime']>;
+  first: Scalars['Int'];
+};
+
+export type UsersPageInfo = {
+  __typename?: 'UsersPageInfo';
+  endCursor?: Maybe<Scalars['DateTime']>;
+  hasNextPage?: Maybe<Scalars['Boolean']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -211,8 +207,6 @@ export type ResolversTypes = ResolversObject<{
   LikeStatus: LikeStatus;
   Me: ResolverTypeWrapper<UserDoc>;
   Mutation: ResolverTypeWrapper<{}>;
-  PageInfo: ResolverTypeWrapper<PageInfo>;
-  PaginateInput: PaginateInput;
   Query: ResolverTypeWrapper<{}>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -220,6 +214,8 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<UserDoc>;
   UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<ResolversTypes['UserEdge']> }>;
   UserEdge: ResolverTypeWrapper<Omit<UserEdge, 'node'> & { node: ResolversTypes['User'] }>;
+  UsersInput: UsersInput;
+  UsersPageInfo: ResolverTypeWrapper<UsersPageInfo>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -230,8 +226,6 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'];
   Me: UserDoc;
   Mutation: {};
-  PageInfo: PageInfo;
-  PaginateInput: PaginateInput;
   Query: {};
   SignUpInput: SignUpInput;
   String: Scalars['String'];
@@ -239,6 +233,8 @@ export type ResolversParentTypes = ResolversObject<{
   User: UserDoc;
   UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserEdge']> };
   UserEdge: Omit<UserEdge, 'node'> & { node: ResolversParentTypes['User'] };
+  UsersInput: UsersInput;
+  UsersPageInfo: UsersPageInfo;
 }>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -263,14 +259,6 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
 }>;
 
-export type PageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
-  endCursor?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  startCursor?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
@@ -289,7 +277,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 
 export type UserConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserConnection'] = ResolversParentTypes['UserConnection']> = ResolversObject<{
   edges?: Resolver<Array<ResolversTypes['UserEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['UsersPageInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -299,14 +287,20 @@ export type UserEdgeResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UsersPageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsersPageInfo'] = ResolversParentTypes['UsersPageInfo']> = ResolversObject<{
+  endCursor?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = Context> = ResolversObject<{
   DateTime?: GraphQLScalarType;
   Me?: MeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
-  PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;
+  UsersPageInfo?: UsersPageInfoResolvers<ContextType>;
 }>;
 

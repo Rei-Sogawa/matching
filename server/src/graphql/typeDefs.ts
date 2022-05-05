@@ -31,24 +31,10 @@ type Mutation {
   updateUser(input: UpdateUserInput!): Me!
 }
 
-type PageInfo {
-  endCursor: DateTime
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: DateTime
-}
-
-input PaginateInput {
-  after: DateTime
-  before: DateTime
-  first: Int
-  last: Int
-}
-
 type Query {
   me: Me!
   user(id: ID!): User!
-  users(input: PaginateInput!): UserConnection!
+  users(input: UsersInput!): UserConnection!
 }
 
 input SignUpInput {
@@ -75,11 +61,21 @@ type User {
 
 type UserConnection {
   edges: [UserEdge!]!
-  pageInfo: PageInfo!
+  pageInfo: UsersPageInfo!
 }
 
 type UserEdge {
   cursor: DateTime!
   node: User!
+}
+
+input UsersInput {
+  after: DateTime
+  first: Int!
+}
+
+type UsersPageInfo {
+  endCursor: DateTime
+  hasNextPage: Boolean
 }
 `;

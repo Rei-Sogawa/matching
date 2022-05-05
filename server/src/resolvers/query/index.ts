@@ -1,3 +1,5 @@
+import { filter, includes, last, map, orderBy, take, toPairs } from "lodash";
+
 import { authorize } from "../../authorize";
 import { Resolvers } from "../../graphql/generated";
 
@@ -24,8 +26,34 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { input } = args;
-    const { usersCollection } = context.collections;
+    const { uid } = context.decodedIdToken;
+    const { usersCollection, userIndexShardsCollection, likeIndexShardsCollection } = context.collections;
 
-    return usersCollection.findAll(input);
+    const likeIndex = await likeIndexShardsCollection.getIndex();
+
+    const sendLikeUserIds = await Promise.resolve(likeIndex)
+      .then((likeIndex) => toPairs(likeIndex))
+      .then((pairs) => filter(pairs, ([, data]) => data.senderId === uid))
+      .then((pairs) => map(pairs, ([, data]) => data.receiverId));
+
+    const userIds = await userIndexShardsCollection
+      .getIndex()
+      .then((userIndex) => toPairs(userIndex))
+      .then((pairs) => orderBy(pairs, ([, data]) => data.lastAccessedAt, "desc"))
+      .then((pairs) => filter(pairs, ([, data]) => (input.after ? input.after > data.lastAccessedAt : true)))
+      .then((pairs) => filter(pairs, ([id]) => !includes(sendLikeUserIds, id)))
+      .then((pairs) => take(pairs, input.first))
+      .then((pairs) => map(pairs, ([id]) => id));
+
+    const nodes = await Promise.all(userIds.map((id) => usersCollection.findOneById(id)));
+    const edges = nodes.map((node) => ({ node, cursor: node.lastAccessedAt }));
+
+    return {
+      edges,
+      pageInfo: {
+        endCursor: last(edges)?.cursor,
+        hasNextPage: input.first === userIds.length,
+      },
+    };
   },
 };

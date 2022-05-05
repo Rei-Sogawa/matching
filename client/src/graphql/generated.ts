@@ -63,21 +63,6 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['DateTime']>;
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  startCursor?: Maybe<Scalars['DateTime']>;
-};
-
-export type PaginateInput = {
-  after?: InputMaybe<Scalars['DateTime']>;
-  before?: InputMaybe<Scalars['DateTime']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   me: Me;
@@ -92,7 +77,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  input: PaginateInput;
+  input: UsersInput;
 };
 
 export type SignUpInput = {
@@ -121,13 +106,24 @@ export type User = {
 export type UserConnection = {
   __typename?: 'UserConnection';
   edges: Array<UserEdge>;
-  pageInfo: PageInfo;
+  pageInfo: UsersPageInfo;
 };
 
 export type UserEdge = {
   __typename?: 'UserEdge';
   cursor: Scalars['DateTime'];
   node: User;
+};
+
+export type UsersInput = {
+  after?: InputMaybe<Scalars['DateTime']>;
+  first: Scalars['Int'];
+};
+
+export type UsersPageInfo = {
+  __typename?: 'UsersPageInfo';
+  endCursor?: Maybe<Scalars['DateTime']>;
+  hasNextPage?: Maybe<Scalars['Boolean']>;
 };
 
 export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
@@ -177,11 +173,11 @@ export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id:
 export type UserForUsersPageUserCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type UsersQueryVariables = Exact<{
-  input: PaginateInput;
+  input: UsersInput;
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean } } };
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'UsersPageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export const UserForUserSwipeCardFragmentDoc = gql`
     fragment UserForUserSwipeCard on User {
@@ -429,7 +425,7 @@ export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
 export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UsersDocument = gql`
-    query Users($input: PaginateInput!) {
+    query Users($input: UsersInput!) {
   users(input: $input) {
     edges {
       node {
