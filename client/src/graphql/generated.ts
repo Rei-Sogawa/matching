@@ -139,6 +139,8 @@ export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
+export type UserSummaryItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
 export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
@@ -155,7 +157,7 @@ export type UnlikeMutationVariables = Exact<{
 
 export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
-export type UserForSendLikeUserCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type SendLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -212,8 +214,8 @@ export const MeForMeFragmentDoc = gql`
   photoUrls
 }
     `;
-export const UserForSendLikeUserCardFragmentDoc = gql`
-    fragment UserForSendLikeUserCard on User {
+export const UserSummaryItemFragmentDoc = gql`
+    fragment UserSummaryItem on User {
   id
   gender
   nickName
@@ -222,6 +224,12 @@ export const UserForSendLikeUserCardFragmentDoc = gql`
   photoUrls
 }
     `;
+export const SendLikeUserItemFragmentDoc = gql`
+    fragment SendLikeUserItem on User {
+  id
+  ...UserSummaryItem
+}
+    ${UserSummaryItemFragmentDoc}`;
 export const UserTopCardFragmentDoc = gql`
     fragment UserTopCard on User {
   id
@@ -319,10 +327,10 @@ export const UnlikeDocument = gql`
     mutation Unlike($userId: ID!) {
   unlike(userId: $userId) {
     id
-    ...UserForSendLikeUserCard
+    ...SendLikeUserItem
   }
 }
-    ${UserForSendLikeUserCardFragmentDoc}`;
+    ${SendLikeUserItemFragmentDoc}`;
 export type UnlikeMutationFn = Apollo.MutationFunction<UnlikeMutation, UnlikeMutationVariables>;
 
 /**
@@ -353,10 +361,10 @@ export const SendLikeUsersDocument = gql`
     query SendLikeUsers {
   sendLikeUsers {
     id
-    ...UserForSendLikeUserCard
+    ...SendLikeUserItem
   }
 }
-    ${UserForSendLikeUserCardFragmentDoc}`;
+    ${SendLikeUserItemFragmentDoc}`;
 
 /**
  * __useSendLikeUsersQuery__

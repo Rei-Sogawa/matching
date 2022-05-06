@@ -1,11 +1,11 @@
 import { gql, Reference } from "@apollo/client";
-import { Box, Button, Divider, Flex, HStack, Image, Stack } from "@chakra-ui/react";
-import { head } from "lodash-es";
+import { Box, Button, Divider, Flex, Stack } from "@chakra-ui/react";
 import { FC } from "react";
 
 import { Loading } from "../../components/case/Loading";
 import { BackButton } from "../../components/common/BackButton";
-import { UserForSendLikeUserCardFragment, useSendLikeUsersQuery, useUnlikeMutation } from "../../graphql/generated";
+import { UserSummaryItem } from "../../components/domain/UserSummaryItem";
+import { SendLikeUserItemFragment, useSendLikeUsersQuery, useUnlikeMutation } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
 
@@ -13,81 +13,60 @@ gql`
   mutation Unlike($userId: ID!) {
     unlike(userId: $userId) {
       id
-      ...UserForSendLikeUserCard
+      ...SendLikeUserItem
     }
   }
 `;
 
-gql`
-  fragment UserForSendLikeUserCard on User {
-    id
-    gender
-    nickName
-    age
-    livingPref
-    photoUrls
-  }
-`;
-
-type UserCardProps = {
-  user: UserForSendLikeUserCardFragment;
-};
-
-const UserCard: FC<UserCardProps> = ({ user }) => {
-  const [unlike] = useUnlikeMutation({
-    variables: { userId: user.id },
+const useUnlike = (userId: string) => {
+  const [mutate] = useUnlikeMutation({
+    variables: { userId },
     update(cache) {
       cache.modify({
         fields: {
           sendLikeUsers(existing, { readField }) {
-            return existing.filter((u: Reference) => readField("id", u) !== user.id);
+            return existing.filter((u: Reference) => readField("id", u) !== userId);
           },
         },
       });
     },
   });
 
-  const onUnlike = async () => {
-    await unlike();
-  };
+  const unlike = () => mutate();
 
-  return (
-    <Stack spacing="4" w={{ base: "full", md: "lg" }} p="4">
-      <Image src={head(user.photoUrls)} rounded="md" />
+  return { unlike };
+};
 
-      <Box>
-        <Box fontWeight="bold" fontSize="2xl">
-          {user.nickName}
-        </Box>
-        <HStack>
-          <Box color="gray" fontWeight="bold">
-            {user.age}歳
-          </Box>
-          <Box color="gray" fontWeight="bold">
-            {user.livingPref}
-          </Box>
-          <Box color="gray" fontWeight="bold">
-            {user.gender === "MALE" ? "男性" : "女性"}
-          </Box>
-        </HStack>
-      </Box>
+gql`
+  fragment SendLikeUserItem on User {
+    id
+    ...UserSummaryItem
+  }
+`;
 
-      <Button onClick={onUnlike}>いいねを取り消す</Button>
-    </Stack>
-  );
+type SendLikeUserItemProps = {
+  user: SendLikeUserItemFragment;
+};
+
+const SendLikeUserItem: FC<SendLikeUserItemProps> = ({ user }) => {
+  const { unlike } = useUnlike(user.id);
+
+  const actionButton = <Button onClick={unlike}>いいねを取り消す</Button>;
+
+  return <UserSummaryItem user={user} actionButton={actionButton} />;
 };
 
 gql`
   query SendLikeUsers {
     sendLikeUsers {
       id
-      ...UserForSendLikeUserCard
+      ...SendLikeUserItem
     }
   }
 `;
 
 type MyPageLikesPageTemplateProps = {
-  users: UserForSendLikeUserCardFragment[];
+  users: SendLikeUserItemFragment[];
 };
 
 const MyPageLikesPageTemplate: FC<MyPageLikesPageTemplateProps> = ({ users }) => {
@@ -105,7 +84,7 @@ const MyPageLikesPageTemplate: FC<MyPageLikesPageTemplateProps> = ({ users }) =>
 
         {users.map((u) => (
           <Stack key={u.id} alignSelf="center" spacing="6">
-            <UserCard user={u} />
+            <SendLikeUserItem user={u} />
             <Divider />
           </Stack>
         ))}
