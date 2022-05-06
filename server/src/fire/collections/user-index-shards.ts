@@ -30,22 +30,22 @@ export class UserIndexShardsCollection extends FireCollection<UserIndexShardData
     return new UserIndexShardDoc({ id: snap.id, ref: snap.ref, data: () => data });
   }
 
-  async userIds({
+  async paginatedUserIds({
+    userId,
     first,
     after,
-    uid,
     sendLikeUserIds,
   }: {
+    userId: string;
     first: number;
     after: Timestamp | null | undefined;
-    uid: string;
     sendLikeUserIds: string[];
   }) {
     return this.getIndex()
       .then((userIndex) => toPairs(userIndex))
       .then((pairs) => orderBy(pairs, ([, data]) => data.lastAccessedAt, "desc"))
+      .then((pairs) => filter(pairs, ([id]) => !includes([userId, ...sendLikeUserIds], id)))
       .then((pairs) => filter(pairs, ([, data]) => (after ? after > data.lastAccessedAt : true)))
-      .then((pairs) => filter(pairs, ([id]) => !includes([uid, ...sendLikeUserIds], id)))
       .then((pairs) => take(pairs, first))
       .then((pairs) => map(pairs, ([id]) => id));
   }

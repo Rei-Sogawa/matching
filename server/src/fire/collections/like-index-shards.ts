@@ -1,6 +1,6 @@
 import { FireCollection } from "@rei-sogawa/unfireorm";
-import { CollectionReference } from "firebase-admin/firestore";
-import { filter, has, map, merge, orderBy, shuffle, toPairs } from "lodash";
+import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { filter, has, map, merge, orderBy, shuffle, take, toPairs } from "lodash";
 
 import { LikeIndexShardData, LikeIndexShardDoc } from "../docs/like-index-shard";
 
@@ -36,5 +36,23 @@ export class LikeIndexShardsCollection extends FireCollection<LikeIndexShardData
       .then((pairs) => orderBy(pairs, ([, data]) => data.createdAt, "desc"))
       .then((pairs) => filter(pairs, ([, data]) => data.senderId === userId))
       .then((pairs) => map(pairs, ([, data]) => data.receiverId));
+  }
+
+  async paginatedSendLikeUserIds({
+    userId,
+    first,
+    after,
+  }: {
+    userId: string;
+    first: number;
+    after: Timestamp | null | undefined;
+  }) {
+    return this.getIndex()
+      .then((likeIndex) => toPairs(likeIndex))
+      .then((pairs) => orderBy(pairs, ([, data]) => data.createdAt, "desc"))
+      .then((pairs) => filter(pairs, ([, data]) => data.senderId === userId))
+      .then((pairs) => filter(pairs, ([, data]) => (after ? after > data.createdAt : true)))
+      .then((pairs) => take(pairs, first))
+      .then((paris) => map(paris, ([, data]) => data.receiverId));
   }
 }

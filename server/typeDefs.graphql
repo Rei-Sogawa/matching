@@ -66,8 +66,8 @@ type Query {
   me: Me!
   user(id: ID!): User!
   users(input: UsersInput!): UserConnection!
-  receiveLikeUsers: [User!]!
-  sendLikeUsers: [User!]!
+  receiveLikeUsers(input: UsersInput!): UserConnection!
+  sendLikeUsers(input: UsersInput!): UserConnection!
 }
 
 #
