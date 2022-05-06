@@ -27,19 +27,19 @@ export abstract class FireIndex<TData extends { id: string }> {
     await doc.ref.set({ value: [...prev.value, data] });
   }
 
-  async update(id: string, data: TData) {
+  async update(data: TData) {
     const { docs } = await this.ref.get();
-    const doc = docs.find((doc) => doc.data().value.find((v) => v.id === id));
+    const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
     if (doc) {
-      await doc.ref.set({ value: doc.data().value.filter((v) => (v.id === id ? data : v)) });
+      await doc.ref.set({ value: doc.data().value.filter((v) => (v.id === data.id ? data : v)) });
     }
   }
 
-  async delete(id: string) {
+  async delete(data: TData) {
     const { docs } = await this.ref.get();
-    const doc = docs.find((doc) => doc.data().value.find((v) => v.id === id));
+    const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
     if (doc) {
-      await doc.ref.set({ value: doc.data().value.filter((v) => v.id !== id) });
+      await doc.ref.set({ value: doc.data().value.filter((v) => v.id !== data.id) });
     }
   }
 }

@@ -6,19 +6,14 @@ import { Resolvers } from "./../../graphql/generated";
 export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
-    const { auth, db } = context;
-    const { usersCollection, userIndexShardsCollection } = context.collections;
+    const { auth } = context;
+    const { usersCollection, userIndexCollection } = context.collections;
 
     const { uid } = await auth.createUser({ email, password });
 
     const user = UserDoc.create(usersCollection.ref, { id: uid });
-    const userIndexShard = await userIndexShardsCollection.get();
-    userIndexShard.addIndex(...user.toIndex());
-
-    const batch = db.batch();
-    batch.set(...user.toBatch());
-    batch.set(...userIndexShard.toBatch());
-    await batch.commit();
+    await user.save();
+    await userIndexCollection.add(user.toIndex());
 
     return user;
   },
@@ -27,15 +22,11 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { uid } = context.decodedIdToken;
-    const { db } = context;
-    const { usersCollection } = context.collections;
+    const { usersCollection, userIndexCollection } = context.collections;
 
-    const user = await usersCollection.findOneById(uid);
-    user.access();
-
-    const batch = db.batch();
-    batch.set(...user.toBatch());
-    await batch.commit();
+    const user = await usersCollection.get(uid);
+    await user.access().save();
+    await userIndexCollection.update(user.toIndex());
 
     return user;
   },
@@ -44,11 +35,13 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { uid } = context.decodedIdToken;
-    const { usersCollection } = context.collections;
+    const { usersCollection, userIndexCollection } = context.collections;
 
-    const user = await usersCollection.findOneById(uid);
-    user.edit(args.input);
-    return user.set();
+    const user = await usersCollection.get(uid);
+    await user.edit(args.input).save();
+    await userIndexCollection.update(user.toIndex());
+
+    return user;
   },
 
   async like(_parent, args, context) {
@@ -56,39 +49,22 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { userId } = args;
     const { uid } = context.decodedIdToken;
-    const { db } = context;
-    const { usersCollection, likesCollection, likeIndexShardsCollection } = context.collections;
+    const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
 
     const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
-    if (sendLike) throw new Error("sendLike exists");
+    if (sendLike) throw new Error("sendLike already exists");
 
     const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
-
     if (receiveLike) {
-      const likeIndexShard = await likeIndexShardsCollection.getById(receiveLike.id);
-
-      receiveLike.match();
-      likeIndexShard.editIndex(...receiveLike.toIndex());
-
-      const batch = db.batch();
-      batch.set(...receiveLike.toBatch());
-      batch.set(...likeIndexShard.toBatch());
-      await batch.commit();
-
-      return usersCollection.findOneById(userId);
+      await receiveLike.match().save();
+      await likeIndexCollection.update(receiveLike.toIndex());
+    } else {
+      const like = LikeDoc.create(likesCollection.ref, { senderId: uid, receiverId: userId });
+      await like.save();
+      await likeIndexCollection.add(like.toIndex());
     }
 
-    const like = LikeDoc.create(likesCollection.ref, { senderId: uid, receiverId: userId });
-    const likeIndexShard = await likeIndexShardsCollection.get();
-
-    likeIndexShard.addIndex(...like.toIndex());
-
-    const batch = db.batch();
-    batch.set(...like.toBatch());
-    batch.set(...likeIndexShard.toBatch());
-    await batch.commit();
-
-    return usersCollection.findOneById(userId);
+    return usersCollection.get(userId);
   },
 
   async unlike(_parent, args, context) {
@@ -96,21 +72,15 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { userId } = args;
     const { uid } = context.decodedIdToken;
-    const { db } = context;
-    const { usersCollection, likesCollection, likeIndexShardsCollection } = context.collections;
+    const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
 
     const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
     if (!sendLike) throw new Error("sendLike not exists");
-    const likeIndexShard = await likeIndexShardsCollection.getById(sendLike.id);
 
-    likeIndexShard.removeIndex(sendLike.id);
+    await sendLike.delete();
+    await likeIndexCollection.delete(sendLike.toIndex());
 
-    const batch = db.batch();
-    batch.delete(sendLike.ref);
-    batch.set(...likeIndexShard.toBatch());
-    await batch.commit();
-
-    return usersCollection.findOneById(userId);
+    return usersCollection.get(userId);
   },
 
   async skip(_parent, args, context) {
@@ -118,21 +88,14 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { userId } = args;
     const { uid } = context.decodedIdToken;
-    const { db } = context;
-    const { usersCollection, likesCollection, likeIndexShardsCollection } = context.collections;
+    const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
 
-    const sendLike = await likesCollection.find({ senderId: userId, receiverId: uid });
-    if (!sendLike) throw new Error("sendLike not exists");
-    const likeIndexShard = await likeIndexShardsCollection.getById(sendLike.id);
+    const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
+    if (!receiveLike) throw new Error("receiveLike not exists");
 
-    sendLike.skip();
-    likeIndexShard.editIndex(...sendLike.toIndex());
+    await receiveLike.skip().save();
+    await likeIndexCollection.update(receiveLike.toIndex());
 
-    const batch = db.batch();
-    batch.set(...sendLike.toBatch());
-    batch.set(...likeIndexShard.toBatch());
-    await batch.commit();
-
-    return usersCollection.findOneById(userId);
+    return usersCollection.get(userId);
   },
 };
