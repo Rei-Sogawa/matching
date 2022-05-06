@@ -139,6 +139,8 @@ export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
+export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
 export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -220,8 +222,8 @@ export const UserForSendLikeUserCardFragmentDoc = gql`
   photoUrls
 }
     `;
-export const UserForUserPageFragmentDoc = gql`
-    fragment UserForUserPage on User {
+export const UserTopCardFragmentDoc = gql`
+    fragment UserTopCard on User {
   id
   gender
   nickName
@@ -230,6 +232,12 @@ export const UserForUserPageFragmentDoc = gql`
   photoUrls
 }
     `;
+export const UserForUserPageFragmentDoc = gql`
+    fragment UserForUserPage on User {
+  id
+  ...UserTopCard
+}
+    ${UserTopCardFragmentDoc}`;
 export const UserForUsersPageUserCardFragmentDoc = gql`
     fragment UserForUsersPageUserCard on User {
   id
@@ -482,10 +490,10 @@ export const UserDocument = gql`
     query User($id: ID!) {
   user(id: $id) {
     id
-    ...UserForUserPage
+    ...UserTopCard
   }
 }
-    ${UserForUserPageFragmentDoc}`;
+    ${UserTopCardFragmentDoc}`;
 
 /**
  * __useUserQuery__

@@ -71,7 +71,7 @@ export const UserPhotoPicker: FC<UserPhotoPickerProps> = ({ photoUrls, onPick, o
       {photoUrls.length > 0 && (
         <Wrap>
           {photoUrls.map((url, index) => (
-            <WrapItem key={index}>
+            <WrapItem key={index} h="max-content">
               <UserPhotoCard
                 photoUrl={url}
                 onUp={() => onUp(index)}

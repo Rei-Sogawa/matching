@@ -1,5 +1,5 @@
 import { gql, Reference, useApolloClient } from "@apollo/client";
-import { Box, BoxProps, Center, HStack, IconButton, Stack, VStack } from "@chakra-ui/react";
+import { Box, Center, HStack, IconButton, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { animated, useSpring } from "react-spring";
 
 import { Loading } from "../../../components/case/Loading";
 import { BackButton } from "../../../components/common/BackButton";
+import { UserTopCard } from "../../../components/domain/UserTopCard";
 import {
   useLikeMutation,
   UserForUserPageFragment,
@@ -17,10 +18,6 @@ import {
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 import { assertDefined } from "../../../utils/assert-defined";
-
-const Card: FC<BoxProps> = (props) => {
-  return <Box w={{ base: "full", md: "lg" }} p="4" rounded="md" boxShadow="md" bg="white" {...props} />;
-};
 
 gql`
   mutation Like($userId: ID!) {
@@ -34,11 +31,7 @@ gql`
 gql`
   fragment UserForUserPage on User {
     id
-    gender
-    nickName
-    age
-    livingPref
-    photoUrls
+    ...UserTopCard
   }
 `;
 
@@ -60,19 +53,6 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
       return routes["/users/:userId"].path({ userId: nextUser.id });
     } else {
       return routes["/users"].path();
-    }
-  };
-
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-
-  const onClickRight = () => {
-    if (activeImageIndex < user.photoUrls.length - 1) {
-      setActiveImageIndex((prev) => prev + 1);
-    }
-  };
-  const onClickLeft = () => {
-    if (activeImageIndex > 0) {
-      setActiveImageIndex((prev) => prev - 1);
     }
   };
 
@@ -125,73 +105,38 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     }, 1_500);
   };
 
+  const imageForeground = (
+    <animated.div style={{ height: "100%", ...imageStyles }}>
+      {liked && (
+        <Center position="absolute" h="full" w="full" bg="pink.50">
+          <VStack color="red.400">
+            <BiLike fontSize="64px" />
+            <Box fontWeight="bold" fontSize="2xl">
+              いいね！
+            </Box>
+          </VStack>
+        </Center>
+      )}
+
+      {skipped && (
+        <Center position="absolute" h="full" w="full" bg="gray.50">
+          <VStack color="gray.400">
+            <BiShare fontSize="64px" />
+            <Box fontWeight="bold" fontSize="2xl">
+              スキップ
+            </Box>
+          </VStack>
+        </Center>
+      )}
+    </animated.div>
+  );
+
   return (
     <AppLayout footer={false} bg="gray.50">
       <VStack>
         <BackButton alignSelf="start" path={routes["/users"].path()} />
 
-        <Card>
-          <Stack spacing="4">
-            <Box
-              rounded="md"
-              sx={{ aspectRatio: "1 / 1 " }}
-              backgroundImage={`url(${user.photoUrls[activeImageIndex]})`}
-              backgroundSize="cover"
-              backgroundRepeat="no-repeat"
-              position="relative"
-            >
-              <animated.div style={{ height: "100%", ...imageStyles }}>
-                {liked && (
-                  <Center position="absolute" h="full" w="full" bg="pink.50">
-                    <VStack color="red.400">
-                      <BiLike fontSize="64px" />
-                      <Box fontWeight="bold" fontSize="2xl">
-                        いいね！
-                      </Box>
-                    </VStack>
-                  </Center>
-                )}
-
-                {skipped && (
-                  <Center position="absolute" h="full" w="full" bg="gray.50">
-                    <VStack color="gray.400">
-                      <BiShare fontSize="64px" />
-                      <Box fontWeight="bold" fontSize="2xl">
-                        スキップ
-                      </Box>
-                    </VStack>
-                  </Center>
-                )}
-              </animated.div>
-
-              <HStack position="absolute" bottom="2" w="full" px="2">
-                {user.photoUrls.map((_, i) => (
-                  <Box key={i} flex="1" h="1" bg={i === activeImageIndex ? "white" : "gray.500"} />
-                ))}
-              </HStack>
-
-              <Box position="absolute" top="0" left="0" w="50%" h="100%" cursor="pointer" onClick={onClickLeft} />
-              <Box position="absolute" top="0" left="50%" w="50%" h="100%" cursor="pointer" onClick={onClickRight} />
-            </Box>
-
-            <Box>
-              <Box fontWeight="bold" fontSize="2xl">
-                {user.nickName}
-              </Box>
-              <HStack>
-                <Box color="gray" fontWeight="bold">
-                  {user.age}歳
-                </Box>
-                <Box color="gray" fontWeight="bold">
-                  {user.livingPref}
-                </Box>
-                <Box color="gray" fontWeight="bold">
-                  {user.gender === "MALE" ? "男性" : "女性"}
-                </Box>
-              </HStack>
-            </Box>
-          </Stack>
-        </Card>
+        <UserTopCard user={user} imageForeground={imageForeground} />
       </VStack>
 
       <HStack spacing="8" position="absolute" bottom="10" left="50%" transform="translateX(-50%)">
@@ -225,7 +170,7 @@ gql`
   query User($id: ID!) {
     user(id: $id) {
       id
-      ...UserForUserPage
+      ...UserTopCard
     }
   }
 `;
