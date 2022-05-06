@@ -32,9 +32,6 @@ export const Query: Resolvers["Query"] = {
     const sendLikes = await likeIndexCollection.sendLikes(uid);
     const receiveLikes = await likeIndexCollection.receiveLikes(uid);
 
-    // console.log(sendLikes);
-    console.log(receiveLikes);
-
     const users = await userIndexCollection.paginatedUsers({
       first: input.first,
       after: input.after,

@@ -33,13 +33,26 @@ gql`
 const useLike = (userId: string) => {
   const [mutate] = useLikeMutation({
     variables: { userId },
-    update(cache) {
+    update(cache, { data }) {
+      assertDefined(data);
+
       cache.modify({
         fields: {
           users(existing, { readField }) {
             return {
               ...existing,
               edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
+            };
+          },
+        },
+      });
+
+      cache.modify({
+        fields: {
+          sendLikeUsers(existing, { toReference }) {
+            return {
+              ...existing,
+              edges: [{ __typename: "UserEdge", node: toReference(data.like), cursor: new Date() }, ...existing.edges],
             };
           },
         },
