@@ -23,6 +23,13 @@ export class LikeIndexCollection extends FireIndex<LikeIndexData> {
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"));
   }
 
+  async receivePendingLikes(userId: string) {
+    return this.get()
+      .then((ary) => filter(ary, (e) => e.receiverId === userId))
+      .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
+      .then((ary) => filter(ary, (e) => e.status === "PENDING"));
+  }
+
   async paginatedSendLikes({
     userId,
     first,

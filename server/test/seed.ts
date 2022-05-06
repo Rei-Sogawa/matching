@@ -16,7 +16,7 @@ const main = async () => {
   await clearFirestore();
 
   const fakeAuthUsers = await Promise.all(
-    Array.from({ length: 15 }).map((_, i) => {
+    Array.from({ length: 10 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
     })
   );
@@ -49,7 +49,7 @@ const main = async () => {
   {
     const authUser = await auth.createUser({
       email: "nao@example.com",
-      password: "password",
+      password: "Password00",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
@@ -69,7 +69,7 @@ const main = async () => {
   {
     const authUser = await auth.createUser({
       email: "megu@example.com",
-      password: "password",
+      password: "Password00",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
@@ -89,7 +89,7 @@ const main = async () => {
   {
     const authUser = await auth.createUser({
       email: "kaede@example.com",
-      password: "password",
+      password: "Password00",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 

@@ -31,7 +31,7 @@ export abstract class FireIndex<TData extends { id: string }> {
     const { docs } = await this.ref.get();
     const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
     if (doc) {
-      await doc.ref.set({ value: doc.data().value.filter((v) => (v.id === data.id ? data : v)) });
+      await doc.ref.set({ value: doc.data().value.map((v) => (v.id === data.id ? data : v)) });
     }
   }
 

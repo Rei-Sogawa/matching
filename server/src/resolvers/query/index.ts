@@ -59,7 +59,7 @@ export const Query: Resolvers["Query"] = {
     const { uid } = context.decodedIdToken;
     const { usersCollection, likeIndexCollection } = context.collections;
 
-    const receiveLikes = await likeIndexCollection.receiveLikes(uid);
+    const receiveLikes = await likeIndexCollection.receivePendingLikes(uid);
 
     return Promise.all(receiveLikes.map((data) => usersCollection.get(data.senderId)));
   },
