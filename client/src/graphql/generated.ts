@@ -155,6 +155,20 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
+export type MatchMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type MatchMutation = { __typename?: 'Mutation', like: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+
+export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
+export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ReceiveLikeUsersQuery = { __typename?: 'Query', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
+
 export type UnlikeMutationVariables = Exact<{
   userId: Scalars['ID'];
 }>;
@@ -221,6 +235,22 @@ export const MeForMeFragmentDoc = gql`
   photoUrls
 }
     `;
+export const UserTopCardFragmentDoc = gql`
+    fragment UserTopCard on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
+  photoUrls
+}
+    `;
+export const UserForLikePageFragmentDoc = gql`
+    fragment UserForLikePage on User {
+  id
+  ...UserTopCard
+}
+    ${UserTopCardFragmentDoc}`;
 export const UserSummaryItemFragmentDoc = gql`
     fragment UserSummaryItem on User {
   id
@@ -237,16 +267,6 @@ export const SendLikeUserItemFragmentDoc = gql`
   ...UserSummaryItem
 }
     ${UserSummaryItemFragmentDoc}`;
-export const UserTopCardFragmentDoc = gql`
-    fragment UserTopCard on User {
-  id
-  gender
-  nickName
-  age
-  livingPref
-  photoUrls
-}
-    `;
 export const UserForUserPageFragmentDoc = gql`
     fragment UserForUserPage on User {
   id
@@ -330,6 +350,75 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MatchDocument = gql`
+    mutation Match($userId: ID!) {
+  like(userId: $userId) {
+    id
+    ...UserForLikePage
+  }
+}
+    ${UserForLikePageFragmentDoc}`;
+export type MatchMutationFn = Apollo.MutationFunction<MatchMutation, MatchMutationVariables>;
+
+/**
+ * __useMatchMutation__
+ *
+ * To run a mutation, you first call `useMatchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMatchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [matchMutation, { data, loading, error }] = useMatchMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useMatchMutation(baseOptions?: Apollo.MutationHookOptions<MatchMutation, MatchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MatchMutation, MatchMutationVariables>(MatchDocument, options);
+      }
+export type MatchMutationHookResult = ReturnType<typeof useMatchMutation>;
+export type MatchMutationResult = Apollo.MutationResult<MatchMutation>;
+export type MatchMutationOptions = Apollo.BaseMutationOptions<MatchMutation, MatchMutationVariables>;
+export const ReceiveLikeUsersDocument = gql`
+    query ReceiveLikeUsers {
+  receiveLikeUsers {
+    id
+    ...UserForLikePage
+  }
+}
+    ${UserForLikePageFragmentDoc}`;
+
+/**
+ * __useReceiveLikeUsersQuery__
+ *
+ * To run a query within a React component, call `useReceiveLikeUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReceiveLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReceiveLikeUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useReceiveLikeUsersQuery(baseOptions?: Apollo.QueryHookOptions<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>(ReceiveLikeUsersDocument, options);
+      }
+export function useReceiveLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>(ReceiveLikeUsersDocument, options);
+        }
+export type ReceiveLikeUsersQueryHookResult = ReturnType<typeof useReceiveLikeUsersQuery>;
+export type ReceiveLikeUsersLazyQueryHookResult = ReturnType<typeof useReceiveLikeUsersLazyQuery>;
+export type ReceiveLikeUsersQueryResult = Apollo.QueryResult<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>;
 export const UnlikeDocument = gql`
     mutation Unlike($userId: ID!) {
   unlike(userId: $userId) {
