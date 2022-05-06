@@ -60,7 +60,7 @@ const main = async () => {
       paths.push(storagePath);
     }
 
-    await user.edit({ age: 34, nickName: "Nao", livingPref: "新潟県", photoPaths: paths }).save();
+    await user.edit({ gender: "FEMALE", nickName: "Nao", age: 34, livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
     nao = user;
@@ -80,7 +80,7 @@ const main = async () => {
       paths.push(storagePath);
     }
 
-    await user.edit({ age: 32, nickName: "Megu", livingPref: "新潟県", photoPaths: paths }).save();
+    await user.edit({ gender: "FEMALE", nickName: "Megu", age: 32, livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
     megu = user;
@@ -100,7 +100,7 @@ const main = async () => {
       paths.push(storagePath);
     }
 
-    await user.edit({ age: 30, nickName: "Kaede", livingPref: "新潟県", photoPaths: paths }).save();
+    await user.edit({ gender: "FEMALE", nickName: "Kaede", age: 30, livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
     kaede = user;

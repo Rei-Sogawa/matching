@@ -13,7 +13,7 @@ const { usersCollection, userIndexCollection, likesCollection, likeIndexCollecti
 
 const main = async () => {
   const fakeAuthUsers = await Promise.all(
-    Array.from({ length: 15 }).map((_, i) => {
+    Array.from({ length: 10 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
     })
   );
@@ -46,7 +46,7 @@ const main = async () => {
   {
     const authUser = await auth.createUser({
       email: "nao@example.com",
-      password: "password",
+      password: "Password00",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
@@ -57,7 +57,7 @@ const main = async () => {
       paths.push(storagePath);
     }
 
-    await user.edit({ age: 34, nickName: "Nao", livingPref: "新潟県", photoPaths: paths }).save();
+    await user.edit({ gender: "FEMALE", nickName: "Nao", age: 34, livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
     nao = user;
@@ -66,7 +66,7 @@ const main = async () => {
   {
     const authUser = await auth.createUser({
       email: "megu@example.com",
-      password: "password",
+      password: "Password00",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
@@ -77,7 +77,7 @@ const main = async () => {
       paths.push(storagePath);
     }
 
-    await user.edit({ age: 32, nickName: "Megu", livingPref: "新潟県", photoPaths: paths }).save();
+    await user.edit({ gender: "FEMALE", nickName: "Megu", age: 32, livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
     megu = user;
@@ -86,7 +86,7 @@ const main = async () => {
   {
     const authUser = await auth.createUser({
       email: "kaede@example.com",
-      password: "password",
+      password: "Password00",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
@@ -97,7 +97,7 @@ const main = async () => {
       paths.push(storagePath);
     }
 
-    await user.edit({ age: 30, nickName: "Kaede", livingPref: "新潟県", photoPaths: paths }).save();
+    await user.edit({ gender: "FEMALE", nickName: "Kaede", age: 30, livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
     kaede = user;
