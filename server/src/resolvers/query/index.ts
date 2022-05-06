@@ -32,11 +32,16 @@ export const Query: Resolvers["Query"] = {
     const sendLikes = await likeIndexCollection.sendLikes(uid);
     const receiveLikes = await likeIndexCollection.receiveLikes(uid);
 
+    // console.log(sendLikes);
+    console.log(receiveLikes);
+
     const users = await userIndexCollection.paginatedUsers({
       first: input.first,
       after: input.after,
       excludeUserIds: [uid, ...sendLikes.map((like) => like.receiverId), ...receiveLikes.map((like) => like.senderId)],
     });
+
+    console.log(users);
 
     const nodes = await Promise.all(users.map((user) => usersCollection.get(user.id)));
     const edges = nodes.map((node) => ({ node, cursor: node.lastAccessedAt }));
