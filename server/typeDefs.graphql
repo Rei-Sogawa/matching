@@ -92,4 +92,5 @@ type Mutation {
   updateUser(input: UpdateUserInput!): Me!
   like(userId: ID!): User!
   unlike(userId: ID!): User!
+  skip(userId: ID!): User!
 }
