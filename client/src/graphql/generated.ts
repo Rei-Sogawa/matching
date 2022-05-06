@@ -72,10 +72,20 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
-  receiveLikeUsers: Array<User>;
-  sendLikeUsers: Array<User>;
+  receiveLikeUsers: UserConnection;
+  sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
+};
+
+
+export type QueryReceiveLikeUsersArgs = {
+  input: UsersInput;
+};
+
+
+export type QuerySendLikeUsersArgs = {
+  input: UsersInput;
 };
 
 
@@ -159,10 +169,12 @@ export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: '
 
 export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type SendLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type SendLikeUsersQueryVariables = Exact<{
+  input: UsersInput;
+}>;
 
 
-export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
+export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'UsersPageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
@@ -358,10 +370,19 @@ export type UnlikeMutationHookResult = ReturnType<typeof useUnlikeMutation>;
 export type UnlikeMutationResult = Apollo.MutationResult<UnlikeMutation>;
 export type UnlikeMutationOptions = Apollo.BaseMutationOptions<UnlikeMutation, UnlikeMutationVariables>;
 export const SendLikeUsersDocument = gql`
-    query SendLikeUsers {
-  sendLikeUsers {
-    id
-    ...SendLikeUserItem
+    query SendLikeUsers($input: UsersInput!) {
+  sendLikeUsers(input: $input) {
+    edges {
+      node {
+        id
+        ...SendLikeUserItem
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
   }
 }
     ${SendLikeUserItemFragmentDoc}`;
@@ -378,10 +399,11 @@ export const SendLikeUsersDocument = gql`
  * @example
  * const { data, loading, error } = useSendLikeUsersQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useSendLikeUsersQuery(baseOptions?: Apollo.QueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
+export function useSendLikeUsersQuery(baseOptions: Apollo.QueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
       }

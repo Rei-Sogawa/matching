@@ -29,12 +29,12 @@ export const Query: Resolvers["Query"] = {
     const { uid } = context.decodedIdToken;
     const { usersCollection, userIndexShardsCollection, likeIndexShardsCollection } = context.collections;
 
-    const sendLikeUserIds = await likeIndexShardsCollection.sendLikeUserIds(uid);
+    const sendLikes = await likeIndexShardsCollection.sendLikes(uid);
     const userIds = await userIndexShardsCollection.paginatedUserIds({
       userId: uid,
       first: input.first,
       after: input.after,
-      sendLikeUserIds,
+      sendLikeUserIds: sendLikes.map(([, data]) => data.receiverId),
     });
 
     const nodes = await Promise.all(userIds.map((id) => usersCollection.findOneById(id)));
@@ -56,14 +56,21 @@ export const Query: Resolvers["Query"] = {
     const { uid } = context.decodedIdToken;
     const { usersCollection, likeIndexShardsCollection } = context.collections;
 
-    const sendLikeUserIds = await likeIndexShardsCollection.paginatedSendLikeUserIds({
+    const sendLikes = await likeIndexShardsCollection.paginatedSendLikes({
       userId: uid,
       first: input.first,
       after: input.after,
     });
 
-    const nodes = await Promise.all(sendLikeUserIds.map((id) => usersCollection.findOneById(id)));
-    const edges = nodes.map((node) => ({ node, cursor: node.createdAt }));
+    const edges = await Promise.all(
+      sendLikes.map(async ([, data]) => {
+        const node = await usersCollection.findOneById(data.receiverId);
+        return {
+          node,
+          cursor: data.createdAt,
+        };
+      })
+    );
 
     return {
       edges,

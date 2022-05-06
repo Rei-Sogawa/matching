@@ -28,6 +28,28 @@ gql`
   }
 `;
 
+const useLike = (userId: string) => {
+  const [mutate] = useLikeMutation({
+    variables: { userId },
+    update(cache) {
+      cache.modify({
+        fields: {
+          users(existing, { readField }) {
+            return {
+              ...existing,
+              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
+            };
+          },
+        },
+      });
+    },
+  });
+
+  const like = () => mutate();
+
+  return { like };
+};
+
 gql`
   fragment UserForUserPage on User {
     id
@@ -56,21 +78,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     }
   };
 
-  const [like] = useLikeMutation({
-    variables: { userId: user.id },
-    update(cache) {
-      cache.modify({
-        fields: {
-          users(existing, { readField }) {
-            return {
-              ...existing,
-              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== user.id),
-            };
-          },
-        },
-      });
-    },
-  });
+  const { like } = useLike(user.id);
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
   const [liked, setLiked] = useState(false);

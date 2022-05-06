@@ -30,15 +30,14 @@ export class LikeIndexShardsCollection extends FireCollection<LikeIndexShardData
     return new LikeIndexShardDoc({ id: snap.id, ref: snap.ref, data: () => data });
   }
 
-  async sendLikeUserIds(userId: string) {
+  async sendLikes(userId: string) {
     return this.getIndex()
       .then((likeIndex) => toPairs(likeIndex))
       .then((pairs) => orderBy(pairs, ([, data]) => data.createdAt, "desc"))
-      .then((pairs) => filter(pairs, ([, data]) => data.senderId === userId))
-      .then((pairs) => map(pairs, ([, data]) => data.receiverId));
+      .then((pairs) => filter(pairs, ([, data]) => data.senderId === userId));
   }
 
-  async paginatedSendLikeUserIds({
+  async paginatedSendLikes({
     userId,
     first,
     after,
@@ -52,7 +51,6 @@ export class LikeIndexShardsCollection extends FireCollection<LikeIndexShardData
       .then((pairs) => orderBy(pairs, ([, data]) => data.createdAt, "desc"))
       .then((pairs) => filter(pairs, ([, data]) => data.senderId === userId))
       .then((pairs) => filter(pairs, ([, data]) => (after ? after > data.createdAt : true)))
-      .then((pairs) => take(pairs, first))
-      .then((paris) => map(paris, ([, data]) => data.receiverId));
+      .then((pairs) => take(pairs, first));
   }
 }

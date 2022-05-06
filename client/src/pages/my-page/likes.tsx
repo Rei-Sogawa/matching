@@ -25,7 +25,10 @@ const useUnlike = (userId: string) => {
       cache.modify({
         fields: {
           sendLikeUsers(existing, { readField }) {
-            return existing.filter((u: Reference) => readField("id", u) !== userId);
+            return {
+              ...existing,
+              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
+            };
           },
         },
       });
@@ -57,19 +60,38 @@ const SendLikeUserItem: FC<SendLikeUserItemProps> = ({ user }) => {
 };
 
 gql`
-  query SendLikeUsers {
-    sendLikeUsers {
-      id
-      ...SendLikeUserItem
+  query SendLikeUsers($input: UsersInput!) {
+    sendLikeUsers(input: $input) {
+      edges {
+        node {
+          id
+          ...SendLikeUserItem
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
     }
   }
 `;
 
-type MyPageLikesPageTemplateProps = {
-  users: SendLikeUserItemFragment[];
-};
+const QUERY_SIZE = 6;
 
-const MyPageLikesPageTemplate: FC<MyPageLikesPageTemplateProps> = ({ users }) => {
+export const MyPageLikesPage: FC = () => {
+  const { data, fetchMore } = useSendLikeUsersQuery({ variables: { input: { first: QUERY_SIZE } } });
+
+  const users = data?.sendLikeUsers.edges.map((v) => v.node) ?? [];
+  const hasMore = data?.sendLikeUsers.pageInfo.hasNextPage ?? false;
+
+  const onLoadMore = async () => {
+    await fetchMore({
+      variables: { input: { first: QUERY_SIZE, after: data?.sendLikeUsers.pageInfo.endCursor } },
+    });
+  };
+
+  if (!data) return <Loading />;
   return (
     <AppLayout footer={false}>
       <Stack spacing="6">
@@ -88,13 +110,13 @@ const MyPageLikesPageTemplate: FC<MyPageLikesPageTemplateProps> = ({ users }) =>
             <Divider />
           </Stack>
         ))}
+
+        {hasMore && (
+          <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+            もっと見る
+          </Button>
+        )}
       </Stack>
     </AppLayout>
   );
-};
-
-export const MyPageLikesPage: FC = () => {
-  const { data } = useSendLikeUsersQuery();
-
-  return data ? <MyPageLikesPageTemplate users={data.sendLikeUsers} /> : <Loading />;
 };

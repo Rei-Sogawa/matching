@@ -54,17 +54,17 @@ gql`
   }
 `;
 
-const SIZE = 6;
+const QUERY_SIZE = 6;
 
 export const UsersPage: FC = () => {
-  const { data, fetchMore } = useUsersQuery({ variables: { input: { first: SIZE } } });
+  const { data, fetchMore } = useUsersQuery({ variables: { input: { first: QUERY_SIZE } } });
 
   const users = data?.users.edges.map((v) => v.node) ?? [];
   const hasMore = data?.users.pageInfo.hasNextPage ?? false;
 
   const onLoadMore = async () => {
     await fetchMore({
-      variables: { input: { first: SIZE, after: data?.users.pageInfo.endCursor } },
+      variables: { input: { first: QUERY_SIZE, after: data?.users.pageInfo.endCursor } },
     });
   };
 
