@@ -9,7 +9,7 @@ const db = getDb();
 const storage = getStorage();
 
 const collections = createCollections(db);
-const { usersCollection, userIndexShardsCollection, likesCollection, likeIndexShardsCollection } = collections;
+const { usersCollection, userIndexCollection, likesCollection, likeIndexCollection } = collections;
 
 const main = async () => {
   await clearAuth();
@@ -34,9 +34,8 @@ const main = async () => {
         livingPref: prefs[randomInt(46)],
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
-      .set();
-    const userIndexShard = await userIndexShardsCollection.get();
-    await userIndexShard.addIndex(...user.toIndex()).set();
+      .save();
+    await userIndexCollection.add(user.toIndex());
 
     fakeUsers.push(user);
     i++;
@@ -56,9 +55,8 @@ const main = async () => {
     const storagePath = `users/${user.id}/profilePhotos/${id()}`;
     await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
 
-    await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).set();
-    const userIndexShard = await userIndexShardsCollection.get();
-    await userIndexShard.addIndex(...user.toIndex()).set();
+    await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).save();
+    await userIndexCollection.add(user.toIndex());
 
     user1 = user;
   }
@@ -73,24 +71,19 @@ const main = async () => {
     const storagePath = `users/${user.id}/profilePhotos/${id()}`;
     await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: storagePath });
 
-    await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).set();
-    const userIndexShard = await userIndexShardsCollection.get();
-    await userIndexShard.addIndex(...user.toIndex()).set();
+    await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).save();
+    await userIndexCollection.add(user.toIndex());
 
     user2 = user;
   }
 
   for (const fakeUser of fakeUsers) {
-    const likeIndexShard = await likeIndexShardsCollection.get();
-
     const like = LikeDoc.create(likesCollection.ref, {
       senderId: fakeUser.id,
       receiverId: [user1, user2][randomInt(1)].id,
     });
-    likeIndexShard.addIndex(...like.toIndex());
-
-    await like.set();
-    await likeIndexShard.set();
+    await like.save();
+    await likeIndexCollection.add(like.toIndex());
   }
 };
 
