@@ -54,16 +54,15 @@ export const Mutation: Resolvers["Mutation"] = {
   async like(_parent, args, context) {
     authorize(context);
 
-    const { userId: targetUserId } = args;
-    const { uid: actionUserId } = context.decodedIdToken;
+    const { userId } = args;
+    const { uid } = context.decodedIdToken;
     const { db } = context;
     const { usersCollection, likesCollection, likeIndexShardsCollection } = context.collections;
 
-    const sendLike = await likesCollection.find({ senderId: actionUserId, receiverId: targetUserId });
+    const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
     if (sendLike) throw new Error("sendLike exists");
-    const receiveLike = await likesCollection.find({ senderId: targetUserId, receiverId: actionUserId });
 
-    const batch = db.batch();
+    const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
 
     if (receiveLike) {
       const likeIndexShard = await likeIndexShardsCollection.getById(receiveLike.id);
@@ -71,21 +70,25 @@ export const Mutation: Resolvers["Mutation"] = {
       receiveLike.match();
       likeIndexShard.editIndex(...receiveLike.toIndex());
 
+      const batch = db.batch();
       batch.set(...receiveLike.toBatch());
       batch.set(...likeIndexShard.toBatch());
-    } else {
-      const like = LikeDoc.create(likesCollection.ref, { senderId: actionUserId, receiverId: targetUserId });
-      const likeIndexShard = await likeIndexShardsCollection.get();
+      await batch.commit();
 
-      likeIndexShard.addIndex(...like.toIndex());
-
-      batch.set(...like.toBatch());
-      batch.set(...likeIndexShard.toBatch());
+      return usersCollection.findOneById(userId);
     }
 
+    const like = LikeDoc.create(likesCollection.ref, { senderId: uid, receiverId: userId });
+    const likeIndexShard = await likeIndexShardsCollection.get();
+
+    likeIndexShard.addIndex(...like.toIndex());
+
+    const batch = db.batch();
+    batch.set(...like.toBatch());
+    batch.set(...likeIndexShard.toBatch());
     await batch.commit();
 
-    return usersCollection.findOneById(targetUserId);
+    return usersCollection.findOneById(userId);
   },
 
   async unlike(_parent, args, context) {

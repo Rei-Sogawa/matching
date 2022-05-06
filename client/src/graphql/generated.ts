@@ -45,6 +45,7 @@ export type Mutation = {
   access: Me;
   like: User;
   signUp: Me;
+  skip: User;
   unlike: User;
   updateUser: Me;
 };
@@ -57,6 +58,11 @@ export type MutationLikeArgs = {
 
 export type MutationSignUpArgs = {
   input: SignUpInput;
+};
+
+
+export type MutationSkipArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -161,6 +167,13 @@ export type MatchMutationVariables = Exact<{
 
 
 export type MatchMutation = { __typename?: 'Mutation', like: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+
+export type SkipMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type SkipMutation = { __typename?: 'Mutation', skip: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
 export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -384,6 +397,40 @@ export function useMatchMutation(baseOptions?: Apollo.MutationHookOptions<MatchM
 export type MatchMutationHookResult = ReturnType<typeof useMatchMutation>;
 export type MatchMutationResult = Apollo.MutationResult<MatchMutation>;
 export type MatchMutationOptions = Apollo.BaseMutationOptions<MatchMutation, MatchMutationVariables>;
+export const SkipDocument = gql`
+    mutation Skip($userId: ID!) {
+  skip(userId: $userId) {
+    id
+    ...UserForLikePage
+  }
+}
+    ${UserForLikePageFragmentDoc}`;
+export type SkipMutationFn = Apollo.MutationFunction<SkipMutation, SkipMutationVariables>;
+
+/**
+ * __useSkipMutation__
+ *
+ * To run a mutation, you first call `useSkipMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSkipMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [skipMutation, { data, loading, error }] = useSkipMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useSkipMutation(baseOptions?: Apollo.MutationHookOptions<SkipMutation, SkipMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SkipMutation, SkipMutationVariables>(SkipDocument, options);
+      }
+export type SkipMutationHookResult = ReturnType<typeof useSkipMutation>;
+export type SkipMutationResult = Apollo.MutationResult<SkipMutation>;
+export type SkipMutationOptions = Apollo.BaseMutationOptions<SkipMutation, SkipMutationVariables>;
 export const ReceiveLikeUsersDocument = gql`
     query ReceiveLikeUsers {
   receiveLikeUsers {

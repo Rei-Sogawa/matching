@@ -34,7 +34,8 @@ export class LikeIndexShardsCollection extends FireCollection<LikeIndexShardData
     return this.getIndex()
       .then((likeIndex) => toPairs(likeIndex))
       .then((pairs) => orderBy(pairs, ([, data]) => data.createdAt, "desc"))
-      .then((pairs) => filter(pairs, ([, data]) => data.receiverId === userId));
+      .then((pairs) => filter(pairs, ([, data]) => data.receiverId === userId))
+      .then((pairs) => filter(pairs, ([, data]) => data.status === "PENDING"));
   }
 
   async sendLikes(userId: string) {

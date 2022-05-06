@@ -1,7 +1,7 @@
 import { gql, Reference, useApolloClient } from "@apollo/client";
-import { Box, Center, HStack, Stack, VStack } from "@chakra-ui/react";
+import { Box, Center, HStack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
-import { BiLike, BiShare } from "react-icons/bi";
+import { BiHeart, BiShare } from "react-icons/bi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 
@@ -13,6 +13,7 @@ import {
   ReceiveLikeUsersQueryResult,
   useMatchMutation,
   UserForLikePageFragment,
+  useSkipMutation,
 } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
@@ -46,6 +47,34 @@ const useMatch = (userId: string) => {
 };
 
 gql`
+  mutation Skip($userId: ID!) {
+    skip(userId: $userId) {
+      id
+      ...UserForLikePage
+    }
+  }
+`;
+
+const useSkip = (userId: string) => {
+  const [mutate] = useSkipMutation({
+    variables: { userId },
+    update(cache) {
+      cache.modify({
+        fields: {
+          receiveLikeUsers(existing, { readField }) {
+            return existing.filter((u: Reference) => readField("id", u) !== userId);
+          },
+        },
+      });
+    },
+  });
+
+  const skip = () => mutate();
+
+  return { skip };
+};
+
+gql`
   fragment UserForLikePage on User {
     id
     ...UserTopCard
@@ -74,6 +103,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
   };
 
   const { match } = useMatch(user.id);
+  const { skip } = useSkip(user.id);
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
   const [liked, setLiked] = useState(false);
@@ -106,9 +136,10 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
     }, 1_500);
   };
 
-  const onSkip = () => {
+  const onSkip = async () => {
     skipAnimation();
     const redirectPath = getRedirectPath();
+    await skip();
 
     setTimeout(() => {
       resetAnimation();
@@ -121,7 +152,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
       {liked && (
         <Center position="absolute" h="full" w="full" bg="pink.50">
           <VStack color="red.400">
-            <BiLike fontSize="64px" />
+            <BiHeart fontSize="64px" />
             <Box fontWeight="bold" fontSize="2xl">
               マッチング！
             </Box>
