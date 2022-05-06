@@ -1,9 +1,8 @@
-import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
-import { UserIndexData } from "./user-index-shard";
+import { FireDocument, FireDocumentInput } from "../lib/fire-document";
 
 const UserSchema = z
   .object({
@@ -19,6 +18,10 @@ const UserSchema = z
   .strict();
 
 export type UserData = z.infer<typeof UserSchema>;
+
+export type UserIndexData = {
+  id: string;
+} & Pick<UserData, "gender" | "age" | "livingPref" | "lastAccessedAt">;
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
   static create(collection: CollectionReference<UserData>, { id }: { id: string }) {
@@ -49,7 +52,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   createdAt!: Timestamp;
   updatedAt!: Timestamp;
 
-  constructor(snap: FireDocumentInput) {
+  constructor(snap: FireDocumentInput<UserData>) {
     super(snap);
   }
 
@@ -65,8 +68,8 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
 
   toIndex() {
     const { id, ref, ...data } = this;
-    const { gender, age, livingPref, lastAccessedAt }: UserIndexData = data;
-    return [id, { gender, age, livingPref, lastAccessedAt }] as const;
+    const { gender, age, livingPref, lastAccessedAt } = data;
+    return { id, gender, age, livingPref, lastAccessedAt } as UserIndexData;
   }
 
   access() {

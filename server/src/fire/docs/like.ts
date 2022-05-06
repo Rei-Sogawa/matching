@@ -1,8 +1,8 @@
-import { FireDocument, FireDocumentInput } from "@rei-sogawa/unfireorm";
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
+import { FireDocument, FireDocumentInput } from "../lib/fire-document";
 
 const LikeSchema = z
   .object({
@@ -15,6 +15,8 @@ const LikeSchema = z
   .strict();
 
 export type LikeData = z.infer<typeof LikeSchema>;
+
+export type LikeIndexData = { id: string } & Pick<LikeData, "senderId" | "receiverId" | "status" | "createdAt">;
 
 export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   static create(
@@ -42,7 +44,7 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   createdAt!: Timestamp;
   updatedAt!: Timestamp;
 
-  constructor(snap: FireDocumentInput) {
+  constructor(snap: FireDocumentInput<LikeData>) {
     super(snap);
   }
 
@@ -58,7 +60,8 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
 
   toIndex() {
     const { id, ref, ...data } = this;
-    return [id, data] as const;
+    const { senderId, receiverId, status, createdAt } = data;
+    return { id, senderId, receiverId, status, createdAt } as LikeIndexData;
   }
 
   skip() {
