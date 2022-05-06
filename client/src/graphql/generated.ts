@@ -72,15 +72,10 @@ export type MutationUpdateUserArgs = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
-  receiveLikeUsers: UserConnection;
+  receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
-};
-
-
-export type QueryReceiveLikeUsersArgs = {
-  input: UsersInput;
 };
 
 

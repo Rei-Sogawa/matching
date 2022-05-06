@@ -34,7 +34,7 @@ type Mutation {
 
 type Query {
   me: Me!
-  receiveLikeUsers(input: UsersInput!): UserConnection!
+  receiveLikeUsers: [User!]!
   sendLikeUsers(input: UsersInput!): UserConnection!
   user(id: ID!): User!
   users(input: UsersInput!): UserConnection!

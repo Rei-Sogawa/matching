@@ -52,33 +52,12 @@ export const Query: Resolvers["Query"] = {
   receiveLikeUsers: async (_parent, args, context) => {
     authorize(context);
 
-    const { input } = args;
     const { uid } = context.decodedIdToken;
     const { usersCollection, likeIndexShardsCollection } = context.collections;
 
-    const sendLikes = await likeIndexShardsCollection.paginatedReceiveLikes({
-      userId: uid,
-      first: input.first,
-      after: input.after,
-    });
+    const receiveLikes = await likeIndexShardsCollection.receiveLikes(uid);
 
-    const edges = await Promise.all(
-      sendLikes.map(async ([, data]) => {
-        const node = await usersCollection.findOneById(data.senderId);
-        return {
-          node,
-          cursor: data.createdAt,
-        };
-      })
-    );
-
-    return {
-      edges,
-      pageInfo: {
-        endCursor: last(edges)?.cursor,
-        hasNextPage: input.first === edges.length,
-      },
-    };
+    return Promise.all(receiveLikes.map(([, data]) => usersCollection.findOneById(data.senderId)));
   },
 
   sendLikeUsers: async (_parent, args, context) => {

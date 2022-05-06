@@ -30,21 +30,11 @@ export class LikeIndexShardsCollection extends FireCollection<LikeIndexShardData
     return new LikeIndexShardDoc({ id: snap.id, ref: snap.ref, data: () => data });
   }
 
-  async paginatedReceiveLikes({
-    userId,
-    first,
-    after,
-  }: {
-    userId: string;
-    first: number;
-    after: Timestamp | null | undefined;
-  }) {
+  async receiveLikes(userId: string) {
     return this.getIndex()
       .then((likeIndex) => toPairs(likeIndex))
       .then((pairs) => orderBy(pairs, ([, data]) => data.createdAt, "desc"))
-      .then((pairs) => filter(pairs, ([, data]) => data.receiverId === userId))
-      .then((pairs) => filter(pairs, ([, data]) => (after ? after > data.createdAt : true)))
-      .then((pairs) => take(pairs, first));
+      .then((pairs) => filter(pairs, ([, data]) => data.receiverId === userId));
   }
 
   async sendLikes(userId: string) {
