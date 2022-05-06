@@ -45,6 +45,7 @@ const main = async () => {
 
   {
     const authUser = await auth.createUser({
+      uid: "1988-04-10",
       email: "nao@example.com",
       password: "Password00",
     });
@@ -65,6 +66,7 @@ const main = async () => {
 
   {
     const authUser = await auth.createUser({
+      uid: "1989-06-03",
       email: "megu@example.com",
       password: "Password00",
     });
@@ -85,6 +87,7 @@ const main = async () => {
 
   {
     const authUser = await auth.createUser({
+      uid: "1991-09-15",
       email: "kaede@example.com",
       password: "Password00",
     });
