@@ -21,7 +21,7 @@ gql`
 export const MyPageProfileEditPage: FC = () => {
   const toast = useToast();
 
-  const me = useMe();
+  const { me } = useMe();
 
   const [updateUserMutation] = useUpdateUserMutation();
 

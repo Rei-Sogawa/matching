@@ -10,7 +10,7 @@ import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
 
 export const MyPagePage: FC = () => {
-  const me = useMe();
+  const { me } = useMe();
 
   const logout = () => {
     signOut(getAuth());

@@ -6,7 +6,7 @@ import { routes } from "../routes";
 
 export const AuthorizeUser: FC = ({ children }) => {
   const { userId } = useParams();
-  const me = useMe();
+  const { me } = useMe();
   if (userId !== me.id) return <Navigate to={routes["/"].path()} />;
   return <>{children}</>;
 };

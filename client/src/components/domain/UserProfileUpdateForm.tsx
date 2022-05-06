@@ -32,7 +32,7 @@ export type UserProfileUpdateFormProps = {
 export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialValues, onSubmit }) => {
   const toast = useToast();
 
-  const me = useMe();
+  const { me } = useMe();
 
   const finalInitialValues: FinalFormValues = useMemo(
     () => ({

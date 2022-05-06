@@ -43,5 +43,5 @@ export const MeProvider: FC = ({ children }) => {
 export const useMe = () => {
   const me = useContext(MeContext);
   assertDefined(me);
-  return me;
+  return { me };
 };
