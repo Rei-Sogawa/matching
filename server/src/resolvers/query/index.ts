@@ -41,8 +41,6 @@ export const Query: Resolvers["Query"] = {
       excludeUserIds: [uid, ...sendLikes.map((like) => like.receiverId), ...receiveLikes.map((like) => like.senderId)],
     });
 
-    console.log(users);
-
     const nodes = await Promise.all(users.map((user) => usersCollection.get(user.id)));
     const edges = nodes.map((node) => ({ node, cursor: node.lastAccessedAt }));
 

@@ -26,7 +26,7 @@ export const MyPagePage: FC = () => {
               {me.nickName}
             </Box>
             <AppLink to={routes["/my-page/profile/edit"].path()} fontWeight="bold" color="primary.500">
-              プロフィール確認
+              プロフィール編集
             </AppLink>
           </Box>
         </HStack>

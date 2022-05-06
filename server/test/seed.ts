@@ -42,45 +42,74 @@ const main = async () => {
   }
 
   // NOTE: メインユーザー
-  let user1;
-  let user2;
+  let nao;
+  let megu;
+  let kaede;
 
   {
     const authUser = await auth.createUser({
-      email: "user-1@example.com",
+      email: "nao@example.com",
       password: "password",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
-    const storagePath = `users/${user.id}/profilePhotos/${id()}`;
-    await storage.bucket().upload(__dirname + "/fixture/man-1.png", { destination: storagePath });
+    const paths = [];
+    for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
+      const storagePath = `users/${user.id}/profilePhotos/${id()}`;
+      await storage.bucket().upload(__dirname + `/fixture/nao-${i + 1}.png`, { destination: storagePath });
+      paths.push(storagePath);
+    }
 
-    await user.edit({ nickName: "Messi", photoPaths: [storagePath] }).save();
+    await user.edit({ age: 34, nickName: "Nao", livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
-    user1 = user;
+    nao = user;
   }
 
   {
     const authUser = await auth.createUser({
-      email: "user-2@example.com",
+      email: "megu@example.com",
       password: "password",
     });
     const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
 
-    const storagePath = `users/${user.id}/profilePhotos/${id()}`;
-    await storage.bucket().upload(__dirname + "/fixture/man-2.png", { destination: storagePath });
+    const paths = [];
+    for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
+      const storagePath = `users/${user.id}/profilePhotos/${id()}`;
+      await storage.bucket().upload(__dirname + `/fixture/megu-${i + 1}.png`, { destination: storagePath });
+      paths.push(storagePath);
+    }
 
-    await user.edit({ nickName: "CR7", photoPaths: [storagePath] }).save();
+    await user.edit({ age: 32, nickName: "Megu", livingPref: "新潟県", photoPaths: paths }).save();
     await userIndexCollection.add(user.toIndex());
 
-    user2 = user;
+    megu = user;
+  }
+
+  {
+    const authUser = await auth.createUser({
+      email: "kaede@example.com",
+      password: "password",
+    });
+    const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
+
+    const paths = [];
+    for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
+      const storagePath = `users/${user.id}/profilePhotos/${id()}`;
+      await storage.bucket().upload(__dirname + `/fixture/kaede-${i + 1}.png`, { destination: storagePath });
+      paths.push(storagePath);
+    }
+
+    await user.edit({ age: 30, nickName: "Kaede", livingPref: "新潟県", photoPaths: paths }).save();
+    await userIndexCollection.add(user.toIndex());
+
+    kaede = user;
   }
 
   for (const fakeUser of fakeUsers) {
     const like = LikeDoc.create(likesCollection.ref, {
       senderId: fakeUser.id,
-      receiverId: [user1, user2][randomInt(1)].id,
+      receiverId: [nao, megu, kaede][randomInt(2)].id,
     });
     await like.save();
     await likeIndexCollection.add(like.toIndex());
