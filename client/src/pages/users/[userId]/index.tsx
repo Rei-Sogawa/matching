@@ -1,5 +1,5 @@
 import { gql, Reference, useApolloClient } from "@apollo/client";
-import { Box, Center, HStack, VStack } from "@chakra-ui/react";
+import { Box, Center, HStack, Stack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -151,16 +151,14 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
 
   return (
     <AppLayout footer={false} bg="gray.50">
-      <VStack>
+      <VStack spacing="8">
         <BackButton alignSelf="start" path={routes["/users"].path()} />
-
         <UserTopCard user={user} imageForeground={imageForeground} />
+        <HStack spacing="8">
+          <SkipButton onClick={onSkip} disabled={liked || skipped} />
+          <LikeButton onClick={onLike} disabled={liked || skipped} />
+        </HStack>
       </VStack>
-
-      <HStack spacing="8" position="absolute" bottom="10" left="50%" transform="translateX(-50%)">
-        <SkipButton onClick={onSkip} disabled={liked || skipped} />
-        <LikeButton onClick={onLike} disabled={liked || skipped} />
-      </HStack>
     </AppLayout>
   );
 };

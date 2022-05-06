@@ -1,9 +1,12 @@
 import { gql } from "@apollo/client";
 import { Box, Stack } from "@chakra-ui/react";
-import { FC } from "react";
+import { head } from "lodash-es";
+import { FC, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useReceiveLikeUsersQuery } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
+import { routes } from "../../routes";
 
 gql`
   query ReceiveLikeUsers {
@@ -15,11 +18,18 @@ gql`
 `;
 
 export const LikesPage: FC = () => {
+  const navigate = useNavigate();
+
   const { data } = useReceiveLikeUsersQuery();
 
   const users = data?.receiveLikeUsers ?? [];
 
-  console.log(users);
+  useEffect(() => {
+    const user = head(users);
+    if (user) {
+      navigate(routes["/likes/:userId"].path({ userId: user.id }));
+    }
+  }, [users]);
 
   return (
     <AppLayout footer={true}>
