@@ -3,6 +3,7 @@ import { pathBuilder } from "@rei-sogawa/path-builder";
 import { Authenticated } from "./middleware/Authenticated";
 import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
 import { IndexPage } from "./pages/Index";
+import { LikesPage } from "./pages/likes";
 import { LogInPage } from "./pages/log-in";
 import { MyPagePage } from "./pages/my-page";
 import { MyPageLikesPage } from "./pages/my-page/likes";
@@ -19,6 +20,7 @@ const MY_PAGE_LIKES = "/my-page/likes";
 const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
 const USERS_PATH = "/users";
 const USER_PATH = "/users/:userId";
+const LIKES_PATH = "/likes";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -59,6 +61,11 @@ export const routes = {
   [USER_PATH]: {
     path: pathBuilder(USER_PATH),
     Component: UserPage,
+    middleware: [Authenticated],
+  },
+  [LIKES_PATH]: {
+    path: pathBuilder(LIKES_PATH),
+    Component: LikesPage,
     middleware: [Authenticated],
   },
 };

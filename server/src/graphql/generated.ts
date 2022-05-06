@@ -77,7 +77,6 @@ export type Query = {
   me: Me;
   receiveLikeUsers: UserConnection;
   sendLikeUsers: UserConnection;
-  skipLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
 };
@@ -89,11 +88,6 @@ export type QueryReceiveLikeUsersArgs = {
 
 
 export type QuerySendLikeUsersArgs = {
-  input: UsersInput;
-};
-
-
-export type QuerySkipLikeUsersArgs = {
   input: UsersInput;
 };
 
@@ -288,7 +282,6 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   receiveLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryReceiveLikeUsersArgs, 'input'>>;
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
-  skipLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySkipLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
 }>;

@@ -36,7 +36,7 @@ export const AppMenu: FC = () => {
               </Flex>
             </AppLink>
 
-            <AppLink to="#" color={isActive("") ? "black" : "gray.500"}>
+            <AppLink to={routes["/likes"].path()} color={isActive("likes") ? "black" : "gray.500"}>
               <Flex direction="column" alignItems="center">
                 <BiLike fontSize="28px" />
                 <Box fontWeight="bold" fontSize="xs">

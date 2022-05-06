@@ -1,11 +1,13 @@
 import { gql, Reference, useApolloClient } from "@apollo/client";
-import { Box, Center, HStack, IconButton, VStack } from "@chakra-ui/react";
+import { Box, Center, HStack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 
+import { LikeButton } from "../../../components/case/LikeButton";
 import { Loading } from "../../../components/case/Loading";
+import { SkipButton } from "../../../components/case/SkipButton";
 import { BackButton } from "../../../components/common/BackButton";
 import { UserTopCard } from "../../../components/domain/UserTopCard";
 import {
@@ -156,27 +158,8 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
       </VStack>
 
       <HStack spacing="8" position="absolute" bottom="10" left="50%" transform="translateX(-50%)">
-        <IconButton
-          h="20"
-          w="20"
-          isRound
-          boxShadow="md"
-          aria-label="skip"
-          icon={<BiShare fontSize="28px" />}
-          onClick={onSkip}
-          disabled={liked || skipped}
-        />
-        <IconButton
-          colorScheme="secondary"
-          h="20"
-          w="20"
-          isRound
-          boxShadow="md"
-          aria-label="like"
-          icon={<BiLike fontSize="28px" />}
-          onClick={onLike}
-          disabled={liked || skipped}
-        />
+        <SkipButton onClick={onSkip} disabled={liked || skipped} />
+        <LikeButton onClick={onLike} disabled={liked || skipped} />
       </HStack>
     </AppLayout>
   );
