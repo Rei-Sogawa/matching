@@ -6,7 +6,8 @@ import { IndexPage } from "./pages/Index";
 import { LikesPage } from "./pages/likes";
 import { LikePage } from "./pages/likes/[likeId]";
 import { LogInPage } from "./pages/log-in";
-import { MessagesPage } from "./pages/messages";
+import { MessageRoomsPage } from "./pages/message-rooms";
+import { MessageRoomPage } from "./pages/message-rooms/[messageRoomId]";
 import { MyPagePage } from "./pages/my-page";
 import { MyPageLikesPage } from "./pages/my-page/likes";
 import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
@@ -24,7 +25,8 @@ const USERS_PATH = "/users";
 const USER_PATH = "/users/:userId";
 const LIKES_PATH = "/likes";
 const LIKE_PATH = "/likes/:userId";
-const MESSAGES_PATH = "/messages";
+const MESSAGE_ROOMS_PATH = "/message-rooms";
+const MESSAGE_ROOM_PATH = "/message-rooms/:messageRoomId";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -77,9 +79,14 @@ export const routes = {
     Component: LikePage,
     middleware: [Authenticated],
   },
-  [MESSAGES_PATH]: {
-    path: pathBuilder(MESSAGES_PATH),
-    Component: MessagesPage,
+  [MESSAGE_ROOMS_PATH]: {
+    path: pathBuilder(MESSAGE_ROOMS_PATH),
+    Component: MessageRoomsPage,
+    middleware: [Authenticated],
+  },
+  [MESSAGE_ROOM_PATH]: {
+    path: pathBuilder(MESSAGE_ROOM_PATH),
+    Component: MessageRoomPage,
     middleware: [Authenticated],
   },
 };

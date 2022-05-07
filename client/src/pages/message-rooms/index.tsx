@@ -5,6 +5,7 @@ import { head } from "lodash-es";
 import { FC } from "react";
 import { BiHeart, BiMessageRoundedDots } from "react-icons/bi";
 
+import { AppLink } from "../../components/base/AppLink";
 import {
   MessageRoomItemFragment,
   NewMessageRoomItemFragment,
@@ -12,6 +13,7 @@ import {
   useNewMessageRoomsQuery,
 } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
+import { routes } from "../../routes";
 
 gql`
   fragment NewMessageRoomItem on MessageRoom {
@@ -85,7 +87,9 @@ const NewMessageRoomItem: FC<NewMessageRoomItemProps> = ({ messageRoom }) => {
     <HStack spacing="4">
       <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
       <Box>
-        <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
+        <AppLink to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}>
+          <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
+        </AppLink>
         <Box color="gray.500">メッセージを送信してみましょう！</Box>
       </Box>
     </HStack>
@@ -102,7 +106,9 @@ const MessageRoomItem: FC<MessageRoomItemProps> = ({ messageRoom }) => {
       <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
       <Box>
         <Flex justifyContent="space-between">
-          <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
+          <AppLink to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}>
+            <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
+          </AppLink>
           <Box color="gray.500">{format(new Date(messageRoom.lastMessage.createdAt), "yyyy/MM/dd")}</Box>
         </Flex>
         <Box color="gray.500" noOfLines={1}>
@@ -139,18 +145,29 @@ const NewMessageRooms: FC = () => {
 };
 
 const MessageRooms: FC = () => {
-  const { data } = useMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
+  const { data, fetchMore } = useMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
   const messageRooms = data?.messageRooms.edges.map((e) => e.node) ?? [];
+  const hasMore = data?.messageRooms.pageInfo.hasNextPage ?? false;
+  const onLoadMore = async () => {
+    await fetchMore({ variables: { input: { first: QUERY_SIZE, after: data?.messageRooms.pageInfo.endCursor } } });
+  };
+
   return (
-    <Stack spacing="8">
+    <Stack spacing="6">
       {messageRooms.map((mr) => (
         <MessageRoomItem key={mr.id} messageRoom={mr} />
       ))}
+
+      {hasMore && (
+        <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+          もっと見る
+        </Button>
+      )}
     </Stack>
   );
 };
 
-export const MessagesPage: FC = () => {
+export const MessageRoomsPage: FC = () => {
   return (
     <AppLayout footer={true}>
       <Stack spacing="8">
