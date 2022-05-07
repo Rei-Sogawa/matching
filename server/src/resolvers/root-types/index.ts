@@ -1,4 +1,4 @@
-import { last } from "lodash";
+import { head, last } from "lodash";
 
 import { assertDefined } from "../../utils/assert-defined";
 import { getSignedUrl } from "../../utils/get-signed-url";
@@ -15,6 +15,12 @@ export const User: Resolvers["User"] = {
   photoUrls: async (parent, _args, context) => {
     const { storage } = context;
     return parent.photoPaths.map((path) => getSignedUrl(storage, path));
+  },
+
+  topPhotoUrl: async (parent, _args, context) => {
+    const { storage } = context;
+    const top = head(parent.photoPaths);
+    return top ? getSignedUrl(storage, top) : null;
   },
 };
 
@@ -42,5 +48,10 @@ export const Message: Resolvers["Message"] = {
   user: async (parent, _args, context) => {
     const { usersCollection } = context.collections;
     return usersCollection.get(parent.userId);
+  },
+
+  mine: async (parent, _args, context) => {
+    assertDefined(context.decodedIdToken);
+    return parent.userId === context.decodedIdToken.uid;
   },
 };

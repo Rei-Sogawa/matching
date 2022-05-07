@@ -55,6 +55,7 @@ export type Message = {
   content: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
+  mine: Scalars['Boolean'];
   user: User;
 };
 
@@ -209,6 +210,7 @@ export type User = {
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
+  topPhotoUrl?: Maybe<Scalars['String']>;
 };
 
 export type UserConnection = {
@@ -366,6 +368,7 @@ export type MessageResolvers<ContextType = Context, ParentType extends Resolvers
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  mine?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -439,6 +442,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   livingPref?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nickName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   photoUrls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  topPhotoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

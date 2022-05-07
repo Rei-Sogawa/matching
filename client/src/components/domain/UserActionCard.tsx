@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Box, HStack, Image, Stack } from "@chakra-ui/react";
-import { head } from "lodash-es";
 import { FC, ReactNode } from "react";
 
 import { UserActionCardFragment } from "../../graphql/generated";
@@ -12,7 +11,7 @@ gql`
     nickName
     age
     livingPref
-    photoUrls
+    topPhotoUrl
   }
 `;
 
@@ -21,7 +20,7 @@ type UserActionCardProps = { user: UserActionCardFragment; actionButton: ReactNo
 export const UserActionCard: FC<UserActionCardProps> = ({ user, actionButton }) => {
   return (
     <Stack spacing="4" w={{ base: "full", md: "lg" }} p="4">
-      <Image src={head(user.photoUrls)} rounded="md" />
+      <Image src={user.topPhotoUrl ?? undefined} rounded="md" />
 
       <Box>
         <Box fontWeight="bold" fontSize="2xl">

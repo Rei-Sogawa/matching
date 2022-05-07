@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Avatar, Box, HStack, VStack } from "@chakra-ui/react";
-import { head } from "lodash-es";
 import { FC } from "react";
 
 import { UserSmallCardFragment } from "../../graphql/generated";
@@ -13,7 +12,7 @@ gql`
     gender
     age
     livingPref
-    photoUrls
+    topPhotoUrl
   }
 `;
 
@@ -25,7 +24,7 @@ export const UserSmallCard: FC<UserSmallCard> = ({ user }) => {
   return (
     <AppLink to={routes["/users/:userId"].path({ userId: user.id })}>
       <VStack>
-        <Avatar src={head(user.photoUrls)} boxSize="36" />
+        <Avatar src={user.topPhotoUrl ?? undefined} boxSize="36" />
         <HStack>
           <Box fontWeight="bold">{user.age}歳</Box>
           <Box fontWeight="bold">{user.livingPref}</Box>

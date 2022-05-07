@@ -50,6 +50,7 @@ export type Message = {
   content: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
+  mine: Scalars['Boolean'];
   user: User;
 };
 
@@ -204,6 +205,7 @@ export type User = {
   livingPref: Scalars['String'];
   nickName: Scalars['String'];
   photoUrls: Array<Scalars['String']>;
+  topPhotoUrl?: Maybe<Scalars['String']>;
 };
 
 export type UserConnection = {
@@ -223,9 +225,9 @@ export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
-export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
-export type UserSmallCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
+export type UserSmallCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -257,6 +259,8 @@ export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ReceiveLikeUsersQuery = { __typename?: 'Query', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
+export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
+
 export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } };
 
 export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, lastMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
@@ -280,16 +284,16 @@ export type UnlikeMutationVariables = Exact<{
 }>;
 
 
-export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } };
 
-export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type SendLikeUsersQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
@@ -319,7 +323,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string>, nickName: string } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null, nickName: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export const UserSmallCardFragmentDoc = gql`
     fragment UserSmallCard on User {
@@ -327,7 +331,7 @@ export const UserSmallCardFragmentDoc = gql`
   gender
   age
   livingPref
-  photoUrls
+  topPhotoUrl
 }
     `;
 export const MeForMeFragmentDoc = gql`
@@ -357,6 +361,18 @@ export const UserForLikePageFragmentDoc = gql`
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
+export const MessageItemFragmentDoc = gql`
+    fragment MessageItem on Message {
+  id
+  user {
+    id
+    topPhotoUrl
+  }
+  mine
+  content
+  createdAt
+}
+    `;
 export const NewMessageRoomItemFragmentDoc = gql`
     fragment NewMessageRoomItem on MessageRoom {
   id
@@ -389,7 +405,7 @@ export const UserActionCardFragmentDoc = gql`
   nickName
   age
   livingPref
-  photoUrls
+  topPhotoUrl
 }
     `;
 export const SendLikeUserItemFragmentDoc = gql`

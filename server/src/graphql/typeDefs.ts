@@ -33,6 +33,7 @@ type Message {
   content: String!
   createdAt: DateTime!
   id: ID!
+  mine: Boolean!
   user: User!
 }
 
@@ -117,6 +118,7 @@ type User {
   livingPref: String!
   nickName: String!
   photoUrls: [String!]!
+  topPhotoUrl: String
 }
 
 type UserConnection {
