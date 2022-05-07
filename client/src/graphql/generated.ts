@@ -150,7 +150,9 @@ export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
-export type UserSummaryItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
+export type UserSmallCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -221,8 +223,6 @@ export type LikeMutation = { __typename?: 'Mutation', like: { __typename?: 'User
 
 export type UserForUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type UserMiniCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string> };
-
 export type UsersQueryVariables = Exact<{
   input: UsersInput;
 }>;
@@ -230,6 +230,15 @@ export type UsersQueryVariables = Exact<{
 
 export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string>, nickName: string } }>, pageInfo: { __typename?: 'UsersPageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
+export const UserSmallCardFragmentDoc = gql`
+    fragment UserSmallCard on User {
+  id
+  gender
+  age
+  livingPref
+  photoUrls
+}
+    `;
 export const MeForMeFragmentDoc = gql`
     fragment MeForMe on Me {
   id
@@ -257,8 +266,8 @@ export const UserForLikePageFragmentDoc = gql`
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
-export const UserSummaryItemFragmentDoc = gql`
-    fragment UserSummaryItem on User {
+export const UserActionCardFragmentDoc = gql`
+    fragment UserActionCard on User {
   id
   gender
   nickName
@@ -270,24 +279,15 @@ export const UserSummaryItemFragmentDoc = gql`
 export const SendLikeUserItemFragmentDoc = gql`
     fragment SendLikeUserItem on User {
   id
-  ...UserSummaryItem
+  ...UserActionCard
 }
-    ${UserSummaryItemFragmentDoc}`;
+    ${UserActionCardFragmentDoc}`;
 export const UserForUserPageFragmentDoc = gql`
     fragment UserForUserPage on User {
   id
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
-export const UserMiniCardFragmentDoc = gql`
-    fragment UserMiniCard on User {
-  id
-  gender
-  age
-  livingPref
-  photoUrls
-}
-    `;
 export const AccessDocument = gql`
     mutation Access {
   access {
@@ -646,7 +646,7 @@ export const UsersDocument = gql`
     edges {
       node {
         id
-        ...UserMiniCard
+        ...UserSmallCard
         ...UserTopCard
       }
       cursor
@@ -657,7 +657,7 @@ export const UsersDocument = gql`
     }
   }
 }
-    ${UserMiniCardFragmentDoc}
+    ${UserSmallCardFragmentDoc}
 ${UserTopCardFragmentDoc}`;
 
 /**

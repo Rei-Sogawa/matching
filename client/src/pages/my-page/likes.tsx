@@ -4,7 +4,7 @@ import { FC } from "react";
 
 import { Loading } from "../../components/case/Loading";
 import { BackButton } from "../../components/common/BackButton";
-import { UserSummaryItem } from "../../components/domain/UserSummaryItem";
+import { UserActionCard } from "../../components/domain/UserActionCard";
 import { SendLikeUserItemFragment, useSendLikeUsersQuery, useUnlikeMutation } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
@@ -43,7 +43,7 @@ const useUnlike = (userId: string) => {
 gql`
   fragment SendLikeUserItem on User {
     id
-    ...UserSummaryItem
+    ...UserActionCard
   }
 `;
 
@@ -56,7 +56,7 @@ const SendLikeUserItem: FC<SendLikeUserItemProps> = ({ user }) => {
 
   const actionButton = <Button onClick={unlike}>いいねを取り消す</Button>;
 
-  return <UserSummaryItem user={user} actionButton={actionButton} />;
+  return <UserActionCard user={user} actionButton={actionButton} />;
 };
 
 gql`

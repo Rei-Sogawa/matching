@@ -3,10 +3,10 @@ import { Box, HStack, Image, Stack } from "@chakra-ui/react";
 import { head } from "lodash-es";
 import { FC, ReactNode } from "react";
 
-import { UserSummaryItemFragment } from "../../graphql/generated";
+import { UserActionCardFragment } from "../../graphql/generated";
 
 gql`
-  fragment UserSummaryItem on User {
+  fragment UserActionCard on User {
     id
     gender
     nickName
@@ -16,9 +16,9 @@ gql`
   }
 `;
 
-type UserSummaryItemProps = { user: UserSummaryItemFragment; actionButton: ReactNode };
+type UserActionCardProps = { user: UserActionCardFragment; actionButton: ReactNode };
 
-export const UserSummaryItem: FC<UserSummaryItemProps> = ({ user, actionButton }) => {
+export const UserActionCard: FC<UserActionCardProps> = ({ user, actionButton }) => {
   return (
     <Stack spacing="4" w={{ base: "full", md: "lg" }} p="4">
       <Image src={head(user.photoUrls)} rounded="md" />

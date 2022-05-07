@@ -1,40 +1,10 @@
 import { gql } from "@apollo/client";
-import { Avatar, Box, Button, HStack, Stack, VStack, Wrap, WrapItem } from "@chakra-ui/react";
-import { head } from "lodash-es";
+import { Box, Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import { FC } from "react";
 
-import { AppLink } from "../../components/base/AppLink";
-import { UserMiniCardFragment, useUsersQuery } from "../../graphql/generated";
+import { UserSmallCard } from "../../components/domain/UserSmallCard";
+import { useUsersQuery } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
-import { routes } from "../../routes";
-
-gql`
-  fragment UserMiniCard on User {
-    id
-    gender
-    age
-    livingPref
-    photoUrls
-  }
-`;
-
-type UserMiniCard = {
-  user: UserMiniCardFragment;
-};
-
-const UserMiniCard: FC<UserMiniCard> = ({ user }) => {
-  return (
-    <AppLink to={routes["/users/:userId"].path({ userId: user.id })}>
-      <VStack>
-        <Avatar src={head(user.photoUrls)} w="36" h="36" />
-        <HStack>
-          <Box fontWeight="bold">{user.age}歳</Box>
-          <Box fontWeight="bold">{user.livingPref}</Box>
-        </HStack>
-      </VStack>
-    </AppLink>
-  );
-};
 
 gql`
   query Users($input: UsersInput!) {
@@ -42,7 +12,7 @@ gql`
       edges {
         node {
           id
-          ...UserMiniCard
+          ...UserSmallCard
           ...UserTopCard
         }
         cursor
@@ -79,7 +49,7 @@ export const UsersPage: FC = () => {
         <Wrap justify="center" spacing="6">
           {users.map((user) => (
             <WrapItem key={user.id}>
-              <UserMiniCard user={user} />
+              <UserSmallCard user={user} />
             </WrapItem>
           ))}
         </Wrap>
