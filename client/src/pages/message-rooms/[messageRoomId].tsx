@@ -1,11 +1,14 @@
 import { gql } from "@apollo/client";
-import { Avatar, Box, HStack } from "@chakra-ui/react";
+import { Avatar, Box, HStack, Textarea } from "@chakra-ui/react";
 import { FC } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { BackButton } from "../../components/common/BackButton";
 import { MessageItemFragment, useMessageRoomPageQuery, User } from "../../graphql/generated";
+import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { routes } from "../../routes";
 import { assertDefined } from "../../utils/assert-defined";
 
 gql`
@@ -40,12 +43,20 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
   const header = (
     <AppHeader>
       <HStack spacing="4">
+        <BackButton path={routes["/message-rooms"].path()} />
         <Avatar src={partner.topPhotoUrl ?? undefined} />
         <Box fontWeight="bold">{partner.nickName}</Box>
       </HStack>
     </AppHeader>
   );
-  return <AppLayout header={header} footer={null}></AppLayout>;
+
+  const footer = (
+    <AppFooter>
+      <Textarea rows={2} />
+    </AppFooter>
+  );
+
+  return <AppLayout header={header} footer={footer}></AppLayout>;
 };
 
 gql`
