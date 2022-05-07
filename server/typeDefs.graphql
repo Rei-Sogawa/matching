@@ -122,6 +122,10 @@ input UpdateUserInput {
   photoPaths: [String!]!
 }
 
+input CreateMessageInput {
+  content: String!
+}
+
 type Mutation {
   signUp(input: SignUpInput!): Me!
   access: Me!
@@ -129,4 +133,12 @@ type Mutation {
   like(userId: ID!): User!
   unlike(userId: ID!): User!
   skip(userId: ID!): User!
+  createMessage(input: CreateMessageInput!): Message!
+}
+
+#
+# SUBSCRIPTION
+#
+type Subscription {
+  newMessage: Message!
 }
