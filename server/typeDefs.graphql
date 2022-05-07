@@ -106,6 +106,7 @@ type Query {
   sendLikeUsers(input: PageInput!): UserConnection!
   newMessageRooms(input: PageInput!): MessageRoomConnection!
   messageRooms(input: PageInput!): MessageRoomConnection!
+  messageRoom(id: ID!): MessageRoom!
 }
 
 #

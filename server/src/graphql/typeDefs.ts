@@ -86,6 +86,7 @@ input PageInput {
 
 type Query {
   me: Me!
+  messageRoom(id: ID!): MessageRoom!
   messageRooms(input: PageInput!): MessageRoomConnection!
   newMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!

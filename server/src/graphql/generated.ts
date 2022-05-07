@@ -151,12 +151,18 @@ export type PageInput = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  messageRoom: MessageRoom;
   messageRooms: MessageRoomConnection;
   newMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
+};
+
+
+export type QueryMessageRoomArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -423,6 +429,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<QueryMessageRoomArgs, 'id'>>;
   messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryMessageRoomsArgs, 'input'>>;
   newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryNewMessageRoomsArgs, 'input'>>;
   receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;

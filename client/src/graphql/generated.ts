@@ -146,12 +146,18 @@ export type PageInput = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  messageRoom: MessageRoom;
   messageRooms: MessageRoomConnection;
   newMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
+};
+
+
+export type QueryMessageRoomArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -260,6 +266,14 @@ export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type ReceiveLikeUsersQuery = { __typename?: 'Query', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
 export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
+
+export type MessageRoomPageQueryVariables = Exact<{
+  id: Scalars['ID'];
+  input: PageInput;
+}>;
+
+
+export type MessageRoomPageQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, topPhotoUrl?: string | null }, messages: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } };
 
@@ -591,6 +605,60 @@ export function useReceiveLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type ReceiveLikeUsersQueryHookResult = ReturnType<typeof useReceiveLikeUsersQuery>;
 export type ReceiveLikeUsersLazyQueryHookResult = ReturnType<typeof useReceiveLikeUsersLazyQuery>;
 export type ReceiveLikeUsersQueryResult = Apollo.QueryResult<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>;
+export const MessageRoomPageDocument = gql`
+    query MessageRoomPage($id: ID!, $input: PageInput!) {
+  messageRoom(id: $id) {
+    id
+    partner {
+      id
+      nickName
+      topPhotoUrl
+    }
+    messages(input: $input) {
+      edges {
+        node {
+          id
+          ...MessageItem
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+    ${MessageItemFragmentDoc}`;
+
+/**
+ * __useMessageRoomPageQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomPageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMessageRoomPageQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomPageQuery, MessageRoomPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomPageQuery, MessageRoomPageQueryVariables>(MessageRoomPageDocument, options);
+      }
+export function useMessageRoomPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomPageQuery, MessageRoomPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomPageQuery, MessageRoomPageQueryVariables>(MessageRoomPageDocument, options);
+        }
+export type MessageRoomPageQueryHookResult = ReturnType<typeof useMessageRoomPageQuery>;
+export type MessageRoomPageLazyQueryHookResult = ReturnType<typeof useMessageRoomPageLazyQuery>;
+export type MessageRoomPageQueryResult = Apollo.QueryResult<MessageRoomPageQuery, MessageRoomPageQueryVariables>;
 export const NewMessageRoomsDocument = gql`
     query NewMessageRooms($input: PageInput!) {
   newMessageRooms(input: $input) {

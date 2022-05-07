@@ -94,7 +94,9 @@ const NewMessageRoomItem: FC<NewMessageRoomItemProps> = ({ messageRoom }) => {
         <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
         <Box>
           <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
-          <Box color="gray.500">メッセージを送信してみましょう！</Box>
+          <Box fontSize="sm" color="gray.500">
+            メッセージを送信してみましょう！
+          </Box>
         </Box>
       </HStack>
     </AppLink>
