@@ -59,7 +59,7 @@ export abstract class FireIndex<TData extends { id: string }> {
       const prev = doc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
       const next = { ...prev, value: [...prev.value, data], valueLength: prev.value.length + 1 };
       const estimatedByteSize = calcObjectByte(next);
-      t.set(doc.ref, { ...next, estimatedByteSize });
+      await t.set(doc.ref, { ...next, estimatedByteSize });
     });
   }
 
