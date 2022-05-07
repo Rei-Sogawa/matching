@@ -1,9 +1,10 @@
-import { Box, Container, Flex, HStack } from "@chakra-ui/react";
+import { Badge, Box, Container, Flex, HStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { BiLike, BiMessageRoundedDots, BiSearch, BiUser } from "react-icons/bi";
 import { useLocation } from "react-router-dom";
 
 import { AppLink } from "../components/base/AppLink";
+import { useReceiveLikeUsersQuery } from "../graphql/generated";
 import { routes } from "../routes";
 
 export const AppMenu: FC = () => {
@@ -12,6 +13,10 @@ export const AppMenu: FC = () => {
   const rootPath = location.pathname.split("/")[1];
 
   const isActive = (_rootPath: string) => _rootPath === rootPath;
+
+  const { data } = useReceiveLikeUsersQuery();
+
+  const receiveLikeCount = data?.receiveLikeUsers.length ?? 0;
 
   return (
     <Box h="16">
@@ -37,11 +42,16 @@ export const AppMenu: FC = () => {
             </AppLink>
 
             <AppLink to={routes["/likes"].path()} color={isActive("likes") ? "black" : "gray.500"}>
-              <Flex direction="column" alignItems="center">
+              <Flex direction="column" alignItems="center" position="relative">
                 <BiLike fontSize="28px" />
                 <Box fontWeight="bold" fontSize="xs">
                   お相手から
                 </Box>
+                {receiveLikeCount > 0 && (
+                  <Badge position="absolute" right="-1.5" variant="solid" colorScheme="secondary">
+                    {receiveLikeCount}
+                  </Badge>
+                )}
               </Flex>
             </AppLink>
 

@@ -13,7 +13,7 @@ gql`
         node {
           id
           ...UserSmallCard
-          ...UserTopCard
+          ...UserForUserPage
         }
         cursor
       }

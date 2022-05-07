@@ -647,7 +647,7 @@ export const UsersDocument = gql`
       node {
         id
         ...UserSmallCard
-        ...UserTopCard
+        ...UserForUserPage
       }
       cursor
     }
@@ -658,7 +658,7 @@ export const UsersDocument = gql`
   }
 }
     ${UserSmallCardFragmentDoc}
-${UserTopCardFragmentDoc}`;
+${UserForUserPageFragmentDoc}`;
 
 /**
  * __useUsersQuery__
