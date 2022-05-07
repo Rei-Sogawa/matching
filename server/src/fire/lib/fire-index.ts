@@ -54,32 +54,38 @@ export abstract class FireIndex<TData extends { id: string }> {
   }
 
   async add(data: TData) {
-    const doc = await this.ref.doc(this.docIds[randomInt(this.docIds.length - 1)]).get();
-    const prev = doc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
-    const next = { ...prev, value: [...prev.value, data], valueLength: prev.value.length + 1 };
-    const estimatedByteSize = calcObjectByte(next);
-    await doc.ref.set({ ...next, estimatedByteSize });
+    return this.ref.firestore.runTransaction(async (t) => {
+      const doc = await t.get(this.ref.doc(this.docIds[randomInt(this.docIds.length - 1)]));
+      const prev = doc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
+      const next = { ...prev, value: [...prev.value, data], valueLength: prev.value.length + 1 };
+      const estimatedByteSize = calcObjectByte(next);
+      t.set(doc.ref, { ...next, estimatedByteSize });
+    });
   }
 
   async update(data: TData) {
-    const { docs } = await this.ref.get();
-    const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
-    if (doc) {
-      const prev = doc.data() ?? { estimatedByteSize: 0, value: [] };
-      const next = { ...prev, value: prev.value.map((v) => (v.id === data.id ? data : v)) };
-      const estimatedByteSize = calcObjectByte(next);
-      await doc.ref.set({ ...next, estimatedByteSize });
-    }
+    return this.ref.firestore.runTransaction(async (t) => {
+      const { docs } = await t.get(this.ref);
+      const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
+      if (doc) {
+        const prev = doc.data() ?? { estimatedByteSize: 0, value: [] };
+        const next = { ...prev, value: prev.value.map((v) => (v.id === data.id ? data : v)) };
+        const estimatedByteSize = calcObjectByte(next);
+        await t.set(doc.ref, { ...next, estimatedByteSize });
+      }
+    });
   }
 
   async delete(data: TData) {
-    const { docs } = await this.ref.get();
-    const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
-    if (doc) {
-      const prev = doc.data() ?? { estimatedByteSize: 0, value: [] };
-      const next = { ...prev, value: prev.value.filter((v) => v.id !== data.id), valueLength: prev.value.length - 1 };
-      const estimatedByteSize = calcObjectByte(next);
-      await doc.ref.set({ ...next, estimatedByteSize });
-    }
+    return this.ref.firestore.runTransaction(async (t) => {
+      const { docs } = await t.get(this.ref);
+      const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
+      if (doc) {
+        const prev = doc.data() ?? { estimatedByteSize: 0, value: [] };
+        const next = { ...prev, value: prev.value.filter((v) => v.id !== data.id), valueLength: prev.value.length - 1 };
+        const estimatedByteSize = calcObjectByte(next);
+        await t.set(doc.ref, { ...next, estimatedByteSize });
+      }
+    });
   }
 }
