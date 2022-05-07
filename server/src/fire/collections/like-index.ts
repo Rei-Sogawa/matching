@@ -13,35 +13,35 @@ export class LikeIndexCollection extends FireIndex<LikeIndexData> {
 
   async sendLikes(userId: string) {
     return this.get()
-      .then((ary) => filter(ary, (e) => e.senderId === userId))
-      .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"));
+      .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
+      .then((ary) => filter(ary, (e) => e.senderId === userId));
   }
 
   async receiveLikes(userId: string) {
     return this.get()
-      .then((ary) => filter(ary, (e) => e.receiverId === userId))
-      .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"));
+      .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
+      .then((ary) => filter(ary, (e) => e.receiverId === userId));
   }
 
   async receivePendingLikes(userId: string) {
     return this.get()
-      .then((ary) => filter(ary, (e) => e.receiverId === userId))
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
+      .then((ary) => filter(ary, (e) => e.receiverId === userId))
       .then((ary) => filter(ary, (e) => e.status === "PENDING"));
   }
 
   async paginatedSendLikes({
-    userId,
     first,
     after,
+    userId,
   }: {
-    userId: string;
     first: number;
     after: Timestamp | null | undefined;
+    userId: string;
   }) {
     return this.get()
-      .then((ary) => filter(ary, (e) => e.senderId === userId))
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
+      .then((ary) => filter(ary, (e) => e.senderId === userId))
       .then((ary) => filter(ary, (e) => (after ? e.createdAt < after : true)))
       .then((ary) => take(ary, first));
   }

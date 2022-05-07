@@ -69,9 +69,9 @@ export const Query: Resolvers["Query"] = {
     const { usersCollection, likeIndexCollection } = context.collections;
 
     const sendLikes = await likeIndexCollection.paginatedSendLikes({
-      userId: uid,
       first: input.first,
       after: input.after,
+      userId: uid,
     });
 
     const edges = await Promise.all(

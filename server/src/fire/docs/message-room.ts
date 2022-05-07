@@ -1,26 +1,26 @@
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
+import { MessagesCollection } from "../collections/messages";
 import { FireDocument } from "../lib/fire-document";
 
-const MatchSchema = z.object({
+const MessageRoomSchema = z.object({
   likeId: z.string().min(1),
   userIds: z.array(z.string().min(1)).length(2),
   createdAt: z.instanceof(Timestamp),
+  updatedAt: z.instanceof(Timestamp),
 });
 
-export type MatchData = z.infer<typeof MatchSchema>;
+export type MessageRoomData = z.infer<typeof MessageRoomSchema>;
 
-export type MatchIndexData = { id: string } & Pick<MatchData, "userIds" | "createdAt">;
-
-export class MatchDoc extends FireDocument<MatchData> implements MatchData {
+export class MessageRoomDoc extends FireDocument<MessageRoomData> implements MessageRoomData {
   static create(
-    collection: CollectionReference<MatchData>,
+    collection: CollectionReference<MessageRoomData>,
     { likeId, userIds }: { likeId: string; userIds: string[] }
   ) {
     const docRef = collection.doc();
     const createdAt = Timestamp.now();
-    return new MatchDoc({
+    return new MessageRoomDoc({
       id: docRef.id,
       ref: docRef,
       data: () => ({
@@ -35,21 +35,17 @@ export class MatchDoc extends FireDocument<MatchData> implements MatchData {
   likeId!: string;
   userIds!: string[];
   createdAt!: Timestamp;
+  updatedAt!: Timestamp;
+
+  messages = new MessagesCollection(this.ref.collection("messages"));
 
   toData() {
-    const { id, ref, ...data } = this;
+    const { id, ref, messages, ...data } = this;
     return data;
   }
 
   toBatch() {
-    const { id, ref, ...data } = this;
+    const { id, ref, messages, ...data } = this;
     return [ref, data] as const;
-  }
-
-  toIndex() {
-    const { id, ref, ...data } = this;
-    const { userIds, createdAt } = data;
-    const index: MatchIndexData = { id, userIds, createdAt };
-    return index;
   }
 }

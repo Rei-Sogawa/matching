@@ -21,8 +21,8 @@ export class UserIndexCollection extends FireIndex<UserIndexData> {
     excludeUserIds: string[];
   }) {
     return this.get()
-      .then((ary) => filter(ary, (e) => !excludeUserIds.includes(e.id)))
       .then((ary) => orderBy(ary, (e) => e.lastAccessedAt, "desc"))
+      .then((ary) => filter(ary, (e) => !excludeUserIds.includes(e.id)))
       .then((ary) => filter(ary, (e) => (after ? e.lastAccessedAt < after : true)))
       .then((ary) => take(ary, first));
   }
