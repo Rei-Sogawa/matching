@@ -16,6 +16,10 @@ export type Scalars = {
   DateTime: string;
 };
 
+export type CreateMessageInput = {
+  content: Scalars['String'];
+};
+
 export const Gender = {
   Female: 'FEMALE',
   Male: 'MALE'
@@ -88,11 +92,17 @@ export type MessageRoomEdge = {
 export type Mutation = {
   __typename?: 'Mutation';
   access: Me;
+  createMessage: Message;
   like: User;
   signUp: Me;
   skip: User;
   unlike: User;
   updateUser: Me;
+};
+
+
+export type MutationCreateMessageArgs = {
+  input: CreateMessageInput;
 };
 
 
@@ -170,6 +180,11 @@ export type QueryUsersArgs = {
 export type SignUpInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  newMessage: Message;
 };
 
 export type UpdateUserInput = {

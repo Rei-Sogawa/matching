@@ -21,6 +21,10 @@ export type Scalars = {
   DateTime: Timestamp;
 };
 
+export type CreateMessageInput = {
+  content: Scalars['String'];
+};
+
 export const Gender = {
   Female: 'FEMALE',
   Male: 'MALE'
@@ -93,11 +97,17 @@ export type MessageRoomEdge = {
 export type Mutation = {
   __typename?: 'Mutation';
   access: Me;
+  createMessage: Message;
   like: User;
   signUp: Me;
   skip: User;
   unlike: User;
   updateUser: Me;
+};
+
+
+export type MutationCreateMessageArgs = {
+  input: CreateMessageInput;
 };
 
 
@@ -175,6 +185,11 @@ export type QueryUsersArgs = {
 export type SignUpInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  newMessage: Message;
 };
 
 export type UpdateUserInput = {
@@ -278,6 +293,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CreateMessageInput: CreateMessageInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Gender: Gender;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -296,6 +312,7 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Subscription: ResolverTypeWrapper<{}>;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserDoc>;
   UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<ResolversTypes['UserEdge']> }>;
@@ -305,6 +322,7 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
+  CreateMessageInput: CreateMessageInput;
   DateTime: Scalars['DateTime'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
@@ -321,6 +339,7 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   SignUpInput: SignUpInput;
   String: Scalars['String'];
+  Subscription: {};
   UpdateUserInput: UpdateUserInput;
   User: UserDoc;
   UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserEdge']> };
@@ -384,6 +403,7 @@ export type MessageRoomEdgeResolvers<ContextType = Context, ParentType extends R
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   access?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  createMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'input'>>;
   like?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLikeArgs, 'userId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
   skip?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSkipArgs, 'userId'>>;
@@ -405,6 +425,10 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
+}>;
+
+export type SubscriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  newMessage?: SubscriptionResolver<ResolversTypes['Message'], "newMessage", ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -441,6 +465,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;

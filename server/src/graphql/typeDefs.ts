@@ -1,6 +1,10 @@
 import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
+input CreateMessageInput {
+  content: String!
+}
+
 scalar DateTime
 
 enum Gender {
@@ -60,6 +64,7 @@ type MessageRoomEdge {
 
 type Mutation {
   access: Me!
+  createMessage(input: CreateMessageInput!): Message!
   like(userId: ID!): User!
   signUp(input: SignUpInput!): Me!
   skip(userId: ID!): User!
@@ -90,6 +95,10 @@ type Query {
 input SignUpInput {
   email: String!
   password: String!
+}
+
+type Subscription {
+  newMessage: Message!
 }
 
 input UpdateUserInput {
