@@ -1,22 +1,15 @@
 import { gql, Reference, useApolloClient } from "@apollo/client";
-import { Box, Center, HStack, Stack, VStack } from "@chakra-ui/react";
+import { Box, Center, HStack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 
 import { LikeButton } from "../../../components/case/LikeButton";
-import { Loading } from "../../../components/case/Loading";
 import { SkipButton } from "../../../components/case/SkipButton";
 import { BackButton } from "../../../components/common/BackButton";
 import { UserTopCard } from "../../../components/domain/UserTopCard";
-import {
-  useLikeMutation,
-  UserForUserPageFragment,
-  UsersDocument,
-  UsersQueryResult,
-  useUserQuery,
-} from "../../../graphql/generated";
+import { useLikeMutation, UserForUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 import { assertDefined } from "../../../utils/assert-defined";
@@ -81,7 +74,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
 
   const getRedirectPath = () => {
     const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
-    const users = data?.users.edges.map((u) => u.node) ?? [];
+    const users = data?.users.edges.map((e) => e.node) ?? [];
 
     const currIndex = users.findIndex((u) => u.id === user.id);
     const nextUser = users[currIndex + 1];
@@ -176,19 +169,11 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   );
 };
 
-gql`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      ...UserTopCard
-    }
-  }
-`;
-
 export const UserPage: FC = () => {
   const { userId } = useParams();
-  assertDefined(userId);
-  const { data } = useUserQuery({ variables: { id: userId } });
-
-  return data ? <UserPageTemplate user={data.user} /> : <Loading />;
+  const client = useApolloClient();
+  const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
+  const users = data?.users.edges.map((e) => e.node) ?? [];
+  const user = users.find((u) => u.id === userId);
+  return user ? <UserPageTemplate user={user} /> : <Navigate to={routes["/users"].path()} />;
 };

@@ -6,7 +6,7 @@
     "node": ">= 14.0.0"
   },
   "scripts": {
-    "emu": "firebase emulators:start --only auth,firestore,storage",
+    "emu": "firebase emulators:start --only auth,firestore,storage --import=./emulators-export --export-on-exit",
     "emu:stop": "lsof -t -i:9099 -i:8080 -i:9199 | xargs kill -9",
     "dev": "ts-node-dev --respawn src/index",
     "gql": "graphql-codegen",

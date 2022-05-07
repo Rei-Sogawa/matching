@@ -4,12 +4,12 @@ import { head } from "lodash-es";
 import { FC } from "react";
 
 import { AppLink } from "../../components/base/AppLink";
-import { UserForUsersPageUserCardFragment, useUsersQuery } from "../../graphql/generated";
+import { UserMiniCardFragment, useUsersQuery } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
 
 gql`
-  fragment UserForUsersPageUserCard on User {
+  fragment UserMiniCard on User {
     id
     gender
     age
@@ -18,11 +18,11 @@ gql`
   }
 `;
 
-type UserCardProps = {
-  user: UserForUsersPageUserCardFragment;
+type UserMiniCard = {
+  user: UserMiniCardFragment;
 };
 
-const UserCard: FC<UserCardProps> = ({ user }) => {
+const UserMiniCard: FC<UserMiniCard> = ({ user }) => {
   return (
     <AppLink to={routes["/users/:userId"].path({ userId: user.id })}>
       <VStack>
@@ -42,7 +42,8 @@ gql`
       edges {
         node {
           id
-          ...UserForUsersPageUserCard
+          ...UserMiniCard
+          ...UserTopCard
         }
         cursor
       }
@@ -78,7 +79,7 @@ export const UsersPage: FC = () => {
         <Wrap justify="center" spacing="6">
           {users.map((user) => (
             <WrapItem key={user.id}>
-              <UserCard user={user} />
+              <UserMiniCard user={user} />
             </WrapItem>
           ))}
         </Wrap>

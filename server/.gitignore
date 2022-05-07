@@ -4,3 +4,5 @@ cred
 node_modules
 *.log
 dist
+
+emulators-export
