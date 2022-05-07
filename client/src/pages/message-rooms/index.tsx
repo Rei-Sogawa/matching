@@ -12,6 +12,7 @@ import {
   useMessageRoomsQuery,
   useNewMessageRoomsQuery,
 } from "../../graphql/generated";
+import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMenu } from "../../layouts/AppMenu";
@@ -170,8 +171,14 @@ const MessageRooms: FC = () => {
 };
 
 export const MessageRoomsPage: FC = () => {
+  const footer = (
+    <AppFooter>
+      <AppMenu />
+    </AppFooter>
+  );
+
   return (
-    <AppLayout header={null} footer={<AppMenu />}>
+    <AppLayout header={null} footer={footer}>
       <Stack spacing="8">
         <Tabs colorScheme="primary">
           <TabList>

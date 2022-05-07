@@ -5,6 +5,7 @@ import { BiSearch } from "react-icons/bi";
 
 import { UserSmallCard } from "../../components/domain/UserSmallCard";
 import { useUsersQuery } from "../../graphql/generated";
+import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMenu } from "../../layouts/AppMenu";
 
@@ -41,8 +42,14 @@ export const UsersPage: FC = () => {
     });
   };
 
+  const footer = (
+    <AppFooter>
+      <AppMenu />
+    </AppFooter>
+  );
+
   return (
-    <AppLayout header={null} footer={<AppMenu />}>
+    <AppLayout header={null} footer={footer}>
       <Stack spacing="8">
         <Flex justifyContent="end" px={{ base: "6", md: "12" }}>
           <IconButton isRound boxShadow="md" aria-label="Search" icon={<BiSearch fontSize="20px" />} />

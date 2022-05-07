@@ -21,6 +21,7 @@ gql`
 
 const Pages: FC = () => {
   const [access] = useAccessMutation();
+
   useEffect(() => {
     access();
   }, []);

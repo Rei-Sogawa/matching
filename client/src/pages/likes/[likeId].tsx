@@ -15,6 +15,7 @@ import {
   UserForLikePageFragment,
   useSkipMutation,
 } from "../../graphql/generated";
+import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMenu } from "../../layouts/AppMenu";
@@ -175,8 +176,14 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
     </animated.div>
   );
 
+  const footer = (
+    <AppFooter>
+      <AppMenu />
+    </AppFooter>
+  );
+
   return (
-    <AppLayout header={null} footer={<AppMenu />}>
+    <AppLayout header={null} footer={footer}>
       <VStack spacing="6">
         <UserTopCard user={user} imageForeground={imageForeground} />
         <HStack spacing="8">
