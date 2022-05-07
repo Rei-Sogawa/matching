@@ -6,6 +6,7 @@ import { Loading } from "../../components/case/Loading";
 import { BackButton } from "../../components/common/BackButton";
 import { UserActionCard } from "../../components/domain/UserActionCard";
 import { SendLikeUserItemFragment, useSendLikeUsersQuery, useUnlikeMutation } from "../../graphql/generated";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { routes } from "../../routes";
 
@@ -91,19 +92,23 @@ export const MyPageLikesPage: FC = () => {
     });
   };
 
+  const header = (
+    <AppHeader>
+      <Flex w="full" position="relative" justifyContent="center" alignItems="center">
+        <Box position="absolute" left="0">
+          <BackButton path={routes["/my-page"].path()} />
+        </Box>
+        <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
+          あなたから
+        </Box>
+      </Flex>
+    </AppHeader>
+  );
+
   if (!data) return <Loading />;
   return (
-    <AppLayout header={null} footer={null}>
+    <AppLayout header={header} footer={null}>
       <Stack spacing="6">
-        <Flex w="full" position="relative" justifyContent="center" alignItems="center">
-          <Box position="absolute" left="0">
-            <BackButton path={routes["/my-page"].path()} />
-          </Box>
-          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-            あなたから
-          </Box>
-        </Flex>
-
         {users.map((u) => (
           <Stack key={u.id} alignSelf="center" spacing="6">
             <SendLikeUserItem user={u} />

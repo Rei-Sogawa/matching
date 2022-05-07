@@ -176,7 +176,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
   );
 
   return (
-    <AppLayout header={<AppHeader>いいね！</AppHeader>} footer={<AppMenu />}>
+    <AppLayout header={null} footer={<AppMenu />}>
       <VStack spacing="6">
         <UserTopCard user={user} imageForeground={imageForeground} />
         <HStack spacing="8">

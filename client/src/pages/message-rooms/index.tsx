@@ -171,7 +171,7 @@ const MessageRooms: FC = () => {
 
 export const MessageRoomsPage: FC = () => {
   return (
-    <AppLayout header={<AppHeader>メッセージ</AppHeader>} footer={<AppMenu />}>
+    <AppLayout header={null} footer={<AppMenu />}>
       <Stack spacing="8">
         <Tabs colorScheme="primary">
           <TabList>

@@ -1,11 +1,12 @@
 import { gql } from "@apollo/client";
-import { Box, Flex, Stack, useToast } from "@chakra-ui/react";
+import { Box, Container, Flex, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 
 import { BackButton } from "../../../components/common/BackButton";
 import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
 import { useMe } from "../../../contexts/Me";
 import { useUpdateUserMutation } from "../../../graphql/generated";
+import { AppHeader } from "../../../layouts/AppHeader";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { routes } from "../../../routes";
 
@@ -30,18 +31,22 @@ export const MyPageProfileEditPage: FC = () => {
     toast({ title: "更新しました。", status: "success", position: "top-right", duration: 2_500 });
   };
 
-  return (
-    <AppLayout header={null} footer={null}>
-      <Stack spacing="6">
-        <Flex w="full" position="relative" justifyContent="center" alignItems="center">
-          <Box position="absolute" left="0">
-            <BackButton path={routes["/my-page"].path()} />
-          </Box>
-          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-            プロフィール編集
-          </Box>
-        </Flex>
+  const header = (
+    <AppHeader>
+      <Flex w="full" position="relative" justifyContent="center" alignItems="center">
+        <Box position="absolute" left="0">
+          <BackButton path={routes["/my-page"].path()} />
+        </Box>
+        <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
+          プロフィール編集
+        </Box>
+      </Flex>
+    </AppHeader>
+  );
 
+  return (
+    <AppLayout header={header} footer={null}>
+      <Stack spacing="6">
         <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
       </Stack>
     </AppLayout>

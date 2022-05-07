@@ -6,7 +6,6 @@ import { BiLike, BiLogOut } from "react-icons/bi";
 
 import { AppLink } from "../../components/base/AppLink";
 import { useMe } from "../../contexts/Me";
-import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";

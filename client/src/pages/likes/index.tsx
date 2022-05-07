@@ -33,13 +33,17 @@ export const LikesPage: FC = () => {
     }
   }, [users]);
 
+  const header = (
+    <AppHeader>
+      <Box fontWeight="bold" fontSize="2xl">
+        いいね！
+      </Box>
+    </AppHeader>
+  );
+
   return (
-    <AppLayout header={<AppHeader>いいね！</AppHeader>} footer={<AppMenu />}>
-      <Stack spacing="8">
-        <Box fontWeight="bold" fontSize="2xl">
-          いいね！
-        </Box>
-      </Stack>
+    <AppLayout header={header} footer={<AppMenu />}>
+      <Stack spacing="8"></Stack>
     </AppLayout>
   );
 };

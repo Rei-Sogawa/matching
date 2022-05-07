@@ -42,7 +42,7 @@ export const UsersPage: FC = () => {
   };
 
   return (
-    <AppLayout header={<AppHeader>さがす</AppHeader>} footer={<AppMenu />}>
+    <AppLayout header={null} footer={<AppMenu />}>
       <Stack spacing="8">
         <Wrap justify="center" spacing="6">
           {users.map((user) => (
