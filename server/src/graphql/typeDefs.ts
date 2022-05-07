@@ -43,6 +43,7 @@ type MessageEdge {
 
 type MessageRoom {
   id: ID!
+  lastMessage: Message
   messages(input: PageInput!): MessageConnection!
   partner: User!
 }

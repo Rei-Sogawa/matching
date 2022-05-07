@@ -6,6 +6,7 @@ import { IndexPage } from "./pages/Index";
 import { LikesPage } from "./pages/likes";
 import { LikePage } from "./pages/likes/[likeId]";
 import { LogInPage } from "./pages/log-in";
+import { MessagesPage } from "./pages/messages";
 import { MyPagePage } from "./pages/my-page";
 import { MyPageLikesPage } from "./pages/my-page/likes";
 import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
@@ -23,6 +24,7 @@ const USERS_PATH = "/users";
 const USER_PATH = "/users/:userId";
 const LIKES_PATH = "/likes";
 const LIKE_PATH = "/likes/:userId";
+const MESSAGES_PATH = "/messages";
 
 export const routes = {
   [INDEX_PATH]: {
@@ -73,6 +75,11 @@ export const routes = {
   [LIKE_PATH]: {
     path: pathBuilder(LIKE_PATH),
     Component: LikePage,
+    middleware: [Authenticated],
+  },
+  [MESSAGES_PATH]: {
+    path: pathBuilder(MESSAGES_PATH),
+    Component: MessagesPage,
     middleware: [Authenticated],
   },
 };

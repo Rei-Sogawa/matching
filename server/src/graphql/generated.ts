@@ -68,6 +68,7 @@ export type MessageEdge = {
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
+  lastMessage?: Maybe<Message>;
   messages: MessageConnection;
   partner: User;
 };
@@ -363,6 +364,7 @@ export type MessageEdgeResolvers<ContextType = Context, ParentType extends Resol
 
 export type MessageRoomResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageRoom'] = ResolversParentTypes['MessageRoom']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastMessage?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType>;
   messages?: Resolver<ResolversTypes['MessageConnection'], ParentType, ContextType, RequireFields<MessageRoomMessagesArgs, 'input'>>;
   partner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

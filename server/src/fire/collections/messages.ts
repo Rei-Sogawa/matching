@@ -1,4 +1,5 @@
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { head } from "lodash";
 
 import { MessageData, MessageDoc } from "../docs/message";
 import { FireCollection } from "../lib/fire-collection";
@@ -12,5 +13,9 @@ export class MessagesCollection extends FireCollection<MessageData, MessageDoc> 
     return after
       ? this.query((ref) => ref.orderBy("createdAt", "desc").startAfter(after).limit(first))
       : this.query((ref) => ref.orderBy("createdAt", "desc").limit(first));
+  }
+
+  async last() {
+    return this.query((ref) => ref.orderBy("createdAt", "desc").limit(1)).then((docs) => head(docs) ?? null);
   }
 }

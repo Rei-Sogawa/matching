@@ -45,7 +45,7 @@ export const AppMenu: FC = () => {
               </Flex>
             </AppLink>
 
-            <AppLink to="#" color={isActive("") ? "black" : "gray.500"}>
+            <AppLink to={routes["/messages"].path()} color={isActive("messages") ? "black" : "gray.500"}>
               <Flex direction="column" alignItems="center">
                 <BiMessageRoundedDots fontSize="28px" />
                 <Box fontWeight="bold" fontSize="xs">

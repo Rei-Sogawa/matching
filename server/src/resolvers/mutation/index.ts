@@ -1,5 +1,6 @@
 import { authorize } from "../../authorize";
 import { LikeDoc } from "../../fire/docs/like";
+import { MessageRoomDoc } from "../../fire/docs/message-room";
 import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";
 
@@ -49,7 +50,7 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { userId } = args;
     const { uid } = context.decodedIdToken;
-    const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
+    const { usersCollection, likesCollection, messageRoomsCollection, likeIndexCollection } = context.collections;
 
     const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
     if (sendLike) throw new Error("sendLike already exists");
@@ -57,6 +58,10 @@ export const Mutation: Resolvers["Mutation"] = {
     const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
     if (receiveLike) {
       await receiveLike.match().save();
+      await MessageRoomDoc.create(messageRoomsCollection.ref, {
+        likeId: receiveLike.id,
+        userIds: [receiveLike.senderId, receiveLike.receiverId],
+      }).save();
       await likeIndexCollection.update(receiveLike.toIndex());
     } else {
       const like = LikeDoc.create(likesCollection.ref, { senderId: uid, receiverId: userId });

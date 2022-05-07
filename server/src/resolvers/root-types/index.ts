@@ -32,6 +32,10 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
     const edges = messages.map((m) => ({ node: m, cursor: m.createdAt }));
     return { edges, pageInfo: { endCursor: last(edges)?.cursor, hasNextPage: input.first === edges.length } };
   },
+
+  lastMessage: async (parent) => {
+    return parent.messages.last();
+  },
 };
 
 export const Message: Resolvers["Message"] = {

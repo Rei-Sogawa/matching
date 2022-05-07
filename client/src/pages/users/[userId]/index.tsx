@@ -39,17 +39,6 @@ const useLike = (userId: string) => {
           },
         },
       });
-
-      cache.modify({
-        fields: {
-          sendLikeUsers(existing, { toReference }) {
-            return {
-              ...existing,
-              edges: [{ __typename: "UserEdge", node: toReference(data.like), cursor: new Date() }, ...existing.edges],
-            };
-          },
-        },
-      });
     },
   });
 

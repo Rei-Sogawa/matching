@@ -63,8 +63,9 @@ export type MessageEdge = {
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
+  lastMessage?: Maybe<Message>;
   messages: MessageConnection;
-  user: User;
+  partner: User;
 };
 
 
@@ -240,6 +241,24 @@ export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ReceiveLikeUsersQuery = { __typename?: 'Query', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
+export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+
+export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }, lastMessage?: { __typename?: 'Message', id: string, content: string, createdAt: string } | null };
+
+export type NewMessageRoomsQueryVariables = Exact<{
+  input: PageInput;
+}>;
+
+
+export type NewMessageRoomsQuery = { __typename?: 'Query', newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+
+export type MessageRoomsQueryVariables = Exact<{
+  input: PageInput;
+}>;
+
+
+export type MessageRoomsQuery = { __typename?: 'Query', messageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }, lastMessage?: { __typename?: 'Message', id: string, content: string, createdAt: string } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+
 export type UnlikeMutationVariables = Exact<{
   userId: Scalars['ID'];
 }>;
@@ -322,6 +341,37 @@ export const UserForLikePageFragmentDoc = gql`
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
+export const NewMessageRoomItemFragmentDoc = gql`
+    fragment NewMessageRoomItem on MessageRoom {
+  id
+  partner {
+    id
+    gender
+    nickName
+    age
+    livingPref
+    photoUrls
+  }
+}
+    `;
+export const MessageRoomItemFragmentDoc = gql`
+    fragment MessageRoomItem on MessageRoom {
+  id
+  partner {
+    id
+    gender
+    nickName
+    age
+    livingPref
+    photoUrls
+  }
+  lastMessage {
+    id
+    content
+    createdAt
+  }
+}
+    `;
 export const UserActionCardFragmentDoc = gql`
     fragment UserActionCard on User {
   id
@@ -515,6 +565,96 @@ export function useReceiveLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type ReceiveLikeUsersQueryHookResult = ReturnType<typeof useReceiveLikeUsersQuery>;
 export type ReceiveLikeUsersLazyQueryHookResult = ReturnType<typeof useReceiveLikeUsersLazyQuery>;
 export type ReceiveLikeUsersQueryResult = Apollo.QueryResult<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>;
+export const NewMessageRoomsDocument = gql`
+    query NewMessageRooms($input: PageInput!) {
+  newMessageRooms(input: $input) {
+    edges {
+      node {
+        id
+        ...NewMessageRoomItem
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+    ${NewMessageRoomItemFragmentDoc}`;
+
+/**
+ * __useNewMessageRoomsQuery__
+ *
+ * To run a query within a React component, call `useNewMessageRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewMessageRoomsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useNewMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
+      }
+export function useNewMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
+        }
+export type NewMessageRoomsQueryHookResult = ReturnType<typeof useNewMessageRoomsQuery>;
+export type NewMessageRoomsLazyQueryHookResult = ReturnType<typeof useNewMessageRoomsLazyQuery>;
+export type NewMessageRoomsQueryResult = Apollo.QueryResult<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>;
+export const MessageRoomsDocument = gql`
+    query MessageRooms($input: PageInput!) {
+  messageRooms(input: $input) {
+    edges {
+      node {
+        id
+        ...MessageRoomItem
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+    ${MessageRoomItemFragmentDoc}`;
+
+/**
+ * __useMessageRoomsQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomsQuery, MessageRoomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomsQuery, MessageRoomsQueryVariables>(MessageRoomsDocument, options);
+      }
+export function useMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomsQuery, MessageRoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomsQuery, MessageRoomsQueryVariables>(MessageRoomsDocument, options);
+        }
+export type MessageRoomsQueryHookResult = ReturnType<typeof useMessageRoomsQuery>;
+export type MessageRoomsLazyQueryHookResult = ReturnType<typeof useMessageRoomsLazyQuery>;
+export type MessageRoomsQueryResult = Apollo.QueryResult<MessageRoomsQuery, MessageRoomsQueryVariables>;
 export const UnlikeDocument = gql`
     mutation Unlike($userId: ID!) {
   unlike(userId: $userId) {

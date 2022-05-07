@@ -50,6 +50,7 @@ type MessageRoom {
   id: ID!
   partner: User!
   messages(input: PageInput!): MessageConnection!
+  lastMessage: Message
 }
 
 #
