@@ -24,6 +24,7 @@
     "browser-image-compression": "^2.0.0",
     "chakra-ui-steps": "^1.7.2",
     "classnames": "^2.3.1",
+    "date-fns": "^2.28.0",
     "final-form": "^4.20.6",
     "firebase": "^9.6.10",
     "framer-motion": "^6",

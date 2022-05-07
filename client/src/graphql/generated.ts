@@ -63,7 +63,7 @@ export type MessageEdge = {
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
-  lastMessage?: Maybe<Message>;
+  lastMessage: Message;
   messages: MessageConnection;
   partner: User;
 };
@@ -241,23 +241,23 @@ export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ReceiveLikeUsersQuery = { __typename?: 'Query', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
 
-export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } };
 
-export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }, lastMessage?: { __typename?: 'Message', id: string, content: string, createdAt: string } | null };
+export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, lastMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
 
 export type NewMessageRoomsQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type NewMessageRoomsQuery = { __typename?: 'Query', newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+export type NewMessageRoomsQuery = { __typename?: 'Query', newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export type MessageRoomsQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type MessageRoomsQuery = { __typename?: 'Query', messageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }, lastMessage?: { __typename?: 'Message', id: string, content: string, createdAt: string } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+export type MessageRoomsQuery = { __typename?: 'Query', messageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, lastMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export type UnlikeMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -346,10 +346,7 @@ export const NewMessageRoomItemFragmentDoc = gql`
   id
   partner {
     id
-    gender
     nickName
-    age
-    livingPref
     photoUrls
   }
 }
@@ -359,10 +356,7 @@ export const MessageRoomItemFragmentDoc = gql`
   id
   partner {
     id
-    gender
     nickName
-    age
-    livingPref
     photoUrls
   }
   lastMessage {

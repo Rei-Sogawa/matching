@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
-import { Avatar, Box, Button, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { format } from "date-fns";
 import { head } from "lodash-es";
 import { FC } from "react";
 import { BiHeart, BiMessageRoundedDots } from "react-icons/bi";
@@ -17,10 +18,7 @@ gql`
     id
     partner {
       id
-      gender
       nickName
-      age
-      livingPref
       photoUrls
     }
   }
@@ -31,10 +29,7 @@ gql`
     id
     partner {
       id
-      gender
       nickName
-      age
-      livingPref
       photoUrls
     }
     lastMessage {
@@ -90,21 +85,7 @@ const NewMessageRoomItem: FC<NewMessageRoomItemProps> = ({ messageRoom }) => {
     <HStack spacing="4">
       <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
       <Box>
-        <HStack>
-          <Box fontWeight="bold" fontSize="lg">
-            {messageRoom.partner.nickName}
-          </Box>
-          <Box fontWeight="bold" fontSize="lg">
-            {messageRoom.partner.age}歳
-          </Box>
-          <Box fontWeight="bold" fontSize="lg">
-            {messageRoom.partner.livingPref}
-          </Box>
-          <Box fontWeight="bold" fontSize="lg">
-            {messageRoom.partner.gender === "MALE" ? "男性" : "女性"}
-          </Box>
-        </HStack>
-
+        <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
         <Box color="gray.500">メッセージを送信してみましょう！</Box>
       </Box>
     </HStack>
@@ -116,7 +97,20 @@ type MessageRoomItemProps = {
 };
 
 const MessageRoomItem: FC<MessageRoomItemProps> = ({ messageRoom }) => {
-  return <Box></Box>;
+  return (
+    <HStack spacing="4">
+      <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
+      <Box>
+        <Flex justifyContent="space-between">
+          <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
+          <Box color="gray.500">{format(new Date(messageRoom.lastMessage.createdAt), "yyyy/MM/dd")}</Box>
+        </Flex>
+        <Box color="gray.500" noOfLines={1}>
+          {messageRoom.lastMessage?.content}
+        </Box>
+      </Box>
+    </HStack>
+  );
 };
 
 const QUERY_SIZE = 6;
