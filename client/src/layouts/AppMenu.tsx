@@ -14,57 +14,46 @@ export const AppMenu: FC = () => {
   const isActive = (_rootPath: string) => _rootPath === rootPath;
 
   return (
-    <Box h="16">
-      <Box
-        position="fixed"
-        bottom="0"
-        w="full"
-        h="16"
-        zIndex="100"
-        borderTopWidth="1px"
-        borderColor="gray.200"
-        bg="gray.50"
-      >
-        <Container h="full">
-          <HStack h="full" justifyContent="space-around" alignItems="center">
-            <AppLink to={routes["/users"].path()} color={isActive("users") ? "black" : "gray.500"}>
-              <Flex direction="column" alignItems="center">
-                <BiSearch fontSize="28px" />
-                <Box fontWeight="bold" fontSize="xs">
-                  さがす
-                </Box>
-              </Flex>
-            </AppLink>
+    <Box py="2" borderTopWidth="1px" borderColor="gray.200" bg="gray.50">
+      <Container>
+        <HStack justifyContent="space-around" alignItems="center">
+          <AppLink to={routes["/users"].path()} color={isActive("users") ? "black" : "gray.500"}>
+            <Flex direction="column" alignItems="center">
+              <BiSearch fontSize="28px" />
+              <Box fontWeight="bold" fontSize="xs">
+                さがす
+              </Box>
+            </Flex>
+          </AppLink>
 
-            <AppLink to={routes["/likes"].path()} color={isActive("likes") ? "black" : "gray.500"}>
-              <Flex direction="column" alignItems="center" position="relative">
-                <BiLike fontSize="28px" />
-                <Box fontWeight="bold" fontSize="xs">
-                  お相手から
-                </Box>
-              </Flex>
-            </AppLink>
+          <AppLink to={routes["/likes"].path()} color={isActive("likes") ? "black" : "gray.500"}>
+            <Flex direction="column" alignItems="center" position="relative">
+              <BiLike fontSize="28px" />
+              <Box fontWeight="bold" fontSize="xs">
+                お相手から
+              </Box>
+            </Flex>
+          </AppLink>
 
-            <AppLink to={routes["/message-rooms"].path()} color={isActive("message-rooms") ? "black" : "gray.500"}>
-              <Flex direction="column" alignItems="center">
-                <BiMessageRoundedDots fontSize="28px" />
-                <Box fontWeight="bold" fontSize="xs">
-                  メッセージ
-                </Box>
-              </Flex>
-            </AppLink>
+          <AppLink to={routes["/message-rooms"].path()} color={isActive("message-rooms") ? "black" : "gray.500"}>
+            <Flex direction="column" alignItems="center">
+              <BiMessageRoundedDots fontSize="28px" />
+              <Box fontWeight="bold" fontSize="xs">
+                メッセージ
+              </Box>
+            </Flex>
+          </AppLink>
 
-            <AppLink to={routes["/my-page"].path()} color={isActive("my-page") ? "black" : "gray.500"}>
-              <Flex direction="column" alignItems="center">
-                <BiUser fontSize="28px" />
-                <Box fontWeight="bold" fontSize="xs">
-                  マイページ
-                </Box>
-              </Flex>
-            </AppLink>
-          </HStack>
-        </Container>
-      </Box>
+          <AppLink to={routes["/my-page"].path()} color={isActive("my-page") ? "black" : "gray.500"}>
+            <Flex direction="column" alignItems="center">
+              <BiUser fontSize="28px" />
+              <Box fontWeight="bold" fontSize="xs">
+                マイページ
+              </Box>
+            </Flex>
+          </AppLink>
+        </HStack>
+      </Container>
     </Box>
   );
 };

@@ -31,7 +31,7 @@ export const MyPageProfileEditPage: FC = () => {
   };
 
   return (
-    <AppLayout footer={false}>
+    <AppLayout header={null} footer={null}>
       <Stack spacing="6">
         <Flex w="full" position="relative" justifyContent="center" alignItems="center">
           <Box position="absolute" left="0">

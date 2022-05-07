@@ -15,7 +15,9 @@ import {
   UserForLikePageFragment,
   useSkipMutation,
 } from "../../graphql/generated";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
 gql`
@@ -174,13 +176,10 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
   );
 
   return (
-    <AppLayout footer={true} bg="gray.50">
-      <VStack spacing="8">
-        <Box alignSelf="start" fontWeight="bold" fontSize="2xl">
-          いいね！
-        </Box>
+    <AppLayout header={<AppHeader>いいね！</AppHeader>} footer={<AppMenu />}>
+      <VStack spacing="6">
         <UserTopCard user={user} imageForeground={imageForeground} />
-        <HStack spacing="8" alignSelf="center">
+        <HStack spacing="8">
           <SkipButton onClick={onSkip} disabled={liked || skipped} />
           <LikeButton onClick={onMatch} disabled={liked || skipped} />
         </HStack>

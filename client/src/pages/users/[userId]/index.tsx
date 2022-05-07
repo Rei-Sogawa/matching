@@ -145,7 +145,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   );
 
   return (
-    <AppLayout footer={false} bg="gray.50">
+    <AppLayout header={null} footer={null}>
       <VStack spacing="8">
         <BackButton alignSelf="start" path={routes["/users"].path()} />
         <UserTopCard user={user} imageForeground={imageForeground} />

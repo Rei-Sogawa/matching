@@ -6,7 +6,9 @@ import { BiLike, BiLogOut } from "react-icons/bi";
 
 import { AppLink } from "../../components/base/AppLink";
 import { useMe } from "../../contexts/Me";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
 export const MyPagePage: FC = () => {
@@ -17,9 +19,9 @@ export const MyPagePage: FC = () => {
   };
 
   return (
-    <AppLayout footer={true}>
+    <AppLayout header={null} footer={<AppMenu />}>
       <Stack spacing="6">
-        <HStack spacing="8" px="10">
+        <HStack spacing="8" px="10" py="4">
           <Avatar src={head(me.photoUrls)} size="xl" ring="4px" ringColor="primary.500" />
           <Box>
             <Box fontWeight="bold" fontSize="2xl">

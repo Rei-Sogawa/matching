@@ -5,7 +5,9 @@ import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useReceiveLikeUsersQuery } from "../../graphql/generated";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
 gql`
@@ -32,7 +34,7 @@ export const LikesPage: FC = () => {
   }, [users]);
 
   return (
-    <AppLayout footer={true}>
+    <AppLayout header={<AppHeader>いいね！</AppHeader>} footer={<AppMenu />}>
       <Stack spacing="8">
         <Box fontWeight="bold" fontSize="2xl">
           いいね！

@@ -12,7 +12,9 @@ import {
   useMessageRoomsQuery,
   useNewMessageRoomsQuery,
 } from "../../graphql/generated";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
 gql`
@@ -169,12 +171,8 @@ const MessageRooms: FC = () => {
 
 export const MessageRoomsPage: FC = () => {
   return (
-    <AppLayout footer={true}>
+    <AppLayout header={<AppHeader>メッセージ</AppHeader>} footer={<AppMenu />}>
       <Stack spacing="8">
-        <Box fontWeight="bold" fontSize="2xl">
-          メッセージ
-        </Box>
-
         <Tabs colorScheme="primary">
           <TabList>
             <Tab w="50%">

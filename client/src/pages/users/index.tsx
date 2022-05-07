@@ -1,10 +1,12 @@
 import { gql } from "@apollo/client";
-import { Box, Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
+import { Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import { FC } from "react";
 
 import { UserSmallCard } from "../../components/domain/UserSmallCard";
 import { useUsersQuery } from "../../graphql/generated";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMenu } from "../../layouts/AppMenu";
 
 gql`
   query Users($input: PageInput!) {
@@ -40,12 +42,8 @@ export const UsersPage: FC = () => {
   };
 
   return (
-    <AppLayout footer={true}>
+    <AppLayout header={<AppHeader>さがす</AppHeader>} footer={<AppMenu />}>
       <Stack spacing="8">
-        <Box fontWeight="bold" fontSize="2xl">
-          さがす
-        </Box>
-
         <Wrap justify="center" spacing="6">
           {users.map((user) => (
             <WrapItem key={user.id}>
