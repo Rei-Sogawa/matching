@@ -13,7 +13,6 @@ import {
   useNewMessageRoomsQuery,
 } from "../../graphql/generated";
 import { AppFooter } from "../../layouts/AppFooter";
-import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
@@ -87,15 +86,18 @@ type NewMessageRoomItemProps = {
 
 const NewMessageRoomItem: FC<NewMessageRoomItemProps> = ({ messageRoom }) => {
   return (
-    <HStack spacing="4">
-      <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
-      <Box>
-        <AppLink to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}>
+    <AppLink
+      to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}
+      _hover={{ textDecoration: "none" }}
+    >
+      <HStack spacing="4">
+        <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
+        <Box>
           <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
-        </AppLink>
-        <Box color="gray.500">メッセージを送信してみましょう！</Box>
-      </Box>
-    </HStack>
+          <Box color="gray.500">メッセージを送信してみましょう！</Box>
+        </Box>
+      </HStack>
+    </AppLink>
   );
 };
 

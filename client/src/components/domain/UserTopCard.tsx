@@ -32,7 +32,7 @@ export const UserTopCard: FC<UserTopCardProps> = ({ user, imageForeground }) => 
   };
 
   return (
-    <Box w={{ base: "full", md: "lg" }} p="4" rounded="md" boxShadow="md" bg="white">
+    <Box w={{ base: "full", md: "lg" }} p="4" border="1px" borderColor="gray.200" rounded="md" boxShadow="md">
       <Stack spacing="4">
         <Box
           rounded="md"

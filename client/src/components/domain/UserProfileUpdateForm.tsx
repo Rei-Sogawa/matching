@@ -1,8 +1,9 @@
-import { Button, Divider, FormControl, FormLabel, HStack, Radio, Stack, useToast } from "@chakra-ui/react";
+import { Button, Divider, FormControl, FormLabel, HStack, Image, Radio, Stack, useToast } from "@chakra-ui/react";
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { head } from "lodash-es";
 import { FC, useEffect, useMemo, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { v4 } from "uuid";
@@ -106,7 +107,10 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
           <Stack spacing="6">
             <FormControl>
               <FormLabel>プロフィール写真</FormLabel>
-              <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
+              <Stack spacing="4">
+                <Image src={head(photoUrls)} boxSize={{ base: "xs", md: "md" }} rounded="md" />
+                <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
+              </Stack>
             </FormControl>
             <Field name="gender" label="性別" component={AdaptedRadioGroup}>
               <HStack>

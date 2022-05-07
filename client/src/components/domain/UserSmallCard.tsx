@@ -25,7 +25,7 @@ export const UserSmallCard: FC<UserSmallCard> = ({ user }) => {
   return (
     <AppLink to={routes["/users/:userId"].path({ userId: user.id })}>
       <VStack>
-        <Avatar src={head(user.photoUrls)} w="36" h="36" />
+        <Avatar src={head(user.photoUrls)} boxSize="36" />
         <HStack>
           <Box fontWeight="bold">{user.age}歳</Box>
           <Box fontWeight="bold">{user.livingPref}</Box>
