@@ -123,6 +123,7 @@ input UpdateUserInput {
 }
 
 input CreateMessageInput {
+  messageRoomId: String!
   content: String!
 }
 

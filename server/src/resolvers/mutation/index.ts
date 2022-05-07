@@ -1,5 +1,6 @@
 import { authorize } from "../../authorize";
 import { LikeDoc } from "../../fire/docs/like";
+import { MessageDoc } from "../../fire/docs/message";
 import { MessageRoomDoc } from "../../fire/docs/message-room";
 import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";
@@ -102,5 +103,18 @@ export const Mutation: Resolvers["Mutation"] = {
     await likeIndexCollection.update(receiveLike.toIndex());
 
     return usersCollection.get(userId);
+  },
+
+  async createMessage(_parent, args, context) {
+    authorize(context);
+
+    const { messageRoomId, content } = args.input;
+    const { uid } = context.decodedIdToken;
+    const { messageRoomsCollection } = context.collections;
+
+    const messageRoom = await messageRoomsCollection.get(messageRoomId);
+    if (!messageRoom.isMember(uid)) throw new Error("not messageRoom member");
+
+    return MessageDoc.create(messageRoom.messages.ref, { userId: uid, content }).save();
   },
 };

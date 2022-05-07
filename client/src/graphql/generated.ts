@@ -18,6 +18,7 @@ export type Scalars = {
 
 export type CreateMessageInput = {
   content: Scalars['String'];
+  messageRoomId: Scalars['String'];
 };
 
 export const Gender = {

@@ -3,6 +3,7 @@ import { gql } from "apollo-server-express";
 export const typeDefs = gql`
 input CreateMessageInput {
   content: String!
+  messageRoomId: String!
 }
 
 scalar DateTime

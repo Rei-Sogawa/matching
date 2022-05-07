@@ -59,4 +59,8 @@ export class MessageRoomDoc extends FireDocument<MessageRoomData> implements Mes
   partnerId(userId: string) {
     return this.userIds.filter((id) => id !== userId)[0];
   }
+
+  isMember(userId: string) {
+    return this.userIds.includes(userId);
+  }
 }
