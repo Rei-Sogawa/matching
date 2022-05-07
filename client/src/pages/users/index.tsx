@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
-import { Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import { FC } from "react";
+import { BiSearch } from "react-icons/bi";
 
 import { UserSmallCard } from "../../components/domain/UserSmallCard";
 import { useUsersQuery } from "../../graphql/generated";
-import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMenu } from "../../layouts/AppMenu";
 
@@ -44,6 +44,10 @@ export const UsersPage: FC = () => {
   return (
     <AppLayout header={null} footer={<AppMenu />}>
       <Stack spacing="8">
+        <Flex justifyContent="end" px={{ base: "8", md: "10" }}>
+          <IconButton isRound boxShadow="md" aria-label="Search" icon={<BiSearch fontSize="20px" />} />
+        </Flex>
+
         <Wrap justify="center" spacing="6">
           {users.map((user) => (
             <WrapItem key={user.id}>
