@@ -1,10 +1,13 @@
 import { gql } from "@apollo/client";
-import { Avatar, Box, HStack, Textarea } from "@chakra-ui/react";
-import { FC } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, Box, HStack, IconButton } from "@chakra-ui/react";
+import { FC, FormEventHandler } from "react";
+import { BiSend } from "react-icons/bi";
+import { useParams } from "react-router-dom";
 
+import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/common/BackButton";
 import { MessageItemFragment, useMessageRoomPageQuery, User } from "../../graphql/generated";
+import { useTextInput } from "../../hooks/useTextInput";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
@@ -50,9 +53,22 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
     </AppHeader>
   );
 
+  const [input, reset] = useTextInput();
+
+  const onSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+    console.log(input.value);
+    reset();
+  };
+
   const footer = (
     <AppFooter>
-      <Textarea rows={2} />
+      <form onSubmit={onSubmit}>
+        <HStack>
+          <AutoResizeTextarea minRows={2} maxRows={4} isRequired {...input} />
+          <IconButton type="submit" h="16" variant="ghost" aria-label="send" icon={<BiSend fontSize="28px" />} />
+        </HStack>
+      </form>
     </AppFooter>
   );
 

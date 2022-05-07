@@ -7,6 +7,6 @@ type SkipButtonProps = SetOptional<IconButtonProps, "aria-label">;
 
 export const SkipButton: FC<SkipButtonProps> = (props) => {
   return (
-    <IconButton h="20" w="20" isRound boxShadow="md" aria-label="Skip" icon={<BiShare fontSize="28px" />} {...props} />
+    <IconButton h="20" w="20" isRound boxShadow="md" aria-label="skip" icon={<BiShare fontSize="28px" />} {...props} />
   );
 };

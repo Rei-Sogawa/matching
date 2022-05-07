@@ -52,7 +52,7 @@ export const UsersPage: FC = () => {
     <AppLayout header={null} footer={footer}>
       <Stack spacing="8">
         <Flex justifyContent="end" px={{ base: "6", md: "12" }}>
-          <IconButton isRound boxShadow="md" aria-label="Search" icon={<BiSearch fontSize="20px" />} />
+          <IconButton isRound boxShadow="md" aria-label="search" icon={<BiSearch fontSize="20px" />} />
         </Flex>
 
         <Wrap justify="center" spacing="6">

@@ -37,6 +37,7 @@
     "react-image-crop": "^10.0.0",
     "react-router-dom": "6",
     "react-spring": "^9.4.4",
+    "react-textarea-autosize": "^8.3.3",
     "react-use": "^17.3.2",
     "unstated-next": "^1.1.0",
     "uuid": "^8.3.2"
