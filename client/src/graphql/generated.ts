@@ -40,6 +40,50 @@ export type Me = {
   photoUrls: Array<Scalars['String']>;
 };
 
+export type Message = {
+  __typename?: 'Message';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  user: User;
+};
+
+export type MessageConnection = {
+  __typename?: 'MessageConnection';
+  edges: Array<MessageEdge>;
+  pageInfo: PageInfo;
+};
+
+export type MessageEdge = {
+  __typename?: 'MessageEdge';
+  cursor: Scalars['DateTime'];
+  node: Message;
+};
+
+export type MessageRoom = {
+  __typename?: 'MessageRoom';
+  id: Scalars['ID'];
+  messages: MessageConnection;
+  user: User;
+};
+
+
+export type MessageRoomMessagesArgs = {
+  input: PageInput;
+};
+
+export type MessageRoomConnection = {
+  __typename?: 'MessageRoomConnection';
+  edges: Array<MessageRoomEdge>;
+  pageInfo: PageInfo;
+};
+
+export type MessageRoomEdge = {
+  __typename?: 'MessageRoomEdge';
+  cursor: Scalars['DateTime'];
+  node: MessageRoom;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   access: Me;
@@ -75,9 +119,22 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['DateTime']>;
+  hasNextPage?: Maybe<Scalars['Boolean']>;
+};
+
+export type PageInput = {
+  after?: InputMaybe<Scalars['DateTime']>;
+  first: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  messageRooms: MessageRoomConnection;
+  newMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
@@ -85,8 +142,18 @@ export type Query = {
 };
 
 
+export type QueryMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type QueryNewMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
 export type QuerySendLikeUsersArgs = {
-  input: UsersInput;
+  input: PageInput;
 };
 
 
@@ -96,7 +163,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  input: UsersInput;
+  input: PageInput;
 };
 
 export type SignUpInput = {
@@ -125,24 +192,13 @@ export type User = {
 export type UserConnection = {
   __typename?: 'UserConnection';
   edges: Array<UserEdge>;
-  pageInfo: UsersPageInfo;
+  pageInfo: PageInfo;
 };
 
 export type UserEdge = {
   __typename?: 'UserEdge';
   cursor: Scalars['DateTime'];
   node: User;
-};
-
-export type UsersInput = {
-  after?: InputMaybe<Scalars['DateTime']>;
-  first: Scalars['Int'];
-};
-
-export type UsersPageInfo = {
-  __typename?: 'UsersPageInfo';
-  endCursor?: Maybe<Scalars['DateTime']>;
-  hasNextPage?: Maybe<Scalars['Boolean']>;
 };
 
 export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
@@ -194,11 +250,11 @@ export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: '
 export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type SendLikeUsersQueryVariables = Exact<{
-  input: UsersInput;
+  input: PageInput;
 }>;
 
 
-export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'UsersPageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
@@ -224,11 +280,11 @@ export type LikeMutation = { __typename?: 'Mutation', like: { __typename?: 'User
 export type UserForUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export type UsersQueryVariables = Exact<{
-  input: UsersInput;
+  input: PageInput;
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string>, nickName: string } }>, pageInfo: { __typename?: 'UsersPageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
+export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, photoUrls: Array<string>, nickName: string } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export const UserSmallCardFragmentDoc = gql`
     fragment UserSmallCard on User {
@@ -494,7 +550,7 @@ export type UnlikeMutationHookResult = ReturnType<typeof useUnlikeMutation>;
 export type UnlikeMutationResult = Apollo.MutationResult<UnlikeMutation>;
 export type UnlikeMutationOptions = Apollo.BaseMutationOptions<UnlikeMutation, UnlikeMutationVariables>;
 export const SendLikeUsersDocument = gql`
-    query SendLikeUsers($input: UsersInput!) {
+    query SendLikeUsers($input: PageInput!) {
   sendLikeUsers(input: $input) {
     edges {
       node {
@@ -641,7 +697,7 @@ export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
 export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
 export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
 export const UsersDocument = gql`
-    query Users($input: UsersInput!) {
+    query Users($input: PageInput!) {
   users(input: $input) {
     edges {
       node {

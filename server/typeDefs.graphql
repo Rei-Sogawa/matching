@@ -39,15 +39,28 @@ type User {
   photoUrls: [String!]!
 }
 
+type Message {
+  id: ID!
+  user: User!
+  content: String!
+  createdAt: DateTime!
+}
+
+type MessageRoom {
+  id: ID!
+  user: User!
+  messages(input: PageInput!): MessageConnection!
+}
+
 #
 # QUERY
 #
-type UsersPageInfo {
+type PageInfo {
   endCursor: DateTime
   hasNextPage: Boolean
 }
 
-input UsersInput {
+input PageInput {
   first: Int!
   after: DateTime
 }
@@ -59,15 +72,37 @@ type UserEdge {
 
 type UserConnection {
   edges: [UserEdge!]!
-  pageInfo: UsersPageInfo!
+  pageInfo: PageInfo!
+}
+
+type MessageRoomEdge {
+  node: MessageRoom!
+  cursor: DateTime!
+}
+
+type MessageRoomConnection {
+  edges: [MessageRoomEdge!]!
+  pageInfo: PageInfo!
+}
+
+type MessageEdge {
+  node: Message!
+  cursor: DateTime!
+}
+
+type MessageConnection {
+  edges: [MessageEdge!]!
+  pageInfo: PageInfo!
 }
 
 type Query {
   me: Me!
   user(id: ID!): User!
-  users(input: UsersInput!): UserConnection!
+  users(input: PageInput!): UserConnection!
   receiveLikeUsers: [User!]!
-  sendLikeUsers(input: UsersInput!): UserConnection!
+  sendLikeUsers(input: PageInput!): UserConnection!
+  newMessageRooms(input: PageInput!): MessageRoomConnection!
+  messageRooms(input: PageInput!): MessageRoomConnection!
 }
 
 #

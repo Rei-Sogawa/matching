@@ -60,7 +60,7 @@ const SendLikeUserItem: FC<SendLikeUserItemProps> = ({ user }) => {
 };
 
 gql`
-  query SendLikeUsers($input: UsersInput!) {
+  query SendLikeUsers($input: PageInput!) {
     sendLikeUsers(input: $input) {
       edges {
         node {

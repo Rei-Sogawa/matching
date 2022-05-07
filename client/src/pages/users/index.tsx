@@ -7,7 +7,7 @@ import { useUsersQuery } from "../../graphql/generated";
 import { AppLayout } from "../../layouts/AppLayout";
 
 gql`
-  query Users($input: UsersInput!) {
+  query Users($input: PageInput!) {
     users(input: $input) {
       edges {
         node {

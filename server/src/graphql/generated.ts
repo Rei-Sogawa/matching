@@ -43,6 +43,50 @@ export type Me = {
   photoUrls: Array<Scalars['String']>;
 };
 
+export type Message = {
+  __typename?: 'Message';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  user: User;
+};
+
+export type MessageConnection = {
+  __typename?: 'MessageConnection';
+  edges: Array<MessageEdge>;
+  pageInfo: PageInfo;
+};
+
+export type MessageEdge = {
+  __typename?: 'MessageEdge';
+  cursor: Scalars['DateTime'];
+  node: Message;
+};
+
+export type MessageRoom = {
+  __typename?: 'MessageRoom';
+  id: Scalars['ID'];
+  messages: MessageConnection;
+  user: User;
+};
+
+
+export type MessageRoomMessagesArgs = {
+  input: PageInput;
+};
+
+export type MessageRoomConnection = {
+  __typename?: 'MessageRoomConnection';
+  edges: Array<MessageRoomEdge>;
+  pageInfo: PageInfo;
+};
+
+export type MessageRoomEdge = {
+  __typename?: 'MessageRoomEdge';
+  cursor: Scalars['DateTime'];
+  node: MessageRoom;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   access: Me;
@@ -78,9 +122,22 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['DateTime']>;
+  hasNextPage?: Maybe<Scalars['Boolean']>;
+};
+
+export type PageInput = {
+  after?: InputMaybe<Scalars['DateTime']>;
+  first: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  messageRooms: MessageRoomConnection;
+  newMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
@@ -88,8 +145,18 @@ export type Query = {
 };
 
 
+export type QueryMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type QueryNewMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
 export type QuerySendLikeUsersArgs = {
-  input: UsersInput;
+  input: PageInput;
 };
 
 
@@ -99,7 +166,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  input: UsersInput;
+  input: PageInput;
 };
 
 export type SignUpInput = {
@@ -128,24 +195,13 @@ export type User = {
 export type UserConnection = {
   __typename?: 'UserConnection';
   edges: Array<UserEdge>;
-  pageInfo: UsersPageInfo;
+  pageInfo: PageInfo;
 };
 
 export type UserEdge = {
   __typename?: 'UserEdge';
   cursor: Scalars['DateTime'];
   node: User;
-};
-
-export type UsersInput = {
-  after?: InputMaybe<Scalars['DateTime']>;
-  first: Scalars['Int'];
-};
-
-export type UsersPageInfo = {
-  __typename?: 'UsersPageInfo';
-  endCursor?: Maybe<Scalars['DateTime']>;
-  hasNextPage?: Maybe<Scalars['Boolean']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -225,7 +281,15 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LikeStatus: LikeStatus;
   Me: ResolverTypeWrapper<UserDoc>;
+  Message: ResolverTypeWrapper<Omit<Message, 'user'> & { user: ResolversTypes['User'] }>;
+  MessageConnection: ResolverTypeWrapper<Omit<MessageConnection, 'edges'> & { edges: Array<ResolversTypes['MessageEdge']> }>;
+  MessageEdge: ResolverTypeWrapper<Omit<MessageEdge, 'node'> & { node: ResolversTypes['Message'] }>;
+  MessageRoom: ResolverTypeWrapper<Omit<MessageRoom, 'messages' | 'user'> & { messages: ResolversTypes['MessageConnection'], user: ResolversTypes['User'] }>;
+  MessageRoomConnection: ResolverTypeWrapper<Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversTypes['MessageRoomEdge']> }>;
+  MessageRoomEdge: ResolverTypeWrapper<Omit<MessageRoomEdge, 'node'> & { node: ResolversTypes['MessageRoom'] }>;
   Mutation: ResolverTypeWrapper<{}>;
+  PageInfo: ResolverTypeWrapper<PageInfo>;
+  PageInput: PageInput;
   Query: ResolverTypeWrapper<{}>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -233,8 +297,6 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<UserDoc>;
   UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<ResolversTypes['UserEdge']> }>;
   UserEdge: ResolverTypeWrapper<Omit<UserEdge, 'node'> & { node: ResolversTypes['User'] }>;
-  UsersInput: UsersInput;
-  UsersPageInfo: ResolverTypeWrapper<UsersPageInfo>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -244,7 +306,15 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Me: UserDoc;
+  Message: Omit<Message, 'user'> & { user: ResolversParentTypes['User'] };
+  MessageConnection: Omit<MessageConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageEdge']> };
+  MessageEdge: Omit<MessageEdge, 'node'> & { node: ResolversParentTypes['Message'] };
+  MessageRoom: Omit<MessageRoom, 'messages' | 'user'> & { messages: ResolversParentTypes['MessageConnection'], user: ResolversParentTypes['User'] };
+  MessageRoomConnection: Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageRoomEdge']> };
+  MessageRoomEdge: Omit<MessageRoomEdge, 'node'> & { node: ResolversParentTypes['MessageRoom'] };
   Mutation: {};
+  PageInfo: PageInfo;
+  PageInput: PageInput;
   Query: {};
   SignUpInput: SignUpInput;
   String: Scalars['String'];
@@ -252,8 +322,6 @@ export type ResolversParentTypes = ResolversObject<{
   User: UserDoc;
   UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserEdge']> };
   UserEdge: Omit<UserEdge, 'node'> & { node: ResolversParentTypes['User'] };
-  UsersInput: UsersInput;
-  UsersPageInfo: UsersPageInfo;
 }>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -271,6 +339,45 @@ export type MeResolvers<ContextType = Context, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type MessageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = ResolversObject<{
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MessageConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageConnection'] = ResolversParentTypes['MessageConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['MessageEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MessageEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageEdge'] = ResolversParentTypes['MessageEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MessageRoomResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageRoom'] = ResolversParentTypes['MessageRoom']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  messages?: Resolver<ResolversTypes['MessageConnection'], ParentType, ContextType, RequireFields<MessageRoomMessagesArgs, 'input'>>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MessageRoomConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageRoomConnection'] = ResolversParentTypes['MessageRoomConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['MessageRoomEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MessageRoomEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageRoomEdge'] = ResolversParentTypes['MessageRoomEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   access?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   like?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLikeArgs, 'userId'>>;
@@ -280,8 +387,16 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
 }>;
 
+export type PageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
+  endCursor?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryMessageRoomsArgs, 'input'>>;
+  newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryNewMessageRoomsArgs, 'input'>>;
   receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
@@ -300,7 +415,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 
 export type UserConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserConnection'] = ResolversParentTypes['UserConnection']> = ResolversObject<{
   edges?: Resolver<Array<ResolversTypes['UserEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['UsersPageInfo'], ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -310,20 +425,20 @@ export type UserEdgeResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type UsersPageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsersPageInfo'] = ResolversParentTypes['UsersPageInfo']> = ResolversObject<{
-  endCursor?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type Resolvers<ContextType = Context> = ResolversObject<{
   DateTime?: GraphQLScalarType;
   Me?: MeResolvers<ContextType>;
+  Message?: MessageResolvers<ContextType>;
+  MessageConnection?: MessageConnectionResolvers<ContextType>;
+  MessageEdge?: MessageEdgeResolvers<ContextType>;
+  MessageRoom?: MessageRoomResolvers<ContextType>;
+  MessageRoomConnection?: MessageRoomConnectionResolvers<ContextType>;
+  MessageRoomEdge?: MessageRoomEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;
-  UsersPageInfo?: UsersPageInfoResolvers<ContextType>;
 }>;
 

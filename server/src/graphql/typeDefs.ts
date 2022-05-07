@@ -24,6 +24,39 @@ type Me {
   photoUrls: [String!]!
 }
 
+type Message {
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  user: User!
+}
+
+type MessageConnection {
+  edges: [MessageEdge!]!
+  pageInfo: PageInfo!
+}
+
+type MessageEdge {
+  cursor: DateTime!
+  node: Message!
+}
+
+type MessageRoom {
+  id: ID!
+  messages(input: PageInput!): MessageConnection!
+  user: User!
+}
+
+type MessageRoomConnection {
+  edges: [MessageRoomEdge!]!
+  pageInfo: PageInfo!
+}
+
+type MessageRoomEdge {
+  cursor: DateTime!
+  node: MessageRoom!
+}
+
 type Mutation {
   access: Me!
   like(userId: ID!): User!
@@ -33,12 +66,24 @@ type Mutation {
   updateUser(input: UpdateUserInput!): Me!
 }
 
+type PageInfo {
+  endCursor: DateTime
+  hasNextPage: Boolean
+}
+
+input PageInput {
+  after: DateTime
+  first: Int!
+}
+
 type Query {
   me: Me!
+  messageRooms(input: PageInput!): MessageRoomConnection!
+  newMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!
-  sendLikeUsers(input: UsersInput!): UserConnection!
+  sendLikeUsers(input: PageInput!): UserConnection!
   user(id: ID!): User!
-  users(input: UsersInput!): UserConnection!
+  users(input: PageInput!): UserConnection!
 }
 
 input SignUpInput {
@@ -65,21 +110,11 @@ type User {
 
 type UserConnection {
   edges: [UserEdge!]!
-  pageInfo: UsersPageInfo!
+  pageInfo: PageInfo!
 }
 
 type UserEdge {
   cursor: DateTime!
   node: User!
-}
-
-input UsersInput {
-  after: DateTime
-  first: Int!
-}
-
-type UsersPageInfo {
-  endCursor: DateTime
-  hasNextPage: Boolean
 }
 `;
