@@ -69,7 +69,8 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   toIndex() {
     const { id, ref, ...data } = this;
     const { gender, age, livingPref, lastAccessedAt } = data;
-    return { id, gender, age, livingPref, lastAccessedAt } as UserIndexData;
+    const index: UserIndexData = { id, gender, age, livingPref, lastAccessedAt };
+    return index;
   }
 
   access() {

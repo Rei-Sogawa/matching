@@ -61,7 +61,8 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   toIndex() {
     const { id, ref, ...data } = this;
     const { senderId, receiverId, status, createdAt } = data;
-    return { id, senderId, receiverId, status, createdAt } as LikeIndexData;
+    const index: LikeIndexData = { id, senderId, receiverId, status, createdAt };
+    return index;
   }
 
   skip() {
