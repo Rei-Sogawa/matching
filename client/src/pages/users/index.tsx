@@ -44,7 +44,7 @@ export const UsersPage: FC = () => {
   return (
     <AppLayout header={null} footer={<AppMenu />}>
       <Stack spacing="8">
-        <Flex justifyContent="end" px={{ base: "8", md: "10" }}>
+        <Flex justifyContent="end" px={{ base: "6", md: "12" }}>
           <IconButton isRound boxShadow="md" aria-label="Search" icon={<BiSearch fontSize="20px" />} />
         </Flex>
 
