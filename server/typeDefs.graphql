@@ -48,7 +48,7 @@ type Message {
 
 type MessageRoom {
   id: ID!
-  user: User!
+  partner: User!
   messages(input: PageInput!): MessageConnection!
 }
 

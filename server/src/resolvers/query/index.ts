@@ -92,4 +92,28 @@ export const Query: Resolvers["Query"] = {
       },
     };
   },
+
+  newMessageRooms: async (_parent, args, context) => {
+    authorize(context);
+
+    const { input } = args;
+    const { uid } = context.decodedIdToken;
+    const { messageRoomsCollection } = context.collections;
+
+    const messageRooms = await messageRoomsCollection.paginatedNewMessageRooms({
+      first: input.first,
+      after: input.after,
+      userId: uid,
+    });
+
+    const edges = messageRooms.map((mr) => ({ node: mr, cursor: mr.createdAt }));
+
+    return {
+      edges,
+      pageInfo: {
+        endCursor: last(edges)?.cursor,
+        hasNextPage: input.first === edges.length,
+      },
+    };
+  },
 };

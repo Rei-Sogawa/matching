@@ -1,5 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { UserDoc } from '../fire/docs/user';
+import { MessageRoomDoc } from '../fire/docs/message-room';
+import { MessageDoc } from '../fire/docs/message';
 import { Context } from '../context';
 import { Timestamp } from 'firebase-admin/firestore'
 export type Maybe<T> = T | null;
@@ -67,7 +69,7 @@ export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
   messages: MessageConnection;
-  user: User;
+  partner: User;
 };
 
 
@@ -281,10 +283,10 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LikeStatus: LikeStatus;
   Me: ResolverTypeWrapper<UserDoc>;
-  Message: ResolverTypeWrapper<Omit<Message, 'user'> & { user: ResolversTypes['User'] }>;
+  Message: ResolverTypeWrapper<MessageDoc>;
   MessageConnection: ResolverTypeWrapper<Omit<MessageConnection, 'edges'> & { edges: Array<ResolversTypes['MessageEdge']> }>;
   MessageEdge: ResolverTypeWrapper<Omit<MessageEdge, 'node'> & { node: ResolversTypes['Message'] }>;
-  MessageRoom: ResolverTypeWrapper<Omit<MessageRoom, 'messages' | 'user'> & { messages: ResolversTypes['MessageConnection'], user: ResolversTypes['User'] }>;
+  MessageRoom: ResolverTypeWrapper<MessageRoomDoc>;
   MessageRoomConnection: ResolverTypeWrapper<Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversTypes['MessageRoomEdge']> }>;
   MessageRoomEdge: ResolverTypeWrapper<Omit<MessageRoomEdge, 'node'> & { node: ResolversTypes['MessageRoom'] }>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -306,10 +308,10 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Me: UserDoc;
-  Message: Omit<Message, 'user'> & { user: ResolversParentTypes['User'] };
+  Message: MessageDoc;
   MessageConnection: Omit<MessageConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageEdge']> };
   MessageEdge: Omit<MessageEdge, 'node'> & { node: ResolversParentTypes['Message'] };
-  MessageRoom: Omit<MessageRoom, 'messages' | 'user'> & { messages: ResolversParentTypes['MessageConnection'], user: ResolversParentTypes['User'] };
+  MessageRoom: MessageRoomDoc;
   MessageRoomConnection: Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageRoomEdge']> };
   MessageRoomEdge: Omit<MessageRoomEdge, 'node'> & { node: ResolversParentTypes['MessageRoom'] };
   Mutation: {};
@@ -362,7 +364,7 @@ export type MessageEdgeResolvers<ContextType = Context, ParentType extends Resol
 export type MessageRoomResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageRoom'] = ResolversParentTypes['MessageRoom']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   messages?: Resolver<ResolversTypes['MessageConnection'], ParentType, ContextType, RequireFields<MessageRoomMessagesArgs, 'input'>>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  partner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

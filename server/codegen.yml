@@ -16,6 +16,8 @@ generates:
       mappers:
         Me: ../fire/docs/user#UserDoc
         User: ../fire/docs/user#UserDoc
+        MessageRoom: ../fire/docs/message-room#MessageRoomDoc
+        Message: ../fire/docs/message#MessageDoc
   src/graphql/typeDefs.ts:
     plugins:
       - "typescript-type-defs.js"

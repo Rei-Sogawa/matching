@@ -44,7 +44,7 @@ type MessageEdge {
 type MessageRoom {
   id: ID!
   messages(input: PageInput!): MessageConnection!
-  user: User!
+  partner: User!
 }
 
 type MessageRoomConnection {

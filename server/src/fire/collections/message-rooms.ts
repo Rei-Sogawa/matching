@@ -19,8 +19,46 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
   }) {
     return after
       ? this.query((ref) =>
-          ref.orderBy("createdAt", "desc").where("userIds", "array-contains", userId).startAfter(after).limit(first)
+          ref
+            .orderBy("createdAt", "desc")
+            .where("userIds", "array-contains", userId)
+            .where("open", "==", true)
+            .startAfter(after)
+            .limit(first)
         )
-      : this.query((ref) => ref.orderBy("createdAt", "desc").where("userIds", "array-contains", userId).limit(first));
+      : this.query((ref) =>
+          ref
+            .orderBy("createdAt", "desc")
+            .where("userIds", "array-contains", userId)
+            .where("open", "==", true)
+            .limit(first)
+        );
+  }
+
+  async paginatedNewMessageRooms({
+    first,
+    after,
+    userId,
+  }: {
+    first: number;
+    after: Timestamp | null | undefined;
+    userId: string;
+  }) {
+    return after
+      ? this.query((ref) =>
+          ref
+            .orderBy("createdAt", "desc")
+            .where("userIds", "array-contains", userId)
+            .where("open", "==", false)
+            .startAfter(after)
+            .limit(first)
+        )
+      : this.query((ref) =>
+          ref
+            .orderBy("createdAt", "desc")
+            .where("userIds", "array-contains", userId)
+            .where("open", "==", false)
+            .limit(first)
+        );
   }
 }
