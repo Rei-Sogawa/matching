@@ -202,6 +202,9 @@ const useSubscribeMessage = (messageRoomId: string) => {
                 };
                 return { ...existing, edges: [edge, ...existing.edges] };
               },
+              lastMessage(_existing, { toReference }) {
+                return toReference(data.message);
+              },
             },
           });
         });
