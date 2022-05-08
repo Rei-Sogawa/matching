@@ -5,7 +5,7 @@ const { printSchema } = require("graphql");
 module.exports = {
   plugin: (schema, _documents, _config) => {
     return [
-      'import { gql } from "apollo-server-express";',
+      'import { gql } from "apollo-server";',
       "",
       "export const typeDefs = gql`",
       printSchema(schema),

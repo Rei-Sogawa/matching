@@ -1,5 +1,4 @@
-import { Config } from "apollo-server-core";
-import { ExpressContext } from "apollo-server-express";
+import { Config } from "apollo-server";
 import * as admin from "firebase-admin";
 import { DecodedIdToken } from "firebase-admin/auth";
 
@@ -14,7 +13,7 @@ export type ServerContext = {
   collections: Collections;
 };
 
-export const serverContext: Config<ExpressContext>["context"] = async ({ req }): Promise<ServerContext> => {
+export const serverContext: Config["context"] = async ({ req }): Promise<ServerContext> => {
   const auth = getAuth();
   const db = getDb();
   const storage = getStorage();
