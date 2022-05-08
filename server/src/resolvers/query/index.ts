@@ -154,4 +154,18 @@ export const Query: Resolvers["Query"] = {
 
     return messageRoom;
   },
+
+  message: async (_parent, args, context) => {
+    authorize(context);
+
+    const { input } = args;
+    const { uid } = context.decodedIdToken;
+    const { messageRoomsCollection } = context.collections;
+
+    const messageRoom = await messageRoomsCollection.get(input.messageRoomId);
+
+    if (!messageRoom.isMember(uid)) throw new Error("not messageRoom member");
+
+    return messageRoom.messages.get(input.messageId);
+  },
 };

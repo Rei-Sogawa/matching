@@ -4,6 +4,7 @@ import { z } from "zod";
 import { FireDocument } from "../lib/fire-document";
 
 const MessageSchema = z.object({
+  __id: z.string().min(1),
   userId: z.string().min(1),
   content: z.string().min(1),
   createdAt: z.instanceof(Timestamp),
@@ -22,6 +23,7 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
       id: docRef.id,
       ref: docRef,
       data: () => ({
+        __id: docRef.id,
         userId,
         content,
         createdAt,
@@ -29,6 +31,7 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
     });
   }
 
+  __id!: string;
   userId!: string;
   content!: string;
   createdAt!: Timestamp;

@@ -71,6 +71,11 @@ export type MessageEdge = {
   node: Message;
 };
 
+export type MessageInput = {
+  messageId: Scalars['String'];
+  messageRoomId: Scalars['String'];
+};
+
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
@@ -151,6 +156,7 @@ export type PageInput = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  message: Message;
   messageRoom: MessageRoom;
   messageRooms: MessageRoomConnection;
   newMessageRooms: MessageRoomConnection;
@@ -158,6 +164,11 @@ export type Query = {
   sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
+};
+
+
+export type QueryMessageArgs = {
+  input: MessageInput;
 };
 
 
@@ -193,11 +204,6 @@ export type QueryUsersArgs = {
 export type SignUpInput = {
   email: Scalars['String'];
   password: Scalars['String'];
-};
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  newMessage: Message;
 };
 
 export type UpdateUserInput = {
@@ -312,6 +318,7 @@ export type ResolversTypes = ResolversObject<{
   Message: ResolverTypeWrapper<MessageDoc>;
   MessageConnection: ResolverTypeWrapper<Omit<MessageConnection, 'edges'> & { edges: Array<ResolversTypes['MessageEdge']> }>;
   MessageEdge: ResolverTypeWrapper<Omit<MessageEdge, 'node'> & { node: ResolversTypes['Message'] }>;
+  MessageInput: MessageInput;
   MessageRoom: ResolverTypeWrapper<MessageRoomDoc>;
   MessageRoomConnection: ResolverTypeWrapper<Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversTypes['MessageRoomEdge']> }>;
   MessageRoomEdge: ResolverTypeWrapper<Omit<MessageRoomEdge, 'node'> & { node: ResolversTypes['MessageRoom'] }>;
@@ -321,7 +328,6 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   SignUpInput: SignUpInput;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Subscription: ResolverTypeWrapper<{}>;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserDoc>;
   UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<ResolversTypes['UserEdge']> }>;
@@ -339,6 +345,7 @@ export type ResolversParentTypes = ResolversObject<{
   Message: MessageDoc;
   MessageConnection: Omit<MessageConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageEdge']> };
   MessageEdge: Omit<MessageEdge, 'node'> & { node: ResolversParentTypes['Message'] };
+  MessageInput: MessageInput;
   MessageRoom: MessageRoomDoc;
   MessageRoomConnection: Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageRoomEdge']> };
   MessageRoomEdge: Omit<MessageRoomEdge, 'node'> & { node: ResolversParentTypes['MessageRoom'] };
@@ -348,7 +355,6 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   SignUpInput: SignUpInput;
   String: Scalars['String'];
-  Subscription: {};
   UpdateUserInput: UpdateUserInput;
   User: UserDoc;
   UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserEdge']> };
@@ -429,6 +435,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryMessageArgs, 'input'>>;
   messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<QueryMessageRoomArgs, 'id'>>;
   messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryMessageRoomsArgs, 'input'>>;
   newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryNewMessageRoomsArgs, 'input'>>;
@@ -436,10 +443,6 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
-}>;
-
-export type SubscriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  newMessage?: SubscriptionResolver<ResolversTypes['Message'], "newMessage", ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -477,7 +480,6 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Subscription?: SubscriptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;

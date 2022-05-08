@@ -4,6 +4,7 @@ import { LikeIndexCollection } from "./collections/like-index";
 import { LikesCollection } from "./collections/likes";
 import { MessageRoomEventsCollection } from "./collections/message-room-events";
 import { MessageRoomsCollection } from "./collections/message-rooms";
+import { MessagesGroupCollection } from "./collections/messages-group";
 import { UserIndexCollection } from "./collections/user-index";
 import { UsersCollection } from "./collections/users";
 
@@ -11,6 +12,7 @@ export const createCollections = (db: Firestore) => {
   const usersRef = db.collection("users");
   const likesRef = db.collection("likes");
   const messageRoomsRef = db.collection("messageRooms");
+  const messagesGroupRef = db.collectionGroup("messages");
 
   const userIndexRef = db.collection("userIndex");
   const likeIndexRef = db.collection("likeIndex");
@@ -20,6 +22,7 @@ export const createCollections = (db: Firestore) => {
   const usersCollection = new UsersCollection(usersRef);
   const likesCollection = new LikesCollection(likesRef);
   const messageRoomsCollection = new MessageRoomsCollection(messageRoomsRef);
+  const messagesGroupCollection = new MessagesGroupCollection(messagesGroupRef);
 
   const userIndexCollection = new UserIndexCollection(userIndexRef);
   const likeIndexCollection = new LikeIndexCollection(likeIndexRef);
@@ -30,6 +33,7 @@ export const createCollections = (db: Firestore) => {
     usersCollection,
     likesCollection,
     messageRoomsCollection,
+    messagesGroupCollection,
     userIndexCollection,
     likeIndexCollection,
     messageRoomEventsCollection,

@@ -3,6 +3,7 @@ import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { FireDocument } from "../lib/fire-document";
 
 export type MessageRoomEventData = {
+  messageRoomId: string;
   messageId: string;
   action: "CREATE";
   createdAt: Timestamp;
@@ -11,7 +12,7 @@ export type MessageRoomEventData = {
 export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> implements MessageRoomEventData {
   static create(
     collection: CollectionReference<MessageRoomEventData>,
-    { messageId, action }: Pick<MessageRoomEventData, "messageId" | "action">
+    { messageRoomId, messageId, action }: Pick<MessageRoomEventData, "messageRoomId" | "messageId" | "action">
   ) {
     const docRef = collection.doc();
     const createdAt = Timestamp.now();
@@ -19,6 +20,7 @@ export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> impl
       id: docRef.id,
       ref: docRef,
       data: () => ({
+        messageRoomId,
         messageId,
         action,
         createdAt,
@@ -26,6 +28,7 @@ export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> impl
     });
   }
 
+  messageRoomId!: string;
   messageId!: string;
   action!: "CREATE";
   createdAt!: Timestamp;

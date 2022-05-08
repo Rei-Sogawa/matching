@@ -47,6 +47,11 @@ type MessageEdge {
   node: Message!
 }
 
+input MessageInput {
+  messageId: String!
+  messageRoomId: String!
+}
+
 type MessageRoom {
   id: ID!
   lastMessage: Message!
@@ -86,6 +91,7 @@ input PageInput {
 
 type Query {
   me: Me!
+  message(input: MessageInput!): Message!
   messageRoom(id: ID!): MessageRoom!
   messageRooms(input: PageInput!): MessageRoomConnection!
   newMessageRooms(input: PageInput!): MessageRoomConnection!
@@ -98,10 +104,6 @@ type Query {
 input SignUpInput {
   email: String!
   password: String!
-}
-
-type Subscription {
-  newMessage: Message!
 }
 
 input UpdateUserInput {

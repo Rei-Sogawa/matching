@@ -120,6 +120,7 @@ export const Mutation: Resolvers["Mutation"] = {
 
     await messageRoom.touch().save();
     await MessageRoomEventDoc.create(messageRoomEventsCollection.ref, {
+      messageRoomId: messageRoom.id,
       messageId: message.id,
       action: "CREATE",
     }).save();
