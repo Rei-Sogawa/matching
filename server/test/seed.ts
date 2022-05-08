@@ -125,6 +125,7 @@ const seed = async () => {
   }
 
   const like = await LikeDoc.create(likesCollection.ref, { senderId: nao.id, receiverId: megu.id }).match().save();
+  await likeIndexCollection.add(like.toIndex());
   const messageRoom = await MessageRoomDoc.create(messageRoomsCollection.ref, {
     likeId: like.id,
     userIds: [like.senderId, like.receiverId],
@@ -132,7 +133,7 @@ const seed = async () => {
     .touch()
     .save();
 
-  for (const i of Array.from({ length: 50 }).map((_, i) => i)) {
+  for (const i of Array.from({ length: 10 }).map((_, i) => i)) {
     const message = MessageDoc.create(messageRoom.messages.ref, {
       userId: messageRoom.userIds[i % 2],
       content: i.toString(),

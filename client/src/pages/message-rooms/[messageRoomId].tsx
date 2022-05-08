@@ -129,13 +129,13 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
     </AppFooter>
   );
 
-  const lastMessage = useMemo(() => head(messages), [messages]);
+  const lastMessageId = useMemo(() => head(messages)?.id ?? "", [messages]);
 
   const mainRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     assertDefined(mainRef.current);
     mainRef.current.scrollTo({ top: mainRef.current.scrollHeight });
-  }, [lastMessage]);
+  }, [lastMessageId]);
 
   const onClick = async () => {
     assertDefined(mainRef.current);
