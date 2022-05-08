@@ -1,10 +1,11 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Avatar, Box, HStack, IconButton, Stack } from "@chakra-ui/react";
+import { Avatar, Box, Button, HStack, IconButton, Stack } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
-import { FC, FormEventHandler, useEffect } from "react";
+import { createRef, FC, FormEventHandler, useEffect, useRef } from "react";
 import { BiSend } from "react-icons/bi";
 import { useParams } from "react-router-dom";
+import useLockBodyScroll from "react-use/lib/useLockBodyScroll";
 
 import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/common/BackButton";
@@ -19,6 +20,7 @@ import { useTextInput } from "../../hooks/useTextInput";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMain } from "../../layouts/AppMain";
 import { routes } from "../../routes";
 import { assertDefined } from "../../utils/assert-defined";
 
@@ -127,13 +129,24 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
     </AppFooter>
   );
 
+  const mainRef = createRef<HTMLDivElement>();
+  useLockBodyScroll(true, mainRef);
+
   return (
     <AppLayout header={header} footer={footer}>
-      <Stack>
-        {messages.map((m) =>
-          m.mine ? <MyMessageItem key={m.id} message={m} /> : <PartnerMessageItem key={m.id} message={m} />
-        )}
-      </Stack>
+      <AppMain ref={mainRef}>
+        <Stack direction="column-reverse">
+          {messages.map((m) =>
+            m.mine ? <MyMessageItem key={m.id} message={m} /> : <PartnerMessageItem key={m.id} message={m} />
+          )}
+
+          {hasNextPage && (
+            <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+              もっと見る
+            </Button>
+          )}
+        </Stack>
+      </AppMain>
     </AppLayout>
   );
 };
@@ -211,25 +224,29 @@ gql`
   }
 `;
 
-const QUERY_SIZE = 10;
+const QUERY_SIZE = 20;
 
 export const MessageRoomPage: FC = () => {
   const { messageRoomId } = useParams();
   assertDefined(messageRoomId);
 
-  const { data, refetch } = useMessageRoomPageQuery({ variables: { id: messageRoomId, input: { first: QUERY_SIZE } } });
+  const { data, fetchMore } = useMessageRoomPageQuery({
+    variables: { id: messageRoomId, input: { first: QUERY_SIZE } },
+  });
 
   useSubscribeMessage(messageRoomId);
 
   if (!data) return null;
 
   const partner = data.messageRoom.partner;
-  const messages = data.messageRoom.messages.edges.map((e) => e.node).reverse();
+  const messages = data.messageRoom.messages.edges.map((e) => e.node);
   const hasNextPage = data.messageRoom.messages.pageInfo.hasNextPage ?? false;
   const onLoadMore = async () => {
-    await refetch({
-      id: messageRoomId,
-      input: { first: QUERY_SIZE, after: data.messageRoom.messages.pageInfo.endCursor },
+    await fetchMore({
+      variables: {
+        id: messageRoomId,
+        input: { first: QUERY_SIZE, after: data.messageRoom.messages.pageInfo.endCursor },
+      },
     });
   };
 
