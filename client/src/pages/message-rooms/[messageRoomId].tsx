@@ -2,7 +2,8 @@ import { gql, useApolloClient } from "@apollo/client";
 import { Avatar, Box, Button, HStack, IconButton, Stack } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
-import { createRef, FC, FormEventHandler, useEffect, useRef } from "react";
+import { head } from "lodash-es";
+import { createRef, FC, FormEventHandler, useEffect, useMemo, useRef } from "react";
 import { BiSend } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import useLockBodyScroll from "react-use/lib/useLockBodyScroll";
@@ -129,8 +130,20 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
     </AppFooter>
   );
 
-  const mainRef = createRef<HTMLDivElement>();
-  useLockBodyScroll(true, mainRef);
+  const lastMessage = useMemo(() => head(messages), [messages]);
+
+  const mainRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    assertDefined(mainRef.current);
+    mainRef.current.scrollTo({ top: mainRef.current.scrollHeight });
+  }, [lastMessage]);
+
+  const onClick = async () => {
+    assertDefined(mainRef.current);
+    const prevHeight = mainRef.current.scrollHeight;
+    await onLoadMore();
+    mainRef.current.scrollTo({ top: mainRef.current.scrollHeight - prevHeight });
+  };
 
   return (
     <AppLayout header={header} footer={footer}>
@@ -141,7 +154,7 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
           )}
 
           {hasNextPage && (
-            <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+            <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onClick}>
               もっと見る
             </Button>
           )}
