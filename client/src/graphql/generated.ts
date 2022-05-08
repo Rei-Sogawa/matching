@@ -66,6 +66,11 @@ export type MessageEdge = {
   node: Message;
 };
 
+export type MessageInput = {
+  messageId: Scalars['String'];
+  messageRoomId: Scalars['String'];
+};
+
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
@@ -146,6 +151,7 @@ export type PageInput = {
 export type Query = {
   __typename?: 'Query';
   me: Me;
+  message: Message;
   messageRoom: MessageRoom;
   messageRooms: MessageRoomConnection;
   newMessageRooms: MessageRoomConnection;
@@ -153,6 +159,11 @@ export type Query = {
   sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
+};
+
+
+export type QueryMessageArgs = {
+  input: MessageInput;
 };
 
 
@@ -188,11 +199,6 @@ export type QueryUsersArgs = {
 export type SignUpInput = {
   email: Scalars['String'];
   password: Scalars['String'];
-};
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  newMessage: Message;
 };
 
 export type UpdateUserInput = {
@@ -273,6 +279,13 @@ export type CreateMessageMutationVariables = Exact<{
 
 
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } };
+
+export type MessageQueryVariables = Exact<{
+  input: MessageInput;
+}>;
+
+
+export type MessageQuery = { __typename?: 'Query', message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } };
 
 export type MessageRoomPageQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -646,6 +659,42 @@ export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
+export const MessageDocument = gql`
+    query Message($input: MessageInput!) {
+  message(input: $input) {
+    id
+    ...MessageItem
+  }
+}
+    ${MessageItemFragmentDoc}`;
+
+/**
+ * __useMessageQuery__
+ *
+ * To run a query within a React component, call `useMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMessageQuery(baseOptions: Apollo.QueryHookOptions<MessageQuery, MessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
+      }
+export function useMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageQuery, MessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
+        }
+export type MessageQueryHookResult = ReturnType<typeof useMessageQuery>;
+export type MessageLazyQueryHookResult = ReturnType<typeof useMessageLazyQuery>;
+export type MessageQueryResult = Apollo.QueryResult<MessageQuery, MessageQueryVariables>;
 export const MessageRoomPageDocument = gql`
     query MessageRoomPage($id: ID!, $input: PageInput!) {
   messageRoom(id: $id) {

@@ -1,13 +1,20 @@
-import { gql } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Avatar, Box, HStack, IconButton, Stack } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { FC, FormEventHandler } from "react";
+import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
+import { FC, FormEventHandler, useEffect } from "react";
 import { BiSend } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 
 import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/common/BackButton";
-import { MessageItemFragment, useCreateMessageMutation, useMessageRoomPageQuery, User } from "../../graphql/generated";
+import {
+  MessageItemFragment,
+  useCreateMessageMutation,
+  useMessageLazyQuery,
+  useMessageRoomPageQuery,
+  User,
+} from "../../graphql/generated";
 import { useTextInput } from "../../hooks/useTextInput";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
@@ -132,6 +139,53 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
 };
 
 gql`
+  query Message($input: MessageInput!) {
+    message(input: $input) {
+      id
+      ...MessageItem
+    }
+  }
+`;
+
+const useSubscribeMessage = (messageRoomId: string) => {
+  const client = useApolloClient();
+
+  const [fetch] = useMessageLazyQuery();
+
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(getFirestore(), "messageRoomEvents"),
+        where("messageRoomId", "==", messageRoomId),
+        where("createdAt", ">=", Timestamp.now()),
+        orderBy("createdAt", "desc")
+      ),
+      (snap) => {
+        snap.docChanges().forEach(async (dc) => {
+          const messageRoomId = dc.doc.data().messageRoomId;
+          const messageId = dc.doc.data().messageId;
+          const { data } = await fetch({ variables: { input: { messageRoomId, messageId } } });
+          if (!data) return;
+          client.cache.modify({
+            id: client.cache.identify({ __typename: "MessageRoom", id: messageRoomId }),
+            fields: {
+              messages(existing, { toReference }) {
+                const edge = {
+                  __typename: "MessageEdge",
+                  node: toReference(data.message),
+                  cursor: data.message.createdAt,
+                };
+                return { ...existing, edges: [edge, ...existing.edges] };
+              },
+            },
+          });
+        });
+      }
+    );
+  }, []);
+};
+
+gql`
   query MessageRoomPage($id: ID!, $input: PageInput!) {
     messageRoom(id: $id) {
       id
@@ -164,6 +218,8 @@ export const MessageRoomPage: FC = () => {
   assertDefined(messageRoomId);
 
   const { data, refetch } = useMessageRoomPageQuery({ variables: { id: messageRoomId, input: { first: QUERY_SIZE } } });
+
+  useSubscribeMessage(messageRoomId);
 
   if (!data) return null;
 

@@ -44,6 +44,17 @@ const getClient = (token?: string) => {
           },
         },
       },
+      MessageRoom: {
+        fields: {
+          messages: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+        },
+      },
     },
   });
 
