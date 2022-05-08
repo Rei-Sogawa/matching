@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
-import { Avatar, Box, HStack, IconButton } from "@chakra-ui/react";
+import { Avatar, Box, HStack, IconButton, Stack } from "@chakra-ui/react";
+import { format } from "date-fns";
 import { FC, FormEventHandler } from "react";
 import { BiSend } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 
 import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/common/BackButton";
-import { MessageItemFragment, useMessageRoomPageQuery, User } from "../../graphql/generated";
+import { MessageItemFragment, useCreateMessageMutation, useMessageRoomPageQuery, User } from "../../graphql/generated";
 import { useTextInput } from "../../hooks/useTextInput";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
@@ -27,12 +28,54 @@ gql`
   }
 `;
 
-const MyMessageItem: FC = () => {
-  return <Box></Box>;
+type MessageItemProps = { message: MessageItemFragment };
+
+const MyMessageItem: FC<MessageItemProps> = ({ message }) => {
+  return (
+    <HStack alignSelf="end">
+      <Box alignSelf="end" fontSize="sm">
+        {format(new Date(message.createdAt), "HH:mm")}
+      </Box>
+      <Box px="3" py="2" rounded="md" bg="green.200" fontWeight="bold" whiteSpace="pre-wrap">
+        {message.content}
+      </Box>
+    </HStack>
+  );
 };
 
-const PartnerMessageItem: FC = () => {
-  return <Box></Box>;
+type PartnerMessageItemProps = { message: MessageItemFragment };
+
+const PartnerMessageItem: FC<PartnerMessageItemProps> = ({ message }) => {
+  return (
+    <HStack alignSelf="start">
+      <Avatar alignSelf="end" size="sm" src={message.user.topPhotoUrl ?? undefined} />
+      <Box px="3" py="2" rounded="md" bg="gray.200" fontWeight="bold" whiteSpace="pre-wrap">
+        {message.content}
+      </Box>
+      <Box alignSelf="end" fontSize="sm">
+        {format(new Date(message.createdAt), "HH:mm")}
+      </Box>
+    </HStack>
+  );
+};
+
+gql`
+  mutation CreateMessage($input: CreateMessageInput!) {
+    createMessage(input: $input) {
+      id
+      ...MessageItem
+    }
+  }
+`;
+
+const useCreateMessage = (messageRoomId: string) => {
+  const [mutate] = useCreateMessageMutation();
+
+  const createMessage = async (content: string) => {
+    await mutate({ variables: { input: { messageRoomId, content } } });
+  };
+
+  return { createMessage };
 };
 
 type MessageRoomPageTemplateProps = {
@@ -53,11 +96,16 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
     </AppHeader>
   );
 
+  const { messageRoomId } = useParams();
+  assertDefined(messageRoomId);
+
+  const { createMessage } = useCreateMessage(messageRoomId);
+
   const [input, reset] = useTextInput();
 
-  const onSubmit: FormEventHandler = (e) => {
+  const onSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
-    console.log(input.value);
+    await createMessage(input.value);
     reset();
   };
 
@@ -66,40 +114,22 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
       <form onSubmit={onSubmit}>
         <HStack>
           <AutoResizeTextarea minRows={2} maxRows={4} isRequired {...input} />
-          <IconButton type="submit" h="16" variant="ghost" aria-label="send" icon={<BiSend fontSize="28px" />} />
+          <IconButton type="submit" h="16" aria-label="send" icon={<BiSend fontSize="28px" />} />
         </HStack>
       </form>
     </AppFooter>
   );
 
-  return <AppLayout header={header} footer={footer}></AppLayout>;
+  return (
+    <AppLayout header={header} footer={footer}>
+      <Stack>
+        {messages.map((m) =>
+          m.mine ? <MyMessageItem key={m.id} message={m} /> : <PartnerMessageItem key={m.id} message={m} />
+        )}
+      </Stack>
+    </AppLayout>
+  );
 };
-
-gql`
-  query MessageRoomPage($id: ID!, $input: PageInput!) {
-    messageRoom(id: $id) {
-      id
-      partner {
-        id
-        nickName
-        topPhotoUrl
-      }
-      messages(input: $input) {
-        edges {
-          node {
-            id
-            ...MessageItem
-          }
-          cursor
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
 
 const QUERY_SIZE = 10;
 
@@ -112,7 +142,7 @@ export const MessageRoomPage: FC = () => {
   if (!data) return null;
 
   const partner = data.messageRoom.partner;
-  const messages = data.messageRoom.messages.edges.map((e) => e.node);
+  const messages = data.messageRoom.messages.edges.map((e) => e.node).reverse();
   const hasNextPage = data.messageRoom.messages.pageInfo.hasNextPage ?? false;
   const onLoadMore = async () => {
     await refetch({

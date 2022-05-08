@@ -109,20 +109,23 @@ type MessageRoomItemProps = {
 
 const MessageRoomItem: FC<MessageRoomItemProps> = ({ messageRoom }) => {
   return (
-    <HStack spacing="4">
-      <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
-      <Box>
-        <Flex justifyContent="space-between">
-          <AppLink to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}>
+    <AppLink
+      to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}
+      _hover={{ textDecoration: "none" }}
+    >
+      <HStack spacing="4">
+        <Avatar src={head(messageRoom.partner.photoUrls)} size="lg" />
+        <Box flex="1">
+          <Flex justifyContent="space-between">
             <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
-          </AppLink>
-          <Box color="gray.500">{format(new Date(messageRoom.lastMessage.createdAt), "yyyy/MM/dd")}</Box>
-        </Flex>
-        <Box color="gray.500" noOfLines={1}>
-          {messageRoom.lastMessage?.content}
+            <Box color="gray.500">{format(new Date(messageRoom.lastMessage.createdAt), "yyyy/MM/dd")}</Box>
+          </Flex>
+          <Box color="gray.500" noOfLines={1}>
+            {messageRoom.lastMessage?.content}
+          </Box>
         </Box>
-      </Box>
-    </HStack>
+      </HStack>
+    </AppLink>
   );
 };
 

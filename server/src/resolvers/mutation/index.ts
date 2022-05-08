@@ -115,6 +115,8 @@ export const Mutation: Resolvers["Mutation"] = {
     const messageRoom = await messageRoomsCollection.get(messageRoomId);
     if (!messageRoom.isMember(uid)) throw new Error("not messageRoom member");
 
+    await messageRoom.touch().save();
+
     return MessageDoc.create(messageRoom.messages.ref, { userId: uid, content }).save();
   },
 };
