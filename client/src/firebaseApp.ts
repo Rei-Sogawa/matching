@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZOAsGLjDqA6_6mMQ4a68kHLzpeP5diG8",
@@ -15,5 +16,6 @@ initializeApp(firebaseConfig);
 
 if (!import.meta.env.PROD) {
   connectAuthEmulator(getAuth(), "http://localhost:9099", { disableWarnings: true });
+  connectFirestoreEmulator(getFirestore(), "localhost", 8080);
   connectStorageEmulator(getStorage(), "localhost", 9199);
 }

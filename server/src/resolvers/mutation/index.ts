@@ -2,6 +2,7 @@ import { authorize } from "../../authorize";
 import { LikeDoc } from "../../fire/docs/like";
 import { MessageDoc } from "../../fire/docs/message";
 import { MessageRoomDoc } from "../../fire/docs/message-room";
+import { MessageRoomEventDoc } from "../../fire/docs/message-room-event";
 import { UserDoc } from "../../fire/docs/user";
 import { Resolvers } from "./../../graphql/generated";
 
@@ -110,13 +111,19 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { messageRoomId, content } = args.input;
     const { uid } = context.decodedIdToken;
-    const { messageRoomsCollection } = context.collections;
+    const { messageRoomsCollection, messageRoomEventsCollection } = context.collections;
 
     const messageRoom = await messageRoomsCollection.get(messageRoomId);
     if (!messageRoom.isMember(uid)) throw new Error("not messageRoom member");
 
-    await messageRoom.touch().save();
+    const message = await MessageDoc.create(messageRoom.messages.ref, { userId: uid, content }).save();
 
-    return MessageDoc.create(messageRoom.messages.ref, { userId: uid, content }).save();
+    await messageRoom.touch().save();
+    await MessageRoomEventDoc.create(messageRoomEventsCollection.ref, {
+      messageId: message.id,
+      action: "CREATE",
+    }).save();
+
+    return message;
   },
 };

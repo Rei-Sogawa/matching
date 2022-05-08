@@ -139,10 +139,3 @@ type Mutation {
   skip(userId: ID!): User!
   createMessage(input: CreateMessageInput!): Message!
 }
-
-#
-# SUBSCRIPTION
-#
-type Subscription {
-  newMessage: Message!
-}

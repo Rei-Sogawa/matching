@@ -48,6 +48,7 @@ const main = async () => {
 
   {
     const authUser = await auth.createUser({
+      uid: "1988-04-10",
       email: "nao@example.com",
       password: "Password00",
     });
@@ -56,7 +57,9 @@ const main = async () => {
     const paths = [];
     for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
       const storagePath = `users/${user.id}/profilePhotos/${id()}`;
-      await storage.bucket().upload(__dirname + `/fixture/nao-${i + 1}.png`, { destination: storagePath });
+      await storage
+        .bucket()
+        .upload(__dirname + `/fixture/nao-${i + 1}.png`, { destination: storagePath, contentType: "image/png" });
       paths.push(storagePath);
     }
 
@@ -68,6 +71,7 @@ const main = async () => {
 
   {
     const authUser = await auth.createUser({
+      uid: "1989-06-03",
       email: "megu@example.com",
       password: "Password00",
     });
@@ -76,7 +80,9 @@ const main = async () => {
     const paths = [];
     for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
       const storagePath = `users/${user.id}/profilePhotos/${id()}`;
-      await storage.bucket().upload(__dirname + `/fixture/megu-${i + 1}.png`, { destination: storagePath });
+      await storage
+        .bucket()
+        .upload(__dirname + `/fixture/megu-${i + 1}.png`, { destination: storagePath, contentType: "image/png" });
       paths.push(storagePath);
     }
 
@@ -88,6 +94,7 @@ const main = async () => {
 
   {
     const authUser = await auth.createUser({
+      uid: "1991-09-15",
       email: "kaede@example.com",
       password: "Password00",
     });
@@ -96,7 +103,9 @@ const main = async () => {
     const paths = [];
     for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
       const storagePath = `users/${user.id}/profilePhotos/${id()}`;
-      await storage.bucket().upload(__dirname + `/fixture/kaede-${i + 1}.png`, { destination: storagePath });
+      await storage
+        .bucket()
+        .upload(__dirname + `/fixture/kaede-${i + 1}.png`, { destination: storagePath, contentType: "image/png" });
       paths.push(storagePath);
     }
 
