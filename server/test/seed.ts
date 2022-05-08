@@ -1,5 +1,7 @@
 import { createCollections } from "../src/fire/create-collections";
 import { LikeDoc } from "../src/fire/docs/like";
+import { MessageDoc } from "../src/fire/docs/message";
+import { MessageRoomDoc } from "../src/fire/docs/message-room";
 import { UserDoc } from "../src/fire/docs/user";
 import { prefs } from "../src/utils/contants";
 import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
@@ -9,12 +11,10 @@ const db = getDb();
 const storage = getStorage();
 
 const collections = createCollections(db);
-const { usersCollection, userIndexCollection, likesCollection, likeIndexCollection } = collections;
+const { usersCollection, likesCollection, messageRoomsCollection, userIndexCollection, likeIndexCollection } =
+  collections;
 
-const main = async () => {
-  await clearAuth();
-  await clearFirestore();
-
+const seed = async () => {
   const fakeAuthUsers = await Promise.all(
     Array.from({ length: 50 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
@@ -123,6 +123,29 @@ const main = async () => {
     await like.save();
     await likeIndexCollection.add(like.toIndex());
   }
+
+  const like = await LikeDoc.create(likesCollection.ref, { senderId: nao.id, receiverId: megu.id }).match().save();
+  const messageRoom = await MessageRoomDoc.create(messageRoomsCollection.ref, {
+    likeId: like.id,
+    userIds: [like.senderId, like.receiverId],
+  })
+    .touch()
+    .save();
+
+  for (const i of Array.from({ length: 50 }).map((_, i) => i)) {
+    const message = MessageDoc.create(messageRoom.messages.ref, {
+      userId: messageRoom.userIds[i % 2],
+      content: i.toString(),
+    });
+    await message.save();
+  }
+};
+
+const main = async () => {
+  await clearAuth();
+  await clearFirestore();
+
+  await seed();
 };
 
 main();
