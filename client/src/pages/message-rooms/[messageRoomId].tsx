@@ -3,10 +3,9 @@ import { Avatar, Box, Button, HStack, IconButton, Stack } from "@chakra-ui/react
 import { format } from "date-fns";
 import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { head } from "lodash-es";
-import { createRef, FC, FormEventHandler, useEffect, useMemo, useRef } from "react";
+import { FC, FormEventHandler, useEffect, useMemo, useRef } from "react";
 import { BiSend } from "react-icons/bi";
 import { useParams } from "react-router-dom";
-import useLockBodyScroll from "react-use/lib/useLockBodyScroll";
 
 import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/common/BackButton";
@@ -59,7 +58,7 @@ const PartnerMessageItem: FC<PartnerMessageItemProps> = ({ message }) => {
   return (
     <HStack alignSelf="start">
       <Avatar alignSelf="end" size="sm" src={message.user.topPhotoUrl ?? undefined} />
-      <Box px="3" py="2" rounded="md" bg="gray.200" fontWeight="bold" whiteSpace="pre-wrap">
+      <Box px="3" py="2" rounded="md" bg="gray.100" fontWeight="bold" whiteSpace="pre-wrap">
         {message.content}
       </Box>
       <Box alignSelf="end" fontSize="sm">

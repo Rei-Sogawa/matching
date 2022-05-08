@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useReceiveLikeUsersQuery } from "../../graphql/generated";
 import { AppFooter } from "../../layouts/AppFooter";
-import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
@@ -35,14 +34,6 @@ export const LikesPage: FC = () => {
     }
   }, [users]);
 
-  const header = (
-    <AppHeader>
-      <Box fontWeight="bold" fontSize="2xl">
-        いいね！
-      </Box>
-    </AppHeader>
-  );
-
   const footer = (
     <AppFooter>
       <AppMenu />
@@ -50,9 +41,13 @@ export const LikesPage: FC = () => {
   );
 
   return (
-    <AppLayout header={header} footer={footer}>
+    <AppLayout header={null} footer={footer}>
       <AppMain>
-        <Stack spacing="8"></Stack>
+        <Stack spacing="8">
+          <Box fontWeight="bold" fontSize="2xl">
+            いいね！
+          </Box>
+        </Stack>
       </AppMain>
     </AppLayout>
   );
