@@ -178,7 +178,7 @@ const useSubscribeMessage = (messageRoomId: string) => {
   const [fetch] = useMessageLazyQuery();
 
   useEffect(() => {
-    onSnapshot(
+    return onSnapshot(
       query(
         collection(getFirestore(), "messageRoomEvents"),
         where("messageRoomId", "==", messageRoomId),
