@@ -131,6 +131,32 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
   );
 };
 
+gql`
+  query MessageRoomPage($id: ID!, $input: PageInput!) {
+    messageRoom(id: $id) {
+      id
+      partner {
+        id
+        nickName
+        topPhotoUrl
+      }
+      messages(input: $input) {
+        edges {
+          node {
+            id
+            ...MessageItem
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
 const QUERY_SIZE = 10;
 
 export const MessageRoomPage: FC = () => {
