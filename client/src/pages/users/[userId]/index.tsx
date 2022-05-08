@@ -11,6 +11,7 @@ import { BackButton } from "../../../components/common/BackButton";
 import { UserTopCard } from "../../../components/domain/UserTopCard";
 import { useLikeMutation, UserForUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
 import { AppLayout } from "../../../layouts/AppLayout";
+import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";
 import { assertDefined } from "../../../utils/assert-defined";
 
@@ -146,14 +147,16 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
 
   return (
     <AppLayout header={null} footer={null}>
-      <VStack spacing="8">
-        <BackButton alignSelf="start" path={routes["/users"].path()} />
-        <UserTopCard user={user} imageForeground={imageForeground} />
-        <HStack spacing="8">
-          <SkipButton onClick={onSkip} disabled={liked || skipped} />
-          <LikeButton onClick={onLike} disabled={liked || skipped} />
-        </HStack>
-      </VStack>
+      <AppMain>
+        <VStack spacing="8">
+          <BackButton alignSelf="start" path={routes["/users"].path()} />
+          <UserTopCard user={user} imageForeground={imageForeground} />
+          <HStack spacing="8">
+            <SkipButton onClick={onSkip} disabled={liked || skipped} />
+            <LikeButton onClick={onLike} disabled={liked || skipped} />
+          </HStack>
+        </VStack>
+      </AppMain>
     </AppLayout>
   );
 };

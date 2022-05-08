@@ -18,6 +18,7 @@ import {
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
@@ -184,13 +185,15 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
 
   return (
     <AppLayout header={null} footer={footer}>
-      <VStack spacing="6">
-        <UserTopCard user={user} imageForeground={imageForeground} />
-        <HStack spacing="8">
-          <SkipButton onClick={onSkip} disabled={liked || skipped} />
-          <LikeButton onClick={onMatch} disabled={liked || skipped} />
-        </HStack>
-      </VStack>
+      <AppMain>
+        <VStack spacing="6">
+          <UserTopCard user={user} imageForeground={imageForeground} />
+          <HStack spacing="8">
+            <SkipButton onClick={onSkip} disabled={liked || skipped} />
+            <LikeButton onClick={onMatch} disabled={liked || skipped} />
+          </HStack>
+        </VStack>
+      </AppMain>
     </AppLayout>
   );
 };

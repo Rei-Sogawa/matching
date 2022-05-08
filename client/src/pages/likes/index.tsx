@@ -8,6 +8,7 @@ import { useReceiveLikeUsersQuery } from "../../graphql/generated";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
@@ -50,7 +51,9 @@ export const LikesPage: FC = () => {
 
   return (
     <AppLayout header={header} footer={footer}>
-      <Stack spacing="8"></Stack>
+      <AppMain>
+        <Stack spacing="8"></Stack>
+      </AppMain>
     </AppLayout>
   );
 };

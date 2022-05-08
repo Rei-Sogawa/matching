@@ -7,6 +7,7 @@ import { UserSmallCard } from "../../components/domain/UserSmallCard";
 import { useUsersQuery } from "../../graphql/generated";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 
 gql`
@@ -50,25 +51,27 @@ export const UsersPage: FC = () => {
 
   return (
     <AppLayout header={null} footer={footer}>
-      <Stack spacing="8">
-        <Flex justifyContent="end" px={{ base: "6", md: "12" }}>
-          <IconButton isRound boxShadow="md" aria-label="search" icon={<BiSearch fontSize="20px" />} />
-        </Flex>
+      <AppMain>
+        <Stack spacing="8">
+          <Flex justifyContent="end" px={{ base: "6", md: "12" }}>
+            <IconButton isRound boxShadow="md" aria-label="search" icon={<BiSearch fontSize="20px" />} />
+          </Flex>
 
-        <Wrap justify="center" spacing="6">
-          {users.map((user) => (
-            <WrapItem key={user.id}>
-              <UserSmallCard user={user} />
-            </WrapItem>
-          ))}
-        </Wrap>
+          <Wrap justify="center" spacing="6">
+            {users.map((user) => (
+              <WrapItem key={user.id}>
+                <UserSmallCard user={user} />
+              </WrapItem>
+            ))}
+          </Wrap>
 
-        {hasMore && (
-          <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
-            もっと見る
-          </Button>
-        )}
-      </Stack>
+          {hasMore && (
+            <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+              もっと見る
+            </Button>
+          )}
+        </Stack>
+      </AppMain>
     </AppLayout>
   );
 };

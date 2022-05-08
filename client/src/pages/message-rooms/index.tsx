@@ -14,6 +14,7 @@ import {
 } from "../../graphql/generated";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
@@ -186,33 +187,35 @@ export const MessageRoomsPage: FC = () => {
 
   return (
     <AppLayout header={null} footer={footer}>
-      <Stack spacing="8">
-        <Tabs colorScheme="primary">
-          <TabList>
-            <Tab w="50%">
-              <HStack>
-                <BiHeart fontSize="20px" />
-                <Box fontWeight="bold">マッチング中</Box>
-              </HStack>
-            </Tab>
-            <Tab w="50%" fontWeight="bold">
-              <HStack>
-                <BiMessageRoundedDots fontSize="20px" />
-                <Box fontWeight="bold">やりとり中</Box>
-              </HStack>
-            </Tab>
-          </TabList>
+      <AppMain>
+        <Stack spacing="8">
+          <Tabs colorScheme="primary">
+            <TabList>
+              <Tab w="50%">
+                <HStack>
+                  <BiHeart fontSize="20px" />
+                  <Box fontWeight="bold">マッチング中</Box>
+                </HStack>
+              </Tab>
+              <Tab w="50%" fontWeight="bold">
+                <HStack>
+                  <BiMessageRoundedDots fontSize="20px" />
+                  <Box fontWeight="bold">やりとり中</Box>
+                </HStack>
+              </Tab>
+            </TabList>
 
-          <TabPanels>
-            <TabPanel>
-              <NewMessageRooms />
-            </TabPanel>
-            <TabPanel>
-              <MessageRooms />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Stack>
+            <TabPanels>
+              <TabPanel>
+                <NewMessageRooms />
+              </TabPanel>
+              <TabPanel>
+                <MessageRooms />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Stack>
+      </AppMain>
     </AppLayout>
   );
 };

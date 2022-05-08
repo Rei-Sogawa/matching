@@ -8,6 +8,7 @@ import { UserActionCard } from "../../components/domain/UserActionCard";
 import { SendLikeUserItemFragment, useSendLikeUsersQuery, useUnlikeMutation } from "../../graphql/generated";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
+import { AppMain } from "../../layouts/AppMain";
 import { routes } from "../../routes";
 
 gql`
@@ -108,20 +109,22 @@ export const MyPageLikesPage: FC = () => {
   if (!data) return <Loading />;
   return (
     <AppLayout header={header} footer={null}>
-      <Stack spacing="6">
-        {users.map((u) => (
-          <Stack key={u.id} alignSelf="center" spacing="6">
-            <SendLikeUserItem user={u} />
-            <Divider />
-          </Stack>
-        ))}
+      <AppMain>
+        <Stack spacing="6">
+          {users.map((u) => (
+            <Stack key={u.id} alignSelf="center" spacing="6">
+              <SendLikeUserItem user={u} />
+              <Divider />
+            </Stack>
+          ))}
 
-        {hasMore && (
-          <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
-            もっと見る
-          </Button>
-        )}
-      </Stack>
+          {hasMore && (
+            <Button alignSelf="center" variant="ghost" colorScheme="primary" onClick={onLoadMore}>
+              もっと見る
+            </Button>
+          )}
+        </Stack>
+      </AppMain>
     </AppLayout>
   );
 };

@@ -8,6 +8,7 @@ import { useMe } from "../../../contexts/Me";
 import { useUpdateUserMutation } from "../../../graphql/generated";
 import { AppHeader } from "../../../layouts/AppHeader";
 import { AppLayout } from "../../../layouts/AppLayout";
+import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";
 
 gql`
@@ -46,9 +47,11 @@ export const MyPageProfileEditPage: FC = () => {
 
   return (
     <AppLayout header={header} footer={null}>
-      <Stack spacing="6">
-        <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
-      </Stack>
+      <AppMain>
+        <Stack spacing="6">
+          <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
+        </Stack>
+      </AppMain>
     </AppLayout>
   );
 };
