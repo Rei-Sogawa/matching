@@ -1,4 +1,4 @@
-import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
@@ -40,6 +40,10 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
 
   constructor(snap: FireDocumentInput<LikeData>) {
     super(snap);
+  }
+
+  get userIds() {
+    return [this.senderId, this.receiverId] as [string, string];
   }
 
   toData() {

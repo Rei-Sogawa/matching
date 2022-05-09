@@ -1,4 +1,4 @@
-import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { MessageRoomsCollection } from "../collections/message-rooms";
@@ -16,7 +16,10 @@ const MessageRoomSchema = z.object({
 export type MessageRoomData = z.infer<typeof MessageRoomSchema>;
 
 export class MessageRoomDoc extends FireDocument<MessageRoomData> implements MessageRoomData {
-  static create(collection: MessageRoomsCollection, { likeId, userIds }: { likeId: string; userIds: string[] }) {
+  static create(
+    collection: MessageRoomsCollection,
+    { likeId, userIds }: { likeId: string; userIds: [string, string] }
+  ) {
     const createdAt = Timestamp.now();
     const data: MessageRoomData = {
       likeId,

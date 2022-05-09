@@ -18,7 +18,7 @@ export const likeMutation = async (_: unknown, args: { userId: string }, context
     await receiveLike.match().save();
     await MessageRoomDoc.create(messageRoomsCollection, {
       likeId: receiveLike.id,
-      userIds: [receiveLike.senderId, receiveLike.receiverId],
+      userIds: receiveLike.userIds,
     }).save();
     await likeIndexCollection.update(receiveLike.toIndex());
 
