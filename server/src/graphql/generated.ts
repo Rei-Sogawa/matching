@@ -71,11 +71,6 @@ export type MessageEdge = {
   node: Message;
 };
 
-export type MessageInput = {
-  messageId: Scalars['String'];
-  messageRoomId: Scalars['String'];
-};
-
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
@@ -168,7 +163,7 @@ export type Query = {
 
 
 export type QueryMessageArgs = {
-  input: MessageInput;
+  id: Scalars['ID'];
 };
 
 
@@ -318,7 +313,6 @@ export type ResolversTypes = ResolversObject<{
   Message: ResolverTypeWrapper<MessageDoc>;
   MessageConnection: ResolverTypeWrapper<Omit<MessageConnection, 'edges'> & { edges: Array<ResolversTypes['MessageEdge']> }>;
   MessageEdge: ResolverTypeWrapper<Omit<MessageEdge, 'node'> & { node: ResolversTypes['Message'] }>;
-  MessageInput: MessageInput;
   MessageRoom: ResolverTypeWrapper<MessageRoomDoc>;
   MessageRoomConnection: ResolverTypeWrapper<Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversTypes['MessageRoomEdge']> }>;
   MessageRoomEdge: ResolverTypeWrapper<Omit<MessageRoomEdge, 'node'> & { node: ResolversTypes['MessageRoom'] }>;
@@ -345,7 +339,6 @@ export type ResolversParentTypes = ResolversObject<{
   Message: MessageDoc;
   MessageConnection: Omit<MessageConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageEdge']> };
   MessageEdge: Omit<MessageEdge, 'node'> & { node: ResolversParentTypes['Message'] };
-  MessageInput: MessageInput;
   MessageRoom: MessageRoomDoc;
   MessageRoomConnection: Omit<MessageRoomConnection, 'edges'> & { edges: Array<ResolversParentTypes['MessageRoomEdge']> };
   MessageRoomEdge: Omit<MessageRoomEdge, 'node'> & { node: ResolversParentTypes['MessageRoom'] };
@@ -435,7 +428,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryMessageArgs, 'input'>>;
+  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryMessageArgs, 'id'>>;
   messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<QueryMessageRoomArgs, 'id'>>;
   messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryMessageRoomsArgs, 'input'>>;
   newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryNewMessageRoomsArgs, 'input'>>;

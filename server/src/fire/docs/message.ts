@@ -31,6 +31,10 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
   content!: string;
   createdAt!: Timestamp;
 
+  get messageRoomId() {
+    return this.ref.parent.id;
+  }
+
   toData() {
     const { id, ref, ...data } = this;
     return data;

@@ -66,11 +66,6 @@ export type MessageEdge = {
   node: Message;
 };
 
-export type MessageInput = {
-  messageId: Scalars['String'];
-  messageRoomId: Scalars['String'];
-};
-
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
@@ -163,7 +158,7 @@ export type Query = {
 
 
 export type QueryMessageArgs = {
-  input: MessageInput;
+  id: Scalars['ID'];
 };
 
 
@@ -281,7 +276,7 @@ export type CreateMessageMutationVariables = Exact<{
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } };
 
 export type MessageQueryVariables = Exact<{
-  input: MessageInput;
+  id: Scalars['ID'];
 }>;
 
 
@@ -660,8 +655,8 @@ export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessage
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const MessageDocument = gql`
-    query Message($input: MessageInput!) {
-  message(input: $input) {
+    query Message($id: ID!) {
+  message(id: $id) {
     id
     ...MessageItem
   }
@@ -680,7 +675,7 @@ export const MessageDocument = gql`
  * @example
  * const { data, loading, error } = useMessageQuery({
  *   variables: {
- *      input: // value for 'input'
+ *      id: // value for 'id'
  *   },
  * });
  */

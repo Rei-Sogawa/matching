@@ -98,11 +98,6 @@ type MessageConnection {
   pageInfo: PageInfo!
 }
 
-input MessageInput {
-  messageRoomId: String!
-  messageId: String!
-}
-
 type Query {
   me: Me!
   user(id: ID!): User!
@@ -112,7 +107,7 @@ type Query {
   newMessageRooms(input: PageInput!): MessageRoomConnection!
   messageRooms(input: PageInput!): MessageRoomConnection!
   messageRoom(id: ID!): MessageRoom!
-  message(input: MessageInput!): Message!
+  message(id: ID!): Message!
 }
 
 #

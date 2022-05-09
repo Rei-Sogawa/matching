@@ -164,8 +164,8 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
 };
 
 gql`
-  query Message($input: MessageInput!) {
-    message(input: $input) {
+  query Message($id: ID!) {
+    message(id: $id) {
       id
       ...MessageItem
     }
@@ -189,7 +189,7 @@ const useSubscribeMessage = (messageRoomId: string) => {
         snap.docChanges().forEach(async (dc) => {
           const messageRoomId = dc.doc.data().messageRoomId;
           const messageId = dc.doc.data().messageId;
-          const { data } = await fetch({ variables: { input: { messageRoomId, messageId } } });
+          const { data } = await fetch({ variables: { id: messageId } });
           if (!data) return;
           client.cache.modify({
             id: client.cache.identify({ __typename: "MessageRoom", id: messageRoomId }),
@@ -202,9 +202,9 @@ const useSubscribeMessage = (messageRoomId: string) => {
                 };
                 return { ...existing, edges: [edge, ...existing.edges] };
               },
-              lastMessage(_existing, { toReference }) {
-                return toReference(data.message);
-              },
+              // lastMessage(_existing, { toReference }) {
+              //   return toReference(data.message);
+              // },
             },
           });
         });
