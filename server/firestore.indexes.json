@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "messageRoomEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "messageRoomId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "messageRooms",
       "queryScope": "COLLECTION",
       "fields": [
