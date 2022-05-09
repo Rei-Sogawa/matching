@@ -1,8 +1,8 @@
 import { head, last } from "lodash";
 
-import { assertDefined } from "../../utils/assert-defined";
-import { getSignedUrl } from "../../utils/get-signed-url";
-import { Resolvers } from "./../../graphql/generated";
+import { Resolvers } from "../graphql/generated";
+import { assertDefined } from "../utils/assert-defined";
+import { getSignedUrl } from "../utils/get-signed-url";
 
 export const Me: Resolvers["Me"] = {
   photoUrls: async (parent, _args, context) => {
