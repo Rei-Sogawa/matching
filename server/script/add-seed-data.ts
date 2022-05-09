@@ -116,7 +116,7 @@ const seed = async () => {
   }
 
   for (const fakeUser of fakeUsers) {
-    const like = LikeDoc.create(likesCollection.ref, {
+    const like = LikeDoc.create(likesCollection, {
       senderId: fakeUser.id,
       receiverId: [nao, megu, kaede][randomInt(2)].id,
     });
@@ -124,7 +124,7 @@ const seed = async () => {
     await likeIndexCollection.add(like.toIndex());
   }
 
-  const like = await LikeDoc.create(likesCollection.ref, { senderId: nao.id, receiverId: megu.id }).match().save();
+  const like = await LikeDoc.create(likesCollection, { senderId: nao.id, receiverId: megu.id }).match().save();
   await likeIndexCollection.add(like.toIndex());
   const messageRoom = await MessageRoomDoc.create(messageRoomsCollection.ref, {
     likeId: like.id,

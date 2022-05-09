@@ -2,6 +2,7 @@ import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
+import { LikesCollection } from "../collections/likes";
 import { FireDocument, FireDocumentInput } from "../lib/fire-document";
 
 const LikeSchema = z
@@ -19,23 +20,16 @@ export type LikeData = z.infer<typeof LikeSchema>;
 export type LikeIndexData = { id: string } & Pick<LikeData, "senderId" | "receiverId" | "status" | "createdAt">;
 
 export class LikeDoc extends FireDocument<LikeData> implements LikeData {
-  static create(
-    collection: CollectionReference<LikeData>,
-    { senderId, receiverId }: Pick<LikeData, "senderId" | "receiverId">
-  ) {
-    const docRef = collection.doc();
+  static create(collection: LikesCollection, { senderId, receiverId }: Pick<LikeData, "senderId" | "receiverId">) {
     const createdAt = Timestamp.now();
-    return new LikeDoc({
-      id: docRef.id,
-      ref: docRef,
-      data: () => ({
-        senderId,
-        receiverId,
-        status: "PENDING",
-        createdAt,
-        updatedAt: createdAt,
-      }),
-    });
+    const data: LikeData = {
+      senderId,
+      receiverId,
+      status: "PENDING",
+      createdAt,
+      updatedAt: createdAt,
+    };
+    return new LikeDoc(this.createInput(collection, null, data));
   }
 
   senderId!: string;

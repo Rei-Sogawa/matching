@@ -1,4 +1,4 @@
-import { DocumentReference, DocumentSnapshot, FieldValue } from "firebase-admin/firestore";
+import { CollectionReference, DocumentReference, DocumentSnapshot, FieldValue } from "firebase-admin/firestore";
 
 export declare type Primitive = string | number | boolean | undefined | null;
 export declare type PartialWithFieldValue<T> =
@@ -15,6 +15,19 @@ export declare type PartialWithFieldValue<T> =
 export type FireDocumentInput<TData> = Pick<DocumentSnapshot<TData>, "id" | "ref" | "data">;
 
 export abstract class FireDocument<TData> {
+  static createInput<TData>(
+    collection: { ref: CollectionReference<TData> },
+    id: null | string,
+    data: TData
+  ): FireDocumentInput<TData> {
+    const docRef = id ? collection.ref.doc(id) : collection.ref.doc();
+    return {
+      ref: docRef,
+      id: docRef.id,
+      data: () => data,
+    };
+  }
+
   id: string;
   ref: DocumentReference<TData>;
 

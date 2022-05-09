@@ -66,7 +66,7 @@ export const Mutation: Resolvers["Mutation"] = {
       }).save();
       await likeIndexCollection.update(receiveLike.toIndex());
     } else {
-      const like = LikeDoc.create(likesCollection.ref, { senderId: uid, receiverId: userId });
+      const like = LikeDoc.create(likesCollection, { senderId: uid, receiverId: userId });
       await like.save();
       await likeIndexCollection.add(like.toIndex());
     }
