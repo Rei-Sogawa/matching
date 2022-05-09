@@ -64,10 +64,12 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   }
 
   skip() {
+    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
     return this.edit({ status: "SKIPPED", updatedAt: Timestamp.now() });
   }
 
   match() {
+    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
     return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
   }
 }
