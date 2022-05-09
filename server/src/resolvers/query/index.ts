@@ -7,7 +7,7 @@ export const Query: Resolvers["Query"] = {
   me: (_parent, _args, context) => {
     authorize(context);
 
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection } = context.collections;
 
     return usersCollection.get(uid);
@@ -26,7 +26,7 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { input } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, userIndexCollection, likeIndexCollection } = context.collections;
 
     const sendLikes = await likeIndexCollection.sendLikes(uid);
@@ -53,7 +53,7 @@ export const Query: Resolvers["Query"] = {
   receiveLikeUsers: async (_parent, args, context) => {
     authorize(context);
 
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, likeIndexCollection } = context.collections;
 
     const receiveLikes = await likeIndexCollection.receivePendingLikes(uid);
@@ -65,7 +65,7 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { input } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, likeIndexCollection } = context.collections;
 
     const sendLikes = await likeIndexCollection.paginatedSendLikes({
@@ -97,7 +97,7 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { input } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { messageRoomsCollection } = context.collections;
 
     const messageRooms = await messageRoomsCollection.paginatedNewMessageRooms({
@@ -121,7 +121,7 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { input } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { messageRoomsCollection } = context.collections;
 
     const messageRooms = await messageRoomsCollection.paginatedMessageRooms({
@@ -145,7 +145,7 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { id } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { messageRoomsCollection } = context.collections;
 
     const messageRoom = await messageRoomsCollection.get(id);
@@ -159,7 +159,7 @@ export const Query: Resolvers["Query"] = {
     authorize(context);
 
     const { input } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { messageRoomsCollection } = context.collections;
 
     const messageRoom = await messageRoomsCollection.get(input.messageRoomId);

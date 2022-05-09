@@ -6,19 +6,19 @@ import { Resolvers } from "./../../graphql/generated";
 
 export const Me: Resolvers["Me"] = {
   photoUrls: async (parent, _args, context) => {
-    const { storage } = context;
+    const { storage } = context.firebase;
     return parent.photoPaths.map((path) => getSignedUrl(storage, path));
   },
 };
 
 export const User: Resolvers["User"] = {
   photoUrls: async (parent, _args, context) => {
-    const { storage } = context;
+    const { storage } = context.firebase;
     return parent.photoPaths.map((path) => getSignedUrl(storage, path));
   },
 
   topPhotoUrl: async (parent, _args, context) => {
-    const { storage } = context;
+    const { storage } = context.firebase;
     const top = head(parent.photoPaths);
     return top ? getSignedUrl(storage, top) : null;
   },
@@ -26,8 +26,8 @@ export const User: Resolvers["User"] = {
 
 export const MessageRoom: Resolvers["MessageRoom"] = {
   partner: async (parent, _args, context) => {
-    assertDefined(context.decodedIdToken);
-    const { uid } = context.decodedIdToken;
+    assertDefined(context.auth);
+    const { uid } = context.auth;
     const { usersCollection } = context.collections;
     return usersCollection.get(parent.partnerId(uid));
   },
@@ -51,7 +51,7 @@ export const Message: Resolvers["Message"] = {
   },
 
   mine: async (parent, _args, context) => {
-    assertDefined(context.decodedIdToken);
-    return parent.userId === context.decodedIdToken.uid;
+    assertDefined(context.auth);
+    return parent.userId === context.auth.uid;
   },
 };

@@ -9,10 +9,10 @@ import { Resolvers } from "./../../graphql/generated";
 export const Mutation: Resolvers["Mutation"] = {
   async signUp(_parent, args, context) {
     const { email, password } = args.input;
-    const { auth } = context;
     const { usersCollection, userIndexCollection } = context.collections;
+    const { firebase } = context;
 
-    const { uid } = await auth.createUser({ email, password });
+    const { uid } = await firebase.auth.createUser({ email, password });
 
     const user = UserDoc.create(usersCollection.ref, { id: uid });
     await user.save();
@@ -24,7 +24,7 @@ export const Mutation: Resolvers["Mutation"] = {
   async access(_parent, _args, context) {
     authorize(context);
 
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, userIndexCollection } = context.collections;
 
     const user = await usersCollection.get(uid);
@@ -37,7 +37,7 @@ export const Mutation: Resolvers["Mutation"] = {
   async updateUser(_parent, args, context) {
     authorize(context);
 
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, userIndexCollection } = context.collections;
 
     const user = await usersCollection.get(uid);
@@ -51,7 +51,7 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { userId } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, likesCollection, messageRoomsCollection, likeIndexCollection } = context.collections;
 
     const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
@@ -78,7 +78,7 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { userId } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
 
     const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
@@ -94,7 +94,7 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { userId } = args;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
 
     const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
@@ -110,7 +110,7 @@ export const Mutation: Resolvers["Mutation"] = {
     authorize(context);
 
     const { messageRoomId, content } = args.input;
-    const { uid } = context.decodedIdToken;
+    const { uid } = context.auth;
     const { messageRoomsCollection, messageRoomEventsCollection } = context.collections;
 
     const messageRoom = await messageRoomsCollection.get(messageRoomId);
