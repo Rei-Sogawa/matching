@@ -1,5 +1,5 @@
 import { ArrowBackIcon, ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Box, Button, HStack, Image, Input, Stack, useDisclosure, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Input, Stack, useDisclosure, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { BiUpload } from "react-icons/bi";
 
@@ -10,9 +10,9 @@ type UserPhotoCardProps = { photoUrl: string; onUp: () => void; onDown: () => vo
 
 const UserPhotoCard: FC<UserPhotoCardProps> = ({ photoUrl, onUp, onDown, onRemove }) => {
   return (
-    <Stack>
+    <VStack>
       <Image src={photoUrl} boxSize="36" rounded="md" />
-      <HStack justifyContent="center">
+      <HStack>
         <Button size="sm" onClick={onUp}>
           <ArrowBackIcon />
         </Button>
@@ -23,7 +23,7 @@ const UserPhotoCard: FC<UserPhotoCardProps> = ({ photoUrl, onUp, onDown, onRemov
           <DeleteIcon />
         </Button>
       </HStack>
-    </Stack>
+    </VStack>
   );
 };
 
@@ -71,7 +71,7 @@ export const UserPhotoPicker: FC<UserPhotoPickerProps> = ({ photoUrls, onPick, o
       {photoUrls.length > 0 && (
         <Wrap>
           {photoUrls.map((url, index) => (
-            <WrapItem key={index} h="max-content">
+            <WrapItem key={index}>
               <UserPhotoCard
                 photoUrl={url}
                 onUp={() => onUp(index)}

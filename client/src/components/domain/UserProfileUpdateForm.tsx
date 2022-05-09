@@ -108,7 +108,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
             <FormControl>
               <FormLabel>プロフィール写真</FormLabel>
               <Stack spacing="4">
-                <Image src={head(photoUrls)} boxSize={{ base: "xs", md: "md" }} rounded="md" />
+                <Image src={head(photoUrls)} boxSize={{ base: "full", md: "md" }} rounded="md" />
                 <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
               </Stack>
             </FormControl>
