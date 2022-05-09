@@ -32,7 +32,7 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
   createdAt!: Timestamp;
 
   get messageRoomId() {
-    return this.ref.parent.id;
+    return this.ref.parent.parent!.id;
   }
 
   toData() {
