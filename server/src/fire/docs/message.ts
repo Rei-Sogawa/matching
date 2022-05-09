@@ -1,6 +1,8 @@
-import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
+import { v4 } from "uuid";
 import { z } from "zod";
 
+import { MessagesCollection } from "../collections/messages";
 import { FireDocument } from "../lib/fire-document";
 
 const MessageSchema = z.object({
@@ -13,22 +15,15 @@ const MessageSchema = z.object({
 export type MessageData = z.infer<typeof MessageSchema>;
 
 export class MessageDoc extends FireDocument<MessageData> implements MessageData {
-  static create(
-    collection: CollectionReference<MessageData>,
-    { userId, content }: Pick<MessageData, "userId" | "content">
-  ) {
-    const docRef = collection.doc();
+  static create(collection: MessagesCollection, { userId, content }: Pick<MessageData, "userId" | "content">) {
     const createdAt = Timestamp.now();
-    return new MessageDoc({
-      id: docRef.id,
-      ref: docRef,
-      data: () => ({
-        __id: docRef.id,
-        userId,
-        content,
-        createdAt,
-      }),
-    });
+    const data: MessageData = {
+      __id: v4(),
+      userId,
+      content,
+      createdAt,
+    };
+    return new MessageDoc(this.createInput(collection, data.__id, data));
   }
 
   __id!: string;

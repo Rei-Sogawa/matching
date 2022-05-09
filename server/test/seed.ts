@@ -24,7 +24,7 @@ const seed = async () => {
   const fakeUsers = [];
   let i = 0;
   for (const fakeAuthUser of fakeAuthUsers) {
-    const user = UserDoc.create(usersCollection.ref, { id: fakeAuthUser.uid });
+    const user = UserDoc.create(usersCollection, fakeAuthUser.uid);
 
     await user
       .edit({
@@ -52,7 +52,7 @@ const seed = async () => {
       email: "nao@example.com",
       password: "Password00",
     });
-    const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
+    const user = UserDoc.create(usersCollection, authUser.uid);
 
     const paths = [];
     for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
@@ -75,7 +75,7 @@ const seed = async () => {
       email: "megu@example.com",
       password: "Password00",
     });
-    const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
+    const user = UserDoc.create(usersCollection, authUser.uid);
 
     const paths = [];
     for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
@@ -98,7 +98,7 @@ const seed = async () => {
       email: "kaede@example.com",
       password: "Password00",
     });
-    const user = UserDoc.create(usersCollection.ref, { id: authUser.uid });
+    const user = UserDoc.create(usersCollection, authUser.uid);
 
     const paths = [];
     for (const i of Array.from({ length: 3 }).map((_, i) => i)) {
@@ -126,7 +126,7 @@ const seed = async () => {
 
   const like = await LikeDoc.create(likesCollection, { senderId: nao.id, receiverId: megu.id }).match().save();
   await likeIndexCollection.add(like.toIndex());
-  const messageRoom = await MessageRoomDoc.create(messageRoomsCollection.ref, {
+  const messageRoom = await MessageRoomDoc.create(messageRoomsCollection, {
     likeId: like.id,
     userIds: [like.senderId, like.receiverId],
   })
@@ -134,7 +134,7 @@ const seed = async () => {
     .save();
 
   for (const i of Array.from({ length: 10 }).map((_, i) => i)) {
-    const message = MessageDoc.create(messageRoom.messages.ref, {
+    const message = MessageDoc.create(messageRoom.messages, {
       userId: messageRoom.userIds[i % 2],
       content: i.toString(),
     });

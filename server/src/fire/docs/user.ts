@@ -1,7 +1,8 @@
-import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
+import { UsersCollection } from "../collections/users";
 import { FireDocument, FireDocumentInput } from "../lib/fire-document";
 
 const UserSchema = z
@@ -24,23 +25,19 @@ export type UserIndexData = {
 } & Pick<UserData, "gender" | "age" | "livingPref" | "lastAccessedAt">;
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
-  static create(collection: CollectionReference<UserData>, { id }: { id: string }) {
-    const docRef = collection.doc(id);
+  static create(collection: UsersCollection, id: string) {
     const createdAt = Timestamp.now();
-    return new UserDoc({
-      id: docRef.id,
-      ref: docRef,
-      data: () => ({
-        gender: "MALE",
-        nickName: "ニックネーム",
-        age: 30,
-        livingPref: "東京都",
-        photoPaths: [],
-        lastAccessedAt: createdAt,
-        createdAt,
-        updatedAt: createdAt,
-      }),
-    });
+    const data: UserData = {
+      gender: "MALE",
+      nickName: "ニックネーム",
+      age: 30,
+      livingPref: "東京都",
+      photoPaths: [],
+      lastAccessedAt: createdAt,
+      createdAt,
+      updatedAt: createdAt,
+    };
+    return new UserDoc(this.createInput(collection, id, data));
   }
 
   gender!: Gender;

@@ -14,7 +14,7 @@ export const Mutation: Resolvers["Mutation"] = {
 
     const { uid } = await firebase.auth.createUser({ email, password });
 
-    const user = UserDoc.create(usersCollection.ref, { id: uid });
+    const user = UserDoc.create(usersCollection, uid);
     await user.save();
     await userIndexCollection.add(user.toIndex());
 
@@ -60,7 +60,7 @@ export const Mutation: Resolvers["Mutation"] = {
     const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
     if (receiveLike) {
       await receiveLike.match().save();
-      await MessageRoomDoc.create(messageRoomsCollection.ref, {
+      await MessageRoomDoc.create(messageRoomsCollection, {
         likeId: receiveLike.id,
         userIds: [receiveLike.senderId, receiveLike.receiverId],
       }).save();
@@ -116,10 +116,10 @@ export const Mutation: Resolvers["Mutation"] = {
     const messageRoom = await messageRoomsCollection.get(messageRoomId);
     if (!messageRoom.isMember(uid)) throw new Error("not messageRoom member");
 
-    const message = await MessageDoc.create(messageRoom.messages.ref, { userId: uid, content }).save();
+    const message = await MessageDoc.create(messageRoom.messages, { userId: uid, content }).save();
 
     await messageRoom.touch().save();
-    await MessageRoomEventDoc.create(messageRoomEventsCollection.ref, {
+    await MessageRoomEventDoc.create(messageRoomEventsCollection, {
       messageRoomId: messageRoom.id,
       messageId: message.id,
       action: "CREATE",
