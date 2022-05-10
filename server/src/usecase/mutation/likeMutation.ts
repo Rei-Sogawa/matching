@@ -10,10 +10,10 @@ export const likeMutation = async (_: unknown, args: { userId: string }, context
   const { uid } = context.auth;
   const { usersCollection, likesCollection, messageRoomsCollection, likeIndexCollection } = context.collections;
 
-  const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
+  const sendLike = await likesCollection.findByUserIds({ senderId: uid, receiverId: userId });
   if (sendLike) throw new Error("sendLike already exists");
 
-  const receiveLike = await likesCollection.find({ senderId: userId, receiverId: uid });
+  const receiveLike = await likesCollection.findByUserIds({ senderId: userId, receiverId: uid });
   if (receiveLike) {
     await receiveLike.match().save();
     await MessageRoomDoc.create(messageRoomsCollection, {
@@ -21,13 +21,11 @@ export const likeMutation = async (_: unknown, args: { userId: string }, context
       userIds: receiveLike.userIds,
     }).save();
     await likeIndexCollection.update(receiveLike.toIndex());
-
-    return usersCollection.get(userId);
+  } else {
+    const like = LikeDoc.create(likesCollection, { senderId: uid, receiverId: userId });
+    await like.save();
+    await likeIndexCollection.add(like.toIndex());
   }
-
-  const like = LikeDoc.create(likesCollection, { senderId: uid, receiverId: userId });
-  await like.save();
-  await likeIndexCollection.add(like.toIndex());
 
   return usersCollection.get(userId);
 };

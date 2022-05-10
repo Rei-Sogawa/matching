@@ -2,10 +2,11 @@ import { Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { Gender } from "../../graphql/generated";
+import { UserIndexData } from "../collections/user-index";
 import { UsersCollection } from "../collections/users";
 import { FireDocument, FireDocumentInput } from "../lib/fire-document";
 
-const UserSchema = z
+const UserDataSchema = z
   .object({
     gender: z.enum(["MALE", "FEMALE"]),
     nickName: z.string().min(1),
@@ -18,11 +19,7 @@ const UserSchema = z
   })
   .strict();
 
-export type UserData = z.infer<typeof UserSchema>;
-
-export type UserIndexData = {
-  id: string;
-} & Pick<UserData, "gender" | "age" | "livingPref" | "lastAccessedAt">;
+export type UserData = z.infer<typeof UserDataSchema>;
 
 export class UserDoc extends FireDocument<UserData> implements UserData {
   static create(collection: UsersCollection, id: string) {
@@ -56,11 +53,6 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   toData() {
     const { id, ref, ...data } = this;
     return data;
-  }
-
-  toBatch() {
-    const { id, ref, ...data } = this;
-    return [ref, data] as const;
   }
 
   toIndex() {

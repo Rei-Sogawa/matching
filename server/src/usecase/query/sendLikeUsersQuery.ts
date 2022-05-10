@@ -11,7 +11,7 @@ export const sendLikeUsersQuery = async (_: unknown, args: { input: PageInput },
   const { uid } = context.auth;
   const { usersCollection, likeIndexCollection } = context.collections;
 
-  const sendLikes = await likeIndexCollection.paginatedSendLikes({
+  const sendLikes = await likeIndexCollection.paginatedPendingSendLikes({
     first: input.first,
     after: input.after,
     userId: uid,

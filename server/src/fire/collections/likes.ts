@@ -9,7 +9,7 @@ export class LikesCollection extends FireCollection<LikeData, LikeDoc> {
     super(ref, (snap) => new LikeDoc(snap));
   }
 
-  async find({ senderId, receiverId }: { senderId: string; receiverId: string }) {
+  async findByUserIds({ senderId, receiverId }: { senderId: string; receiverId: string }) {
     const docs = await this.query((ref) => ref.where("senderId", "==", senderId).where("receiverId", "==", receiverId));
     return head(docs);
   }

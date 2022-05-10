@@ -5,7 +5,7 @@ import { MessageRoomsCollection } from "../collections/message-rooms";
 import { MessagesCollection } from "../collections/messages";
 import { FireDocument } from "../lib/fire-document";
 
-const MessageRoomSchema = z.object({
+const MessageRoomDataSchema = z.object({
   likeId: z.string().min(1),
   userIds: z.array(z.string().min(1)).length(2),
   open: z.boolean(),
@@ -13,7 +13,7 @@ const MessageRoomSchema = z.object({
   updatedAt: z.instanceof(Timestamp),
 });
 
-export type MessageRoomData = z.infer<typeof MessageRoomSchema>;
+export type MessageRoomData = z.infer<typeof MessageRoomDataSchema>;
 
 export class MessageRoomDoc extends FireDocument<MessageRoomData> implements MessageRoomData {
   static create(
@@ -42,11 +42,6 @@ export class MessageRoomDoc extends FireDocument<MessageRoomData> implements Mes
   toData() {
     const { id, ref, messages, ...data } = this;
     return data;
-  }
-
-  toBatch() {
-    const { id, ref, messages, ...data } = this;
-    return [ref, data] as const;
   }
 
   touch() {

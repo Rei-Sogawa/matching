@@ -2,10 +2,11 @@ import { Timestamp } from "firebase-admin/firestore";
 import { z } from "zod";
 
 import { LikeStatus } from "../../graphql/generated";
+import { LikeIndexData } from "../collections/like-index";
 import { LikesCollection } from "../collections/likes";
 import { FireDocument, FireDocumentInput } from "../lib/fire-document";
 
-const LikeSchema = z
+const LikeDataSchema = z
   .object({
     senderId: z.string().min(1),
     receiverId: z.string().min(1),
@@ -15,9 +16,7 @@ const LikeSchema = z
   })
   .strict();
 
-export type LikeData = z.infer<typeof LikeSchema>;
-
-export type LikeIndexData = { id: string } & Pick<LikeData, "senderId" | "receiverId" | "status" | "createdAt">;
+export type LikeData = z.infer<typeof LikeDataSchema>;
 
 export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   static create(collection: LikesCollection, { senderId, receiverId }: Pick<LikeData, "senderId" | "receiverId">) {
@@ -49,11 +48,6 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
   toData() {
     const { id, ref, ...data } = this;
     return data;
-  }
-
-  toBatch() {
-    const { id, ref, ...data } = this;
-    return [ref, data] as const;
   }
 
   toIndex() {

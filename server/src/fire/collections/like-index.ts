@@ -1,8 +1,10 @@
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { filter, orderBy, take } from "lodash";
 
-import { LikeIndexData } from "../docs/like";
+import { LikeData } from "../docs/like";
 import { FireIndex } from "../lib/fire-index";
+
+export type LikeIndexData = { id: string } & Pick<LikeData, "senderId" | "receiverId" | "status" | "createdAt">;
 
 export class LikeIndexCollection extends FireIndex<LikeIndexData> {
   docIds = ["0", "1", "2"];
@@ -23,14 +25,14 @@ export class LikeIndexCollection extends FireIndex<LikeIndexData> {
       .then((ary) => filter(ary, (e) => e.receiverId === userId));
   }
 
-  async receivePendingLikes(userId: string) {
+  async pendingReceiveLikes(userId: string) {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
       .then((ary) => filter(ary, (e) => e.receiverId === userId))
       .then((ary) => filter(ary, (e) => e.status === "PENDING"));
   }
 
-  async paginatedSendLikes({
+  async paginatedPendingSendLikes({
     first,
     after,
     userId,

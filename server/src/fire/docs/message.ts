@@ -5,14 +5,14 @@ import { z } from "zod";
 import { MessagesCollection } from "../collections/messages";
 import { FireDocument } from "../lib/fire-document";
 
-const MessageSchema = z.object({
+const MessageDataSchema = z.object({
   __id: z.string().min(1),
   userId: z.string().min(1),
   content: z.string().min(1),
   createdAt: z.instanceof(Timestamp),
 });
 
-export type MessageData = z.infer<typeof MessageSchema>;
+export type MessageData = z.infer<typeof MessageDataSchema>;
 
 export class MessageDoc extends FireDocument<MessageData> implements MessageData {
   static create(collection: MessagesCollection, { userId, content }: Pick<MessageData, "userId" | "content">) {
@@ -38,10 +38,5 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
   toData() {
     const { id, ref, ...data } = this;
     return data;
-  }
-
-  toBatch() {
-    const { id, ref, ...data } = this;
-    return [ref, data] as const;
   }
 }

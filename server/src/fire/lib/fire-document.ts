@@ -41,6 +41,10 @@ export abstract class FireDocument<TData> {
 
   abstract toData(): TData;
 
+  toBatch() {
+    return [this.ref, this.toData()] as const;
+  }
+
   edit(data: PartialWithFieldValue<TData>) {
     Object.assign(this, data);
     return this;
