@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { filter, orderBy, take } from "lodash";
+import { filter, map, orderBy, take } from "lodash";
 
 import { assertDefined } from "../../utils/assert-defined";
 import { FireIndex } from "../lib/fire-index";
@@ -20,16 +20,18 @@ export class LikeIndexCollection extends FireIndex<LikeIndexData> {
     return this.ref.parent.parent.id;
   }
 
-  async sendLikes(userId: string) {
+  async sendLikeUserIds(userId: string) {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
-      .then((ary) => filter(ary, (e) => e.senderId === userId));
+      .then((ary) => filter(ary, (e) => e.senderId === userId))
+      .then((ary) => map(ary, (e) => e.receiverId));
   }
 
-  async receiveLikes(userId: string) {
+  async receiveLikeUserIds(userId: string) {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
-      .then((ary) => filter(ary, (e) => e.receiverId === userId));
+      .then((ary) => filter(ary, (e) => e.receiverId === userId))
+      .then((ary) => map(ary, (e) => e.senderId));
   }
 
   async pendingReceiveLikes(userId: string) {
