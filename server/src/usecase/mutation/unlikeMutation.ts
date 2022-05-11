@@ -8,7 +8,7 @@ export const unlikeMutation = async (_: unknown, args: { userId: string }, conte
   const { uid } = context.auth;
   const { usersCollection, likesCollection, likeIndexCollection } = context.collections;
 
-  const sendLike = await likesCollection.find({ senderId: uid, receiverId: userId });
+  const sendLike = await likesCollection.findBySenderAndReceiver({ senderId: uid, receiverId: userId });
   if (!sendLike) throw new Error("sendLike not exists");
 
   await sendLike.delete();

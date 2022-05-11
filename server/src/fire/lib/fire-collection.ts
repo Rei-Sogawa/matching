@@ -49,7 +49,7 @@ export class FireCollection<TData, TTransformed> {
   }
 }
 
-export class FireGroupCollection<TData, TTransformed> {
+export class FireCollectionGroup<TData, TTransformed> {
   ref: CollectionGroup<TData>;
   transformer: (snap: FireDocumentInput<TData>) => TTransformed;
   loader: DataLoader<string, DocumentSnapshot<TData>>;
