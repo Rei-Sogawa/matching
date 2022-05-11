@@ -3,28 +3,34 @@
 ## usecase
 
 - user
-  - createUser
-  - updateUserProfile
-  - updateUserLastAccess
+  - query
+    - me
+    - user
+    - users
+    - receiveLikeUsers
+    - sendLikeUsers
+  - mutation
+    - createUser
+    - updateUserProfile
+    - updateUserLastAccess
 - like
-  - createLike
-  - cancelLike
-  - skipLike
-  - matchLike
+  - mutation
+    - createLike
+    - cancelLike
+    - skipLike
+    - matchLike
 - messageRoom
-  - createMessageRoom
-  - createMessage
+  - query
+    - newMessageRooms
+    - openMessageRooms
+    - messageRoom
+    - message
+  - mutation
+    - createMessageRoom
+    - createMessage
 
-## query
+## index
 
+- userIndex
 - user
-  - me
-  - user
-  - users
-  - receiveLikeUsers
-  - sendLikeUsers
-- messageRoom
-  - newMessageRooms
-  - openMessageRooms
-  - messageRoom
-  - message
+  - likeIndex
