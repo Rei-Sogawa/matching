@@ -16,6 +16,26 @@ const MessageRoomDataSchema = z.object({
 export type MessageRoomData = z.infer<typeof MessageRoomDataSchema>;
 
 export class MessageRoomDoc extends FireDocument<MessageRoomData> implements MessageRoomData {
+  likeId!: string;
+  userIds!: string[];
+  open!: boolean;
+  createdAt!: Timestamp;
+  updatedAt!: Timestamp;
+
+  messages = new MessagesCollection(this.ref.collection("messages"));
+
+  partnerId(userId: string) {
+    return this.userIds.filter((id) => id !== userId)[0];
+  }
+
+  isMember(userId: string) {
+    return this.userIds.includes(userId);
+  }
+
+  touch() {
+    return this.edit({ open: true, updatedAt: Timestamp.now() });
+  }
+
   static create(
     collection: MessageRoomsCollection,
     { likeId, userIds }: { likeId: string; userIds: [string, string] }
@@ -29,30 +49,5 @@ export class MessageRoomDoc extends FireDocument<MessageRoomData> implements Mes
       updatedAt: createdAt,
     };
     return new MessageRoomDoc(this.createInput(collection, null, data));
-  }
-
-  likeId!: string;
-  userIds!: string[];
-  open!: boolean;
-  createdAt!: Timestamp;
-  updatedAt!: Timestamp;
-
-  messages = new MessagesCollection(this.ref.collection("messages"));
-
-  toData() {
-    const { id, ref, messages, ...data } = this;
-    return data;
-  }
-
-  touch() {
-    return this.edit({ open: true, updatedAt: Timestamp.now() });
-  }
-
-  partnerId(userId: string) {
-    return this.userIds.filter((id) => id !== userId)[0];
-  }
-
-  isMember(userId: string) {
-    return this.userIds.includes(userId);
   }
 }

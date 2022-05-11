@@ -2,6 +2,7 @@ import { Timestamp } from "firebase-admin/firestore";
 import { v4 } from "uuid";
 import { z } from "zod";
 
+import { assertDefined } from "../../utils/assert-defined";
 import { MessagesCollection } from "../collections/messages";
 import { FireDocument } from "../lib/fire-document";
 
@@ -15,6 +16,16 @@ const MessageDataSchema = z.object({
 export type MessageData = z.infer<typeof MessageDataSchema>;
 
 export class MessageDoc extends FireDocument<MessageData> implements MessageData {
+  __id!: string;
+  userId!: string;
+  content!: string;
+  createdAt!: Timestamp;
+
+  get messageRoomId() {
+    assertDefined(this.ref.parent.parent);
+    return this.ref.parent.parent.id;
+  }
+
   static create(collection: MessagesCollection, { userId, content }: Pick<MessageData, "userId" | "content">) {
     const createdAt = Timestamp.now();
     const data: MessageData = {
@@ -24,19 +35,5 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
       createdAt,
     };
     return new MessageDoc(this.createInput(collection, data.__id, data));
-  }
-
-  __id!: string;
-  userId!: string;
-  content!: string;
-  createdAt!: Timestamp;
-
-  get messageRoomId() {
-    return this.ref.parent.parent!.id;
-  }
-
-  toData() {
-    const { id, ref, ...data } = this;
-    return data;
   }
 }

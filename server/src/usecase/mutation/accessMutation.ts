@@ -9,7 +9,7 @@ export const accessMutation = async (_: unknown, __: unknown, context: Context) 
 
   const user = await usersCollection.get(uid);
   await user.access().save();
-  await userIndexCollection.update(user.toIndex());
+  await userIndexCollection.update(user.toIndex);
 
   return user;
 };

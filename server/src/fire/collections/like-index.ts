@@ -1,10 +1,15 @@
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { filter, orderBy, take } from "lodash";
 
-import { LikeData } from "../docs/like";
 import { FireIndex } from "../lib/fire-index";
 
-export type LikeIndexData = { id: string } & Pick<LikeData, "senderId" | "receiverId" | "status" | "createdAt">;
+export type LikeIndexData = {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  status: "PENDING" | "MATCHED" | "SKIPPED";
+  createdAt: Timestamp;
+};
 
 export class LikeIndexCollection extends FireIndex<LikeIndexData> {
   docIds = ["0", "1", "2"];

@@ -20,11 +20,11 @@ export const likeMutation = async (_: unknown, args: { userId: string }, context
       likeId: receiveLike.id,
       userIds: [receiveLike.senderId, receiveLike.receiverId],
     }).save();
-    await likeIndexCollection.update(receiveLike.toIndex());
+    await likeIndexCollection.update(receiveLike.toIndex);
   } else {
     const like = LikeDoc.create(likesCollection, { senderId: uid, receiverId: userId });
     await like.save();
-    await likeIndexCollection.add(like.toIndex());
+    await likeIndexCollection.add(like.toIndex);
   }
 
   return usersCollection.get(userId);

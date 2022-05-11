@@ -11,7 +11,7 @@ export const signUpMutation = async (_: unknown, args: { input: SignUpInput }, c
 
   const user = UserDoc.create(usersCollection, uid);
   await user.save();
-  await userIndexCollection.add(user.toIndex());
+  await userIndexCollection.add(user.toIndex);
 
   return user;
 };

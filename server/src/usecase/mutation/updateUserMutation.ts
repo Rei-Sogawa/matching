@@ -10,7 +10,7 @@ export const updateUserMutation = async (_: unknown, args: { input: UpdateUserIn
 
   const user = await usersCollection.get(uid);
   await user.edit(args.input).save();
-  await userIndexCollection.update(user.toIndex());
+  await userIndexCollection.update(user.toIndex);
 
   return user;
 };

@@ -12,7 +12,7 @@ export const unlikeMutation = async (_: unknown, args: { userId: string }, conte
   if (!sendLike) throw new Error("sendLike not exists");
 
   await sendLike.delete();
-  await likeIndexCollection.delete(sendLike.toIndex());
+  await likeIndexCollection.delete(sendLike.toIndex);
 
   return usersCollection.get(userId);
 };

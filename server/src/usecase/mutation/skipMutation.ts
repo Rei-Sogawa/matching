@@ -12,7 +12,7 @@ export const skipMutation = async (_: unknown, args: { userId: string }, context
   if (!receiveLike) throw new Error("receiveLike not exists");
 
   await receiveLike.skip().save();
-  await likeIndexCollection.update(receiveLike.toIndex());
+  await likeIndexCollection.update(receiveLike.toIndex);
 
   return usersCollection.get(userId);
 };

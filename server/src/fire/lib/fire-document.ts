@@ -1,5 +1,7 @@
 import { CollectionReference, DocumentReference, DocumentSnapshot, FieldValue } from "firebase-admin/firestore";
 
+import { FireCollection } from "./fire-collection";
+
 export declare type Primitive = string | number | boolean | undefined | null;
 export declare type PartialWithFieldValue<T> =
   | Partial<T>
@@ -14,20 +16,7 @@ export declare type PartialWithFieldValue<T> =
 
 export type FireDocumentInput<TData> = Pick<DocumentSnapshot<TData>, "id" | "ref" | "data">;
 
-export abstract class FireDocument<TData> {
-  static createInput<TData>(
-    collection: { ref: CollectionReference<TData> },
-    id: null | string,
-    data: TData
-  ): FireDocumentInput<TData> {
-    const docRef = id ? collection.ref.doc(id) : collection.ref.doc();
-    return {
-      ref: docRef,
-      id: docRef.id,
-      data: () => data,
-    };
-  }
-
+export class FireDocument<TData> {
   id: string;
   ref: DocumentReference<TData>;
 
@@ -39,10 +28,16 @@ export abstract class FireDocument<TData> {
     Object.assign(this, data);
   }
 
-  abstract toData(): TData;
+  get toData() {
+    const { id, ref, ...restFields } = this;
+    const data = Object.fromEntries(
+      Object.entries(restFields).filter(([, v]) => (v instanceof FireCollection ? false : true))
+    );
+    return data as unknown as TData;
+  }
 
-  toBatch() {
-    return [this.ref, this.toData()] as const;
+  get toBatch() {
+    return [this.ref, this.toData] as const;
   }
 
   edit(data: PartialWithFieldValue<TData>) {
@@ -51,12 +46,25 @@ export abstract class FireDocument<TData> {
   }
 
   async save() {
-    await this.ref.set(this.toData());
+    await this.ref.set(this.toData);
     return this;
   }
 
   async delete() {
     await this.ref.delete();
     return this;
+  }
+
+  static createInput<TData>(
+    collection: { ref: CollectionReference<TData> },
+    id: null | string,
+    data: TData
+  ): FireDocumentInput<TData> {
+    const docRef = id ? collection.ref.doc(id) : collection.ref.doc();
+    return {
+      ref: docRef,
+      id: docRef.id,
+      data: () => data,
+    };
   }
 }

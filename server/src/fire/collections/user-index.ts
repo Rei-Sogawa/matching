@@ -1,12 +1,15 @@
 import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 import { filter, orderBy, take } from "lodash";
 
-import { UserData } from "../docs/user";
 import { FireIndex } from "../lib/fire-index";
 
 export type UserIndexData = {
   id: string;
-} & Pick<UserData, "gender" | "age" | "livingPref" | "lastAccessedAt">;
+  gender: "MALE" | "FEMALE";
+  age: number;
+  livingPref: string;
+  lastAccessedAt: Timestamp;
+};
 
 export class UserIndexCollection extends FireIndex<UserIndexData> {
   docIds = ["0", "1", "2"];
