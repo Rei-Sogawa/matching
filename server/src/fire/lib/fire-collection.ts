@@ -36,11 +36,15 @@ export class FireCollection<TData, TTransformed> {
     this.loader = createLoader(this.ref);
   }
 
-  get(id: string, { cache } = { cache: true }) {
+  findOne(id: string, { cache } = { cache: true }) {
     return cache ? this.loader.load(id).then(this.transformer) : this.loader.clear(id).load(id).then(this.transformer);
   }
 
-  async query(queryFn: (ref: CollectionReference<TData>) => Query<TData>, { prime } = { prime: false }) {
+  findOneById(id: string, { cache } = { cache: true }) {
+    return this.findOne(id, { cache }).catch(() => undefined);
+  }
+
+  async findManyByQuery(queryFn: (ref: CollectionReference<TData>) => Query<TData>, { prime } = { prime: false }) {
     const snaps = await queryFn(this.ref).get();
     if (prime) {
       snaps.forEach((snap) => this.loader.prime(snap.id, snap));
@@ -64,11 +68,15 @@ export class FireCollectionGroup<TData, TTransformed> {
     this.loader = createGroupLoader(this.ref, idField);
   }
 
-  get(id: string, { cache } = { cache: true }) {
+  findOne(id: string, { cache } = { cache: true }) {
     return cache ? this.loader.load(id).then(this.transformer) : this.loader.clear(id).load(id).then(this.transformer);
   }
 
-  async query(queryFn: (ref: CollectionGroup<TData>) => Query<TData>, { prime } = { prime: false }) {
+  findOneById(id: string, { cache } = { cache: true }) {
+    return this.findOne(id, { cache }).catch(() => undefined);
+  }
+
+  async findManyByQuery(queryFn: (ref: CollectionGroup<TData>) => Query<TData>, { prime } = { prime: false }) {
     const snaps = await queryFn(this.ref).get();
     if (prime) {
       snaps.forEach((snap) => this.loader.prime(snap.id, snap));

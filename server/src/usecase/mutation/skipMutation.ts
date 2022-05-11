@@ -14,5 +14,5 @@ export const skipMutation = async (_: unknown, args: { userId: string }, context
   await receiveLike.skip().save();
   await likeIndexCollection.update(receiveLike.toIndex);
 
-  return usersCollection.get(userId);
+  return usersCollection.findOne(userId);
 };

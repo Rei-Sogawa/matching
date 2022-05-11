@@ -14,5 +14,5 @@ export const unlikeMutation = async (_: unknown, args: { userId: string }, conte
   await sendLike.delete();
   await likeIndexCollection.delete(sendLike.toIndex);
 
-  return usersCollection.get(userId);
+  return usersCollection.findOne(userId);
 };

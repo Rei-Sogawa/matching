@@ -7,8 +7,8 @@ export const messageQuery = async (_: unknown, args: { id: string }, context: Co
   const { uid } = context.auth;
   const { messageRoomsCollection, messagesGroupCollection } = context.collections;
 
-  const message = await messagesGroupCollection.get(args.id);
-  const messageRoom = await messageRoomsCollection.get(message.messageRoomId);
+  const message = await messagesGroupCollection.findOne(args.id);
+  const messageRoom = await messageRoomsCollection.findOne(message.messageRoomId);
 
   if (!messageRoom.isMember(uid)) throw new Error("not messageRoom member");
 

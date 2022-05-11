@@ -8,7 +8,7 @@ export const updateUserMutation = async (_: unknown, args: { input: UpdateUserIn
   const { uid } = context.auth;
   const { usersCollection, userIndexCollection } = context.collections;
 
-  const user = await usersCollection.get(uid);
+  const user = await usersCollection.findOne(uid);
   await user.edit(args.input).save();
   await userIndexCollection.update(user.toIndex);
 

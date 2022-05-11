@@ -19,7 +19,7 @@ export const sendLikeUsersQuery = async (_: unknown, args: { input: PageInput },
 
   const edges = await Promise.all(
     sendLikes.map(async (like) => {
-      const node = await usersCollection.get(like.receiverId);
+      const node = await usersCollection.findOne(like.receiverId);
       return {
         node,
         cursor: like.createdAt,

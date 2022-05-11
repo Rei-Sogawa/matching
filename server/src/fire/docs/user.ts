@@ -33,10 +33,6 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
     return index;
   }
 
-  access() {
-    return this.edit({ lastAccessedAt: Timestamp.now() });
-  }
-
   static create(collection: UsersCollection, id: string) {
     const createdAt = Timestamp.now();
     const data: UserData = {
@@ -50,5 +46,9 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
       updatedAt: createdAt,
     };
     return new UserDoc(this.createInput(collection, id, data));
+  }
+
+  access() {
+    return this.edit({ lastAccessedAt: Timestamp.now() });
   }
 }

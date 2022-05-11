@@ -29,7 +29,7 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
     assertDefined(context.auth);
     const { uid } = context.auth;
     const { usersCollection } = context.collections;
-    return usersCollection.get(parent.partnerId(uid));
+    return usersCollection.findOne(parent.partnerId(uid));
   },
 
   messages: async (parent, args) => {
@@ -47,7 +47,7 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
 export const Message: Resolvers["Message"] = {
   user: async (parent, _args, context) => {
     const { usersCollection } = context.collections;
-    return usersCollection.get(parent.userId);
+    return usersCollection.findOne(parent.userId);
   },
 
   mine: async (parent, _args, context) => {

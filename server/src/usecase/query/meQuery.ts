@@ -7,5 +7,5 @@ export const meQuery = (_: unknown, __: unknown, context: Context) => {
   const { uid } = context.auth;
   const { usersCollection } = context.collections;
 
-  return usersCollection.get(uid);
+  return usersCollection.findOne(uid);
 };

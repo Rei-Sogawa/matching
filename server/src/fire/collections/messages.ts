@@ -10,11 +10,11 @@ export class MessagesCollection extends FireCollection<MessageData, MessageDoc> 
 
   async paginatedMessages({ first, after }: { first: number; after: Timestamp | null | undefined }) {
     return after
-      ? this.query((ref) => ref.orderBy("createdAt", "desc").startAfter(after).limit(first))
-      : this.query((ref) => ref.orderBy("createdAt", "desc").limit(first));
+      ? this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").startAfter(after).limit(first))
+      : this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").limit(first));
   }
 
   async last() {
-    return this.query((ref) => ref.orderBy("createdAt", "desc").limit(1)).then((docs) => docs[0]);
+    return this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").limit(1)).then((docs) => docs[0]);
   }
 }

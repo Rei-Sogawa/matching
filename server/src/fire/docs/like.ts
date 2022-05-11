@@ -27,16 +27,6 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     return index;
   }
 
-  skip() {
-    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
-    return this.edit({ status: "SKIPPED", updatedAt: Timestamp.now() });
-  }
-
-  match() {
-    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
-    return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
-  }
-
   static create(collection: LikesCollection, { senderId, receiverId }: Pick<LikeData, "senderId" | "receiverId">) {
     const createdAt = Timestamp.now();
     const data: LikeData = {
@@ -47,5 +37,15 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
       updatedAt: createdAt,
     };
     return new LikeDoc(this.createInput(collection, null, data));
+  }
+
+  skip() {
+    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
+    return this.edit({ status: "SKIPPED", updatedAt: Timestamp.now() });
+  }
+
+  match() {
+    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
+    return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
   }
 }

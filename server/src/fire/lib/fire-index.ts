@@ -41,8 +41,8 @@ type IndexData<TData extends { id: string }> = {
 };
 
 export abstract class FireIndex<TData extends { id: string }> {
-  abstract docIds: string[];
   ref: CollectionReference<IndexData<TData>>;
+  abstract docIds: string[];
 
   constructor(ref: CollectionReference) {
     this.ref = ref as CollectionReference<IndexData<TData>>;

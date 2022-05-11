@@ -9,5 +9,5 @@ export const receiveLikeUsersQuery = async (_: unknown, __: unknown, context: Co
 
   const receiveLikes = await likeIndexCollection.pendingReceiveLikes(uid);
 
-  return Promise.all(receiveLikes.map((data) => usersCollection.get(data.senderId)));
+  return Promise.all(receiveLikes.map((data) => usersCollection.findOne(data.senderId)));
 };

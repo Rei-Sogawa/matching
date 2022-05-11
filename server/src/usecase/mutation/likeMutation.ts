@@ -27,5 +27,5 @@ export const likeMutation = async (_: unknown, args: { userId: string }, context
     await likeIndexCollection.add(like.toIndex);
   }
 
-  return usersCollection.get(userId);
+  return usersCollection.findOne(userId);
 };

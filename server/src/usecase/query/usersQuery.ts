@@ -20,7 +20,7 @@ export const usersQuery = async (_: unknown, args: { input: PageInput }, context
     excludeUserIds: [uid, ...sendLikes.map((like) => like.receiverId), ...receiveLikes.map((like) => like.senderId)],
   });
 
-  const nodes = await Promise.all(users.map((user) => usersCollection.get(user.id)));
+  const nodes = await Promise.all(users.map((user) => usersCollection.findOne(user.id)));
   const edges = nodes.map((node) => ({ node, cursor: node.lastAccessedAt }));
 
   return {

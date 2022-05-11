@@ -40,6 +40,19 @@ export class FireDocument<TData> {
     return [this.ref, this.toData] as const;
   }
 
+  static createInput<TData>(
+    collection: { ref: CollectionReference<TData> },
+    id: null | string,
+    data: TData
+  ): FireDocumentInput<TData> {
+    const docRef = id ? collection.ref.doc(id) : collection.ref.doc();
+    return {
+      ref: docRef,
+      id: docRef.id,
+      data: () => data,
+    };
+  }
+
   edit(data: PartialWithFieldValue<TData>) {
     Object.assign(this, data);
     return this;
@@ -53,18 +66,5 @@ export class FireDocument<TData> {
   async delete() {
     await this.ref.delete();
     return this;
-  }
-
-  static createInput<TData>(
-    collection: { ref: CollectionReference<TData> },
-    id: null | string,
-    data: TData
-  ): FireDocumentInput<TData> {
-    const docRef = id ? collection.ref.doc(id) : collection.ref.doc();
-    return {
-      ref: docRef,
-      id: docRef.id,
-      data: () => data,
-    };
   }
 }

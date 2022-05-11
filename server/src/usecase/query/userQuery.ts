@@ -7,5 +7,5 @@ export const userQuery = (_: unknown, args: { id: string }, context: Context) =>
   const { id } = args;
   const { usersCollection } = context.collections;
 
-  return usersCollection.get(id);
+  return usersCollection.findOne(id);
 };

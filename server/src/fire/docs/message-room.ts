@@ -24,18 +24,6 @@ export class MessageRoomDoc extends FireDocument<MessageRoomData> implements Mes
 
   messages = new MessagesCollection(this.ref.collection("messages"));
 
-  partnerId(userId: string) {
-    return this.userIds.filter((id) => id !== userId)[0];
-  }
-
-  isMember(userId: string) {
-    return this.userIds.includes(userId);
-  }
-
-  touch() {
-    return this.edit({ open: true, updatedAt: Timestamp.now() });
-  }
-
   static create(
     collection: MessageRoomsCollection,
     { likeId, userIds }: { likeId: string; userIds: [string, string] }
@@ -49,5 +37,17 @@ export class MessageRoomDoc extends FireDocument<MessageRoomData> implements Mes
       updatedAt: createdAt,
     };
     return new MessageRoomDoc(this.createInput(collection, null, data));
+  }
+
+  partnerId(userId: string) {
+    return this.userIds.filter((id) => id !== userId)[0];
+  }
+
+  isMember(userId: string) {
+    return this.userIds.includes(userId);
+  }
+
+  touch() {
+    return this.edit({ open: true, updatedAt: Timestamp.now() });
   }
 }

@@ -18,7 +18,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
     userId: string;
   }) {
     return after
-      ? this.query((ref) =>
+      ? this.findManyByQuery((ref) =>
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
@@ -26,7 +26,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
             .startAfter(after)
             .limit(first)
         )
-      : this.query((ref) =>
+      : this.findManyByQuery((ref) =>
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
@@ -45,7 +45,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
     userId: string;
   }) {
     return after
-      ? this.query((ref) =>
+      ? this.findManyByQuery((ref) =>
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
@@ -53,7 +53,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
             .startAfter(after)
             .limit(first)
         )
-      : this.query((ref) =>
+      : this.findManyByQuery((ref) =>
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
