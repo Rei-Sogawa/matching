@@ -4,28 +4,28 @@ import { MessageRoomEventsCollection } from "../collections/message-room-events"
 import { FireDocument } from "../lib/fire-document";
 
 export type MessageRoomEventData = {
-  messageRoomId: string;
-  messageId: string;
   action: "CREATE";
   createdAt: Timestamp;
+  messageRoomId: string;
+  messageId: string;
 };
 
 export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> implements MessageRoomEventData {
-  messageRoomId!: string;
-  messageId!: string;
   action!: "CREATE";
   createdAt!: Timestamp;
+  messageRoomId!: string;
+  messageId!: string;
 
   static create(
     collection: MessageRoomEventsCollection,
-    { messageRoomId, messageId, action }: Pick<MessageRoomEventData, "messageRoomId" | "messageId" | "action">
+    { action, messageRoomId, messageId }: Pick<MessageRoomEventData, "action" | "messageRoomId" | "messageId">
   ) {
     const createdAt = Timestamp.now();
     const data: MessageRoomEventData = {
-      messageRoomId,
-      messageId,
       action,
       createdAt,
+      messageRoomId,
+      messageId,
     };
     return new MessageRoomEventDoc(this.createInput(collection, null, data));
   }

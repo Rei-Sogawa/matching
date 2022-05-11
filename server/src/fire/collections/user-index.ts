@@ -1,4 +1,4 @@
-import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import { filter, orderBy, take } from "lodash";
 
 import { FireIndex } from "../lib/fire-index";
@@ -13,10 +13,6 @@ export type UserIndexData = {
 
 export class UserIndexCollection extends FireIndex<UserIndexData> {
   docIds = ["0", "1", "2"];
-
-  constructor(ref: CollectionReference) {
-    super(ref);
-  }
 
   async paginatedUsers({
     first,

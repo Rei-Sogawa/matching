@@ -1,9 +1,10 @@
 import { Timestamp } from "firebase-admin/firestore";
 
 import { Gender } from "../../graphql/generated";
+import { LikeIndexCollection } from "../collections/like-index";
 import { UserIndexData } from "../collections/user-index";
 import { UsersCollection } from "../collections/users";
-import { FireDocument, FireDocumentInput } from "../lib/fire-document";
+import { FireDocument } from "../lib/fire-document";
 
 export type UserData = {
   gender: "MALE" | "FEMALE";
@@ -25,6 +26,8 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
   lastAccessedAt!: Timestamp;
   createdAt!: Timestamp;
   updatedAt!: Timestamp;
+
+  likeIndexCollection = new LikeIndexCollection(this.ref.collection("likeIndex"));
 
   get toIndex() {
     const { id, ref, ...data } = this;
