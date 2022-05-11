@@ -41,10 +41,6 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
     super(snap);
   }
 
-  get userIds() {
-    return [this.senderId, this.receiverId] as [string, string];
-  }
-
   toData() {
     const { id, ref, ...data } = this;
     return data;
