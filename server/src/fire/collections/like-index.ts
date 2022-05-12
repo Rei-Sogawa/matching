@@ -21,41 +21,35 @@ export class LikeIndexCollection extends FireIndex<LikeIndexData> {
     return this.ref.parent.parent.id;
   }
 
-  async sendLikeUserIds(userId: string) {
+  async sendLikeUserIds() {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
-      .then((ary) => filter(ary, (e) => e.senderId === userId))
+      .then((ary) => filter(ary, (e) => e.senderId === this.userId))
       .then((ary) => map(ary, (e) => e.receiverId));
   }
 
-  async receiveLikeUserIds(userId: string) {
+  async receiveLikeUserIds() {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
-      .then((ary) => filter(ary, (e) => e.receiverId === userId))
+      .then((ary) => filter(ary, (e) => e.receiverId === this.userId))
       .then((ary) => map(ary, (e) => e.senderId));
   }
 
-  async pendingReceiveLikes(userId: string) {
+  async pendingReceiveLikeUserIds() {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
-      .then((ary) => filter(ary, (e) => e.receiverId === userId))
-      .then((ary) => filter(ary, (e) => e.status === "PENDING"));
+      .then((ary) => filter(ary, (e) => e.receiverId === this.userId))
+      .then((ary) => filter(ary, (e) => e.status === "PENDING"))
+      .then((ary) => map(ary, (e) => e.senderId));
   }
 
-  async paginatedPendingSendLikes({
-    first,
-    after,
-    userId,
-  }: {
-    first: number;
-    after: Timestamp | null | undefined;
-    userId: string;
-  }) {
+  async paginatedPendingSendLikeUserIds({ first, after }: { first: number; after: Timestamp | null | undefined }) {
     return this.get()
       .then((ary) => orderBy(ary, (e) => e.createdAt, "desc"))
-      .then((ary) => filter(ary, (e) => e.senderId === userId))
+      .then((ary) => filter(ary, (e) => e.senderId === this.userId))
       .then((ary) => filter(ary, (e) => e.status === "PENDING"))
       .then((ary) => filter(ary, (e) => (after ? e.createdAt < after : true)))
-      .then((ary) => take(ary, first));
+      .then((ary) => take(ary, first))
+      .then((ary) => map(ary, (e) => e.receiverId));
   }
 }

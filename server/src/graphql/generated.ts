@@ -76,7 +76,6 @@ export type MessageRoom = {
   id: Scalars['ID'];
   latestMessage: Message;
   messages: MessageConnection;
-  opened: Scalars['Boolean'];
   partner: User;
 };
 
@@ -401,7 +400,6 @@ export type MessageRoomResolvers<ContextType = Context, ParentType extends Resol
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   latestMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
   messages?: Resolver<ResolversTypes['MessageConnection'], ParentType, ContextType, RequireFields<MessageRoomMessagesArgs, 'input'>>;
-  opened?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   partner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

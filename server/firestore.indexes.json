@@ -23,7 +23,7 @@
           "arrayConfig": "CONTAINS"
         },
         {
-          "fieldPath": "open",
+          "fieldPath": "opened",
           "order": "ASCENDING"
         },
         {

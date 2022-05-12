@@ -51,7 +51,6 @@ type MessageRoom {
   id: ID!
   latestMessage: Message!
   messages(input: PageInput!): MessageConnection!
-  opened: Boolean!
   partner: User!
 }
 

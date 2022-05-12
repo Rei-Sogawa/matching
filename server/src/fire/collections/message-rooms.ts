@@ -8,7 +8,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
     super(ref, (snap) => new MessageRoomDoc(snap));
   }
 
-  async paginatedMessageRooms({
+  async paginatedOpenedMessageRooms({
     first,
     after,
     userId,
@@ -22,7 +22,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
-            .where("open", "==", true)
+            .where("opened", "==", true)
             .startAfter(after)
             .limit(first)
         )
@@ -30,7 +30,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
-            .where("open", "==", true)
+            .where("opened", "==", true)
             .limit(first)
         );
   }

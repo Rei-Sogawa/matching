@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { filter, orderBy, take } from "lodash";
+import { filter, map, orderBy, take } from "lodash";
 
 import { Gender } from "../../graphql/generated";
 import { FireIndex } from "../lib/fire-index";
@@ -15,7 +15,7 @@ export type UserIndexData = {
 export class UserIndexCollection extends FireIndex<UserIndexData> {
   docIds = ["0", "1", "2"];
 
-  async paginatedUsers({
+  async paginatedUserIds({
     first,
     after,
     excludeUserIds,
@@ -28,6 +28,7 @@ export class UserIndexCollection extends FireIndex<UserIndexData> {
       .then((ary) => orderBy(ary, (e) => e.lastAccessedAt, "desc"))
       .then((ary) => filter(ary, (e) => !excludeUserIds.includes(e.id)))
       .then((ary) => filter(ary, (e) => (after ? e.lastAccessedAt < after : true)))
-      .then((ary) => take(ary, first));
+      .then((ary) => take(ary, first))
+      .then((ary) => map(ary, (e) => e.id));
   }
 }

@@ -12,7 +12,7 @@ export const createMessageMutation = async (
   authorize(auth);
 
   const messageRoom = await messageRoomsCollection.findOne(input.messageRoomId);
-  if (!messageRoom.isMember(auth.uid)) throw new Error("can't createMessage, because not a member");
+  if (!messageRoom.isMember(auth.uid)) throw new Error("can't createMessage, because not a messageRoom member");
 
   const message = MessageDoc.create(messageRoom.messagesCollection, { userId: auth.uid, content: input.content });
   const messageRoomEvent = MessageRoomEventDoc.create(messageRoomEventsCollection, {
