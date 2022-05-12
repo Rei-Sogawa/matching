@@ -3,7 +3,7 @@ import { gql } from "apollo-server";
 export const typeDefs = gql`
 input CreateMessageInput {
   content: String!
-  messageRoomId: String!
+  messageRoomId: ID!
 }
 
 scalar DateTime
@@ -49,8 +49,9 @@ type MessageEdge {
 
 type MessageRoom {
   id: ID!
-  lastMessage: Message!
+  latestMessage: Message!
   messages(input: PageInput!): MessageConnection!
+  opened: Boolean!
   partner: User!
 }
 
@@ -65,13 +66,14 @@ type MessageRoomEdge {
 }
 
 type Mutation {
-  access: Me!
+  cancelLike(likeId: ID!): User!
+  createLike(userId: ID!): User!
   createMessage(input: CreateMessageInput!): Message!
-  like(userId: ID!): User!
+  matchLike(likeId: ID!): User!
   signUp(input: SignUpInput!): Me!
-  skip(userId: ID!): User!
-  unlike(userId: ID!): User!
-  updateUser(input: UpdateUserInput!): Me!
+  skipLike(likeId: ID!): User!
+  updateUserLastAccess: Me!
+  updateUserProfile(input: UpdateUserInput!): Me!
 }
 
 type PageInfo {
@@ -86,13 +88,13 @@ input PageInput {
 
 type Query {
   me: Me!
-  message(id: ID!): Message!
-  messageRoom(id: ID!): MessageRoom!
-  messageRooms(input: PageInput!): MessageRoomConnection!
+  message(messageId: ID!): Message!
+  messageRoom(messageRoomId: ID!): MessageRoom!
   newMessageRooms(input: PageInput!): MessageRoomConnection!
+  openedMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
-  user(id: ID!): User!
+  user(userId: ID!): User!
   users(input: PageInput!): UserConnection!
 }
 

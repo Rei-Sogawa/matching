@@ -1,18 +1,22 @@
+import { cancelLikeMutation } from "../core/like/mutation/cancel-like";
+import { createLikeMutation } from "../core/like/mutation/create-like";
+import { matchLikeMutation } from "../core/like/mutation/match-like";
+import { skipLikeMutation } from "../core/like/mutation/skip-like";
+import { createMessageMutation } from "../core/message-room/mutation/create-message";
+import { signUpMutation } from "../core/user/mutation/sign-up";
+import { updateUserLastAccessMutation } from "../core/user/mutation/update-user-last-access";
+import { updateUserProfileMutation } from "../core/user/mutation/update-user-profile";
 import { Resolvers } from "../graphql/generated";
-import { accessMutation } from "../usecase/mutation/accessMutation";
-import { createMessageMutation } from "../usecase/mutation/createMessageMutation";
-import { likeMutation } from "../usecase/mutation/likeMutation";
-import { signUpMutation } from "../usecase/mutation/signUpMutation";
-import { skipMutation } from "../usecase/mutation/skipMutation";
-import { unlikeMutation } from "../usecase/mutation/unlikeMutation";
-import { updateUserMutation } from "../usecase/mutation/updateUserMutation";
 
 export const Mutation: Resolvers["Mutation"] = {
   signUp: signUpMutation,
-  access: accessMutation,
-  updateUser: updateUserMutation,
-  like: likeMutation,
-  unlike: unlikeMutation,
-  skip: skipMutation,
+  updateUserProfile: updateUserProfileMutation,
+  updateUserLastAccess: updateUserLastAccessMutation,
+
+  createLike: createLikeMutation,
+  cancelLike: cancelLikeMutation,
+  skipLike: skipLikeMutation,
+  matchLike: matchLikeMutation,
+
   createMessage: createMessageMutation,
 };

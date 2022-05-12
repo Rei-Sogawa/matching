@@ -34,13 +34,13 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
 
   messages: async (parent, args) => {
     const { input } = args;
-    const messages = await parent.messages.paginatedMessages({ first: input.first, after: input.after });
+    const messages = await parent.messagesCollection.paginatedMessages({ first: input.first, after: input.after });
     const edges = messages.map((m) => ({ node: m, cursor: m.createdAt }));
     return { edges, pageInfo: { endCursor: last(edges)?.cursor, hasNextPage: input.first === edges.length } };
   },
 
   lastMessage: async (parent) => {
-    return parent.messages.last();
+    return parent.messagesCollection.last();
   },
 };
 

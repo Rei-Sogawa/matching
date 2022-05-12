@@ -12,12 +12,8 @@ export type MessageData = {
   userId: string;
 };
 
-export class MessageDoc extends FireDocument<MessageData> implements MessageData {
-  __id!: string;
-  content!: string;
-  createdAt!: Timestamp;
-  userId!: string;
-
+export interface MessageDoc extends MessageData {}
+export class MessageDoc extends FireDocument<MessageData> {
   get messageRoomId() {
     assertDefined(this.ref.parent.parent);
     return this.ref.parent.parent.id;
@@ -31,6 +27,6 @@ export class MessageDoc extends FireDocument<MessageData> implements MessageData
       createdAt,
       userId,
     };
-    return new MessageDoc(this.createInput(collection, data.__id, data));
+    return new MessageDoc(this.makeCreateInput(collection, data.__id, data));
   }
 }

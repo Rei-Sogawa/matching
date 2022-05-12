@@ -1,12 +1,13 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { filter, map, orderBy, take } from "lodash";
 
+import { LikeStatus } from "../../graphql/generated";
 import { assertDefined } from "../../utils/assert-defined";
 import { FireIndex } from "../lib/fire-index";
 
 export type LikeIndexData = {
   id: string;
-  status: "PENDING" | "MATCHED" | "SKIPPED";
+  status: LikeStatus;
   createdAt: Timestamp;
   senderId: string;
   receiverId: string;

@@ -28,7 +28,7 @@ export class FireDocument<TData> {
     Object.assign(this, data);
   }
 
-  get toData() {
+  get data() {
     const { id, ref, ...restFields } = this;
     const data = Object.fromEntries(
       Object.entries(restFields).filter(([, v]) => (v instanceof FireCollection ? false : true))
@@ -36,11 +36,11 @@ export class FireDocument<TData> {
     return data as unknown as TData;
   }
 
-  get toBatch() {
-    return [this.ref, this.toData] as const;
+  get batchInput() {
+    return [this.ref, this.data] as const;
   }
 
-  static createInput<TData>(
+  static makeCreateInput<TData>(
     collection: { ref: CollectionReference<TData> },
     id: null | string,
     data: TData
@@ -59,7 +59,7 @@ export class FireDocument<TData> {
   }
 
   async save() {
-    await this.ref.set(this.toData);
+    await this.ref.set(this.data);
     return this;
   }
 

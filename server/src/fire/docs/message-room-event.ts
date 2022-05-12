@@ -10,12 +10,8 @@ export type MessageRoomEventData = {
   messageId: string;
 };
 
-export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> implements MessageRoomEventData {
-  action!: "CREATE";
-  createdAt!: Timestamp;
-  messageRoomId!: string;
-  messageId!: string;
-
+export interface MessageRoomEventDoc extends MessageRoomEventData {}
+export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> {
   static create(
     collection: MessageRoomEventsCollection,
     { action, messageRoomId, messageId }: Pick<MessageRoomEventData, "action" | "messageRoomId" | "messageId">
@@ -27,6 +23,6 @@ export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> impl
       messageRoomId,
       messageId,
     };
-    return new MessageRoomEventDoc(this.createInput(collection, null, data));
+    return new MessageRoomEventDoc(this.makeCreateInput(collection, null, data));
   }
 }

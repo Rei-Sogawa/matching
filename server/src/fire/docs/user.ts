@@ -7,7 +7,7 @@ import { UsersCollection } from "../collections/users";
 import { FireDocument } from "../lib/fire-document";
 
 export type UserData = {
-  gender: "MALE" | "FEMALE";
+  gender: Gender;
   nickName: string;
   age: number;
   livingPref: string;
@@ -17,19 +17,11 @@ export type UserData = {
   updatedAt: Timestamp;
 };
 
-export class UserDoc extends FireDocument<UserData> implements UserData {
-  gender!: Gender;
-  nickName!: string;
-  age!: number;
-  livingPref!: string;
-  photoPaths!: string[];
-  lastAccessedAt!: Timestamp;
-  createdAt!: Timestamp;
-  updatedAt!: Timestamp;
-
+export interface UserDoc extends UserData {}
+export class UserDoc extends FireDocument<UserData> {
   likeIndexCollection = new LikeIndexCollection(this.ref.collection("likeIndex"));
 
-  get toIndex() {
+  get indexData() {
     const { id, ref, ...data } = this;
     const { gender, age, livingPref, lastAccessedAt } = data;
     const index: UserIndexData = { id, gender, age, livingPref, lastAccessedAt };
@@ -48,7 +40,7 @@ export class UserDoc extends FireDocument<UserData> implements UserData {
       createdAt,
       updatedAt: createdAt,
     };
-    return new UserDoc(this.createInput(collection, id, data));
+    return new UserDoc(this.makeCreateInput(collection, id, data));
   }
 
   access() {

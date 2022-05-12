@@ -1,0 +1,20 @@
+import { authorize } from "../../../authorize";
+import { Context } from "../../../context";
+import { UserDoc } from "../../../fire/docs/user";
+
+export const updateUserLastAccessMutation = async (
+  _: unknown,
+  __: unknown,
+  { auth, collections: { usersCollection, userIndexCollection } }: Context
+): Promise<UserDoc> => {
+  authorize(auth);
+
+  const user = await usersCollection.findOne(auth.uid);
+
+  user.access();
+
+  await user.save();
+  await userIndexCollection.update(user.indexData);
+
+  return user;
+};

@@ -1,11 +1,12 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { filter, orderBy, take } from "lodash";
 
+import { Gender } from "../../graphql/generated";
 import { FireIndex } from "../lib/fire-index";
 
 export type UserIndexData = {
   id: string;
-  gender: "MALE" | "FEMALE";
+  gender: Gender;
   age: number;
   livingPref: string;
   lastAccessedAt: Timestamp;

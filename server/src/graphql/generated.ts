@@ -23,7 +23,7 @@ export type Scalars = {
 
 export type CreateMessageInput = {
   content: Scalars['String'];
-  messageRoomId: Scalars['String'];
+  messageRoomId: Scalars['ID'];
 };
 
 export const Gender = {
@@ -74,8 +74,9 @@ export type MessageEdge = {
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
-  lastMessage: Message;
+  latestMessage: Message;
   messages: MessageConnection;
+  opened: Scalars['Boolean'];
   partner: User;
 };
 
@@ -98,13 +99,24 @@ export type MessageRoomEdge = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  access: Me;
+  cancelLike: User;
+  createLike: User;
   createMessage: Message;
-  like: User;
+  matchLike: User;
   signUp: Me;
-  skip: User;
-  unlike: User;
-  updateUser: Me;
+  skipLike: User;
+  updateUserLastAccess: Me;
+  updateUserProfile: Me;
+};
+
+
+export type MutationCancelLikeArgs = {
+  likeId: Scalars['ID'];
+};
+
+
+export type MutationCreateLikeArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -113,8 +125,8 @@ export type MutationCreateMessageArgs = {
 };
 
 
-export type MutationLikeArgs = {
-  userId: Scalars['ID'];
+export type MutationMatchLikeArgs = {
+  likeId: Scalars['ID'];
 };
 
 
@@ -123,17 +135,12 @@ export type MutationSignUpArgs = {
 };
 
 
-export type MutationSkipArgs = {
-  userId: Scalars['ID'];
+export type MutationSkipLikeArgs = {
+  likeId: Scalars['ID'];
 };
 
 
-export type MutationUnlikeArgs = {
-  userId: Scalars['ID'];
-};
-
-
-export type MutationUpdateUserArgs = {
+export type MutationUpdateUserProfileArgs = {
   input: UpdateUserInput;
 };
 
@@ -153,8 +160,8 @@ export type Query = {
   me: Me;
   message: Message;
   messageRoom: MessageRoom;
-  messageRooms: MessageRoomConnection;
   newMessageRooms: MessageRoomConnection;
+  openedMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
@@ -163,21 +170,21 @@ export type Query = {
 
 
 export type QueryMessageArgs = {
-  id: Scalars['ID'];
+  messageId: Scalars['ID'];
 };
 
 
 export type QueryMessageRoomArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryMessageRoomsArgs = {
-  input: PageInput;
+  messageRoomId: Scalars['ID'];
 };
 
 
 export type QueryNewMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type QueryOpenedMessageRoomsArgs = {
   input: PageInput;
 };
 
@@ -188,7 +195,7 @@ export type QuerySendLikeUsersArgs = {
 
 
 export type QueryUserArgs = {
-  id: Scalars['ID'];
+  userId: Scalars['ID'];
 };
 
 
@@ -392,8 +399,9 @@ export type MessageEdgeResolvers<ContextType = Context, ParentType extends Resol
 
 export type MessageRoomResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageRoom'] = ResolversParentTypes['MessageRoom']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  lastMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
+  latestMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
   messages?: Resolver<ResolversTypes['MessageConnection'], ParentType, ContextType, RequireFields<MessageRoomMessagesArgs, 'input'>>;
+  opened?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   partner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -411,13 +419,14 @@ export type MessageRoomEdgeResolvers<ContextType = Context, ParentType extends R
 }>;
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  access?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  cancelLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCancelLikeArgs, 'likeId'>>;
+  createLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateLikeArgs, 'userId'>>;
   createMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'input'>>;
-  like?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationLikeArgs, 'userId'>>;
+  matchLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationMatchLikeArgs, 'likeId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
-  skip?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSkipArgs, 'userId'>>;
-  unlike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUnlikeArgs, 'userId'>>;
-  updateUser?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
+  skipLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSkipLikeArgs, 'likeId'>>;
+  updateUserLastAccess?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  updateUserProfile?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationUpdateUserProfileArgs, 'input'>>;
 }>;
 
 export type PageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
@@ -428,13 +437,13 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryMessageArgs, 'id'>>;
-  messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<QueryMessageRoomArgs, 'id'>>;
-  messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryMessageRoomsArgs, 'input'>>;
+  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryMessageArgs, 'messageId'>>;
+  messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<QueryMessageRoomArgs, 'messageRoomId'>>;
   newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryNewMessageRoomsArgs, 'input'>>;
+  openedMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryOpenedMessageRoomsArgs, 'input'>>;
   receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
 }>;
 

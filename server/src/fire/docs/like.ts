@@ -6,21 +6,16 @@ import { LikesCollection } from "../collections/likes";
 import { FireDocument } from "../lib/fire-document";
 
 export type LikeData = {
-  status: "PENDING" | "MATCHED" | "SKIPPED";
+  status: LikeStatus;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   senderId: string;
   receiverId: string;
 };
 
-export class LikeDoc extends FireDocument<LikeData> implements LikeData {
-  status!: LikeStatus;
-  createdAt!: Timestamp;
-  updatedAt!: Timestamp;
-  senderId!: string;
-  receiverId!: string;
-
-  get toIndex() {
+export interface LikeDoc extends LikeData {}
+export class LikeDoc extends FireDocument<LikeData> {
+  get indexData() {
     const { id, ref, ...data } = this;
     const { status, createdAt, senderId, receiverId } = data;
     const index: LikeIndexData = { id, status, createdAt, senderId, receiverId };
@@ -36,16 +31,16 @@ export class LikeDoc extends FireDocument<LikeData> implements LikeData {
       senderId,
       receiverId,
     };
-    return new LikeDoc(this.createInput(collection, null, data));
+    return new LikeDoc(this.makeCreateInput(collection, null, data));
   }
 
   skip() {
-    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
+    if (this.status !== "PENDING") throw new Error("Can't skip, because status is not PENDING");
     return this.edit({ status: "SKIPPED", updatedAt: Timestamp.now() });
   }
 
   match() {
-    if (this.status !== "PENDING") throw new Error("this.status is not PENDING");
+    if (this.status !== "PENDING") throw new Error("Can't match, because status is not PENDING");
     return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
   }
 }

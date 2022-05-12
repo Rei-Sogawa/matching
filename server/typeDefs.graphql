@@ -50,9 +50,10 @@ type Message {
 
 type MessageRoom {
   id: ID!
+  opened: Boolean!
   partner: User!
   messages(input: PageInput!): MessageConnection!
-  lastMessage: Message!
+  latestMessage: Message!
 }
 
 #
@@ -100,14 +101,14 @@ type MessageConnection {
 
 type Query {
   me: Me!
-  user(id: ID!): User!
+  user(userId: ID!): User!
   users(input: PageInput!): UserConnection!
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
   newMessageRooms(input: PageInput!): MessageRoomConnection!
-  messageRooms(input: PageInput!): MessageRoomConnection!
-  messageRoom(id: ID!): MessageRoom!
-  message(id: ID!): Message!
+  openedMessageRooms(input: PageInput!): MessageRoomConnection!
+  messageRoom(messageRoomId: ID!): MessageRoom!
+  message(messageId: ID!): Message!
 }
 
 #
@@ -127,16 +128,19 @@ input UpdateUserInput {
 }
 
 input CreateMessageInput {
-  messageRoomId: String!
+  messageRoomId: ID!
   content: String!
 }
 
 type Mutation {
   signUp(input: SignUpInput!): Me!
-  access: Me!
-  updateUser(input: UpdateUserInput!): Me!
-  like(userId: ID!): User!
-  unlike(userId: ID!): User!
-  skip(userId: ID!): User!
+  updateUserProfile(input: UpdateUserInput!): Me!
+  updateUserLastAccess: Me!
+
+  createLike(userId: ID!): User!
+  cancelLike(likeId: ID!): User!
+  skipLike(likeId: ID!): User!
+  matchLike(likeId: ID!): User!
+
   createMessage(input: CreateMessageInput!): Message!
 }
