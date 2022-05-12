@@ -1,14 +1,13 @@
 import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { LikeDoc } from "../../../fire/docs/like";
-import { UserDoc } from "../../../fire/docs/user";
 import { MutationCreateLikeArgs } from "../../../graphql/generated";
 
 export const createLikeMutation = async (
   _: unknown,
   { userId }: MutationCreateLikeArgs,
   { auth, collections: { usersCollection, likesCollection } }: Context
-): Promise<UserDoc> => {
+) => {
   authorize(auth);
 
   const user = await usersCollection.findOne(auth.uid);

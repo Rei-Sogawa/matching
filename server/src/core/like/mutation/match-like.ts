@@ -1,14 +1,13 @@
 import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { MessageRoomDoc } from "../../../fire/docs/message-room";
-import { UserDoc } from "../../../fire/docs/user";
 import { MutationMatchLikeArgs } from "../../../graphql/generated";
 
 export const matchLikeMutation = async (
   _: unknown,
   { likeId }: MutationMatchLikeArgs,
   { auth, collections: { usersCollection, likesCollection, messageRoomsCollection } }: Context
-): Promise<UserDoc> => {
+) => {
   authorize(auth);
 
   const user = await usersCollection.findOne(auth.uid);

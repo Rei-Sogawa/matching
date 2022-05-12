@@ -8,7 +8,7 @@ export const createMessageMutation = async (
   _: unknown,
   { input }: MutationCreateMessageArgs,
   { auth, collections: { messageRoomsCollection, messageRoomEventsCollection } }: Context
-): Promise<MessageDoc> => {
+) => {
   authorize(auth);
 
   const messageRoom = await messageRoomsCollection.findOne(input.messageRoomId);

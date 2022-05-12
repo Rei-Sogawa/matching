@@ -6,7 +6,7 @@ export const signUpMutation = async (
   _: unknown,
   { input: { email, password } }: MutationSignUpArgs,
   { collections: { usersCollection, userIndexCollection }, firebase }: Context
-): Promise<UserDoc> => {
+) => {
   const { uid } = await firebase.auth.createUser({ email, password });
 
   const user = UserDoc.create(usersCollection, uid);
