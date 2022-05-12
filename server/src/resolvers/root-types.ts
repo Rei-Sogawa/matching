@@ -39,7 +39,7 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
     return { edges, pageInfo: { endCursor: last(edges)?.cursor, hasNextPage: input.first === edges.length } };
   },
 
-  lastMessage: async (parent) => {
+  latestMessage: async (parent) => {
     return parent.messagesCollection.last();
   },
 };
