@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { ViewerType } from './query';
+import { ViewerType } from '../resolvers/query';
 import { UserDoc } from '../fire/docs/user';
 import { MessageRoomDoc } from '../fire/docs/message-room';
 import { MessageDoc } from '../fire/docs/message';
@@ -157,51 +157,7 @@ export type PageInput = {
 
 export type Query = {
   __typename?: 'Query';
-  me: Me;
-  message: Message;
-  messageRoom: MessageRoom;
-  newMessageRooms: MessageRoomConnection;
-  openedMessageRooms: MessageRoomConnection;
-  receiveLikeUsers: Array<User>;
-  sendLikeUsers: UserConnection;
-  user: User;
-  users: UserConnection;
   viewer: Viewer;
-};
-
-
-export type QueryMessageArgs = {
-  messageId: Scalars['ID'];
-};
-
-
-export type QueryMessageRoomArgs = {
-  messageRoomId: Scalars['ID'];
-};
-
-
-export type QueryNewMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type QueryOpenedMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type QuerySendLikeUsersArgs = {
-  input: PageInput;
-};
-
-
-export type QueryUserArgs = {
-  userId: Scalars['ID'];
-};
-
-
-export type QueryUsersArgs = {
-  input: PageInput;
 };
 
 export type SignUpInput = {
@@ -487,15 +443,6 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryMessageArgs, 'messageId'>>;
-  messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<QueryMessageRoomArgs, 'messageRoomId'>>;
-  newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryNewMessageRoomsArgs, 'input'>>;
-  openedMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<QueryOpenedMessageRoomsArgs, 'input'>>;
-  receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
-  users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
   viewer?: Resolver<ResolversTypes['Viewer'], ParentType, ContextType>;
 }>;
 

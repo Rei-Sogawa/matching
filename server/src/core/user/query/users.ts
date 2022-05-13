@@ -1,12 +1,12 @@
 import { last } from "lodash";
 
 import { Context } from "../../../context";
-import { QueryUsersArgs } from "../../../graphql/generated";
+import { ViewerUsersArgs } from "../../../graphql/generated";
 import { ViewerType } from "../../../resolvers/query";
 
 export const usersQuery = async (
   { uid }: ViewerType,
-  { input }: QueryUsersArgs,
+  { input }: ViewerUsersArgs,
   { collections: { usersCollection, userIndexCollection, userLikeIndexCollection } }: Context
 ) => {
   const userIds = await userIndexCollection.paginatedUserIds({

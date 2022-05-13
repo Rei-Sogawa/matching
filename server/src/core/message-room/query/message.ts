@@ -1,11 +1,11 @@
 import { Context } from "../../../context";
 import { MessageDoc } from "../../../fire/docs/message";
-import { QueryMessageArgs } from "../../../graphql/generated";
+import { ViewerMessageArgs } from "../../../graphql/generated";
 import { ViewerType } from "../../../resolvers/query";
 
 export const messageQuery = async (
   { uid }: ViewerType,
-  { messageId }: QueryMessageArgs,
+  { messageId }: ViewerMessageArgs,
   { collections: { messageRoomsCollection, messagesCollectionGroup } }: Context
 ): Promise<MessageDoc> => {
   const message = await messagesCollectionGroup.findOne(messageId);

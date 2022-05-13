@@ -1,12 +1,12 @@
 import { last } from "lodash";
 
 import { Context } from "../../../context";
-import { QuerySendLikeUsersArgs } from "../../../graphql/generated";
+import { ViewerSendLikeUsersArgs } from "../../../graphql/generated";
 import { ViewerType } from "../../../resolvers/query";
 
 export const sendLikeUsersQuery = async (
   { uid }: ViewerType,
-  { input }: QuerySendLikeUsersArgs,
+  { input }: ViewerSendLikeUsersArgs,
   { collections: { usersCollection, userLikeIndexCollection } }: Context
 ) => {
   const userIds = await userLikeIndexCollection.of(uid).paginatedPendingSendLikeUserIds({

@@ -1,12 +1,12 @@
 import { last } from "lodash";
 
 import { Context } from "../../../context";
-import { QueryOpenedMessageRoomsArgs } from "../../../graphql/generated";
+import { ViewerNewMessageRoomsArgs } from "../../../graphql/generated";
 import { ViewerType } from "../../../resolvers/query";
 
 export const openedMessageRooms = async (
   { uid }: ViewerType,
-  { input }: QueryOpenedMessageRoomsArgs,
+  { input }: ViewerNewMessageRoomsArgs,
   { collections: { messageRoomsCollection } }: Context
 ) => {
   const messageRooms = await messageRoomsCollection.paginatedOpenedMessageRooms({
