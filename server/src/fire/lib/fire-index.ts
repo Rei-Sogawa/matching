@@ -10,6 +10,7 @@ const isPrimitive = (input: unknown) => {
     typeof input === "number" ||
     typeof input === "boolean" ||
     input === null ||
+    // TODO: ライブラリ化した時にライブラリの firebase app に依存させたくないので hasOwnProperty('toDate') とかで判定したい
     input instanceof Timestamp
   )
     return true;
@@ -22,7 +23,6 @@ const calcPrimitiveByte = (input: unknown) => {
   if (typeof input === "number") return 8;
   if (typeof input === "boolean") return 1;
   if (input === null) return 1;
-  // TODO: ライブラリ化した時にライブラリの firebase app に依存させたくないので hasOwnProperty('toDate') とかで判定したい
   if (input instanceof Timestamp) return 8;
   throw new Error("could not calcPrimitiveByte");
 };

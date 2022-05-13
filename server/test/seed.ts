@@ -3,6 +3,8 @@ import { LikeDoc } from "../src/fire/docs/like";
 import { MessageDoc } from "../src/fire/docs/message";
 import { MessageRoomDoc } from "../src/fire/docs/message-room";
 import { UserDoc } from "../src/fire/docs/user";
+import { onCreateLike } from "../src/psuedo-trigger/like";
+import { onCreateUser } from "../src/psuedo-trigger/user";
 import { prefs } from "../src/utils/contants";
 import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
 
@@ -10,9 +12,8 @@ const auth = getAuth();
 const db = getDb();
 const storage = getStorage();
 
-const collections = createCollections(db);
-const { usersCollection, likesCollection, messageRoomsCollection, userIndexCollection, likeIndexCollection } =
-  collections;
+const { usersCollection, likesCollection, messageRoomsCollection, userIndexCollection, userLikeIndexCollection } =
+  createCollections(db);
 
 const seed = async () => {
   const fakeAuthUsers = await Promise.all(
@@ -35,7 +36,7 @@ const seed = async () => {
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
       .save();
-    await userIndexCollection.add(user.toIndex());
+    await onCreateUser(user, { userIndexCollection });
 
     fakeUsers.push(user);
     i++;
@@ -64,7 +65,7 @@ const seed = async () => {
     }
 
     await user.edit({ gender: "FEMALE", nickName: "Nao", age: 34, livingPref: "新潟県", photoPaths: paths }).save();
-    await userIndexCollection.add(user.toIndex());
+    await onCreateUser(user, { userIndexCollection });
 
     nao = user;
   }
@@ -87,7 +88,7 @@ const seed = async () => {
     }
 
     await user.edit({ gender: "FEMALE", nickName: "Megu", age: 32, livingPref: "新潟県", photoPaths: paths }).save();
-    await userIndexCollection.add(user.toIndex());
+    await onCreateUser(user, { userIndexCollection });
 
     megu = user;
   }
@@ -110,7 +111,7 @@ const seed = async () => {
     }
 
     await user.edit({ gender: "FEMALE", nickName: "Kaede", age: 30, livingPref: "新潟県", photoPaths: paths }).save();
-    await userIndexCollection.add(user.toIndex());
+    await onCreateUser(user, { userIndexCollection });
 
     kaede = user;
   }
@@ -121,11 +122,11 @@ const seed = async () => {
       receiverId: [nao, megu, kaede][randomInt(2)].id,
     });
     await like.save();
-    await likeIndexCollection.add(like.toIndex());
+    await onCreateLike(like, { userLikeIndexCollection });
   }
 
   const like = await LikeDoc.create(likesCollection, { senderId: nao.id, receiverId: megu.id }).match().save();
-  await likeIndexCollection.add(like.toIndex());
+  await onCreateLike(like, { userLikeIndexCollection });
   const messageRoom = await MessageRoomDoc.create(messageRoomsCollection, {
     likeId: like.id,
     userIds: [like.senderId, like.receiverId],
@@ -134,7 +135,7 @@ const seed = async () => {
     .save();
 
   for (const i of Array.from({ length: 10 }).map((_, i) => i)) {
-    const message = MessageDoc.create(messageRoom.messages, {
+    const message = MessageDoc.create(messageRoom.messagesCollection, {
       userId: messageRoom.userIds[i % 2],
       content: i.toString(),
     });
