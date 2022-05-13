@@ -1,6 +1,7 @@
 import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { MutationUpdateUserProfileArgs } from "../../../graphql/generated";
+import { onUpdateUser } from "../../../psuedo-trigger/user";
 
 export const updateUserProfileMutation = async (
   _: unknown,
@@ -14,7 +15,7 @@ export const updateUserProfileMutation = async (
   user.edit(input);
 
   await user.save();
-  await userIndexCollection.update(user.indexData);
+  await onUpdateUser(user, { userIndexCollection });
 
   return user;
 };

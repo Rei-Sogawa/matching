@@ -1,6 +1,7 @@
 import { Context } from "../../../context";
 import { UserDoc } from "../../../fire/docs/user";
 import { MutationSignUpArgs } from "../../../graphql/generated";
+import { onCreateUser } from "../../../psuedo-trigger/user";
 
 export const signUpMutation = async (
   _: unknown,
@@ -12,7 +13,7 @@ export const signUpMutation = async (
   const user = UserDoc.create(usersCollection, uid);
 
   await user.save();
-  await userIndexCollection.add(user.indexData);
+  await onCreateUser(user, { userIndexCollection });
 
   return user;
 };

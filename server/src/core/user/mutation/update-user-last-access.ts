@@ -1,5 +1,6 @@
 import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
+import { onUpdateUser } from "../../../psuedo-trigger/user";
 
 export const updateUserLastAccessMutation = async (
   _: unknown,
@@ -13,7 +14,7 @@ export const updateUserLastAccessMutation = async (
   user.access();
 
   await user.save();
-  await userIndexCollection.update(user.indexData);
+  await onUpdateUser(user, { userIndexCollection });
 
   return user;
 };

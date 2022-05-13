@@ -1,8 +1,8 @@
 import { Timestamp } from "firebase-admin/firestore";
 
 import { LikeStatus } from "../../graphql/generated";
-import { LikeIndexData } from "../collections/like-index";
 import { LikesCollection } from "../collections/likes";
+import { LikeIndexData } from "../index/like-index";
 import { FireDocument } from "../lib/fire-document";
 
 export type LikeData = {

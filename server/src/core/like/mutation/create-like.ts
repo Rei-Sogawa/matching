@@ -2,25 +2,22 @@ import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { LikeDoc } from "../../../fire/docs/like";
 import { MutationCreateLikeArgs } from "../../../graphql/generated";
+import { onCreateLike } from "../../../psuedo-trigger/like";
 
 export const createLikeMutation = async (
   _: unknown,
   { userId }: MutationCreateLikeArgs,
-  { auth, collections: { usersCollection, likesCollection } }: Context
+  { auth, collections: { usersCollection, likesCollection, userLikeIndexCollection } }: Context
 ) => {
   authorize(auth);
 
-  const user = await usersCollection.findOne(auth.uid);
-  const receiver = await usersCollection.findOne(userId);
-
-  const sendLike = await likesCollection.findBySenderAndReceiver({ senderId: user.id, receiverId: receiver.id });
+  const sendLike = await likesCollection.findBySenderAndReceiver({ senderId: auth.uid, receiverId: userId });
   if (sendLike) throw new Error("Can't createLike, because already like");
 
-  const like = LikeDoc.create(likesCollection, { senderId: user.id, receiverId: receiver.id });
+  const like = LikeDoc.create(likesCollection, { senderId: auth.uid, receiverId: userId });
 
   await like.save();
-  await user.likeIndexCollection.add(like.indexData);
-  await receiver.likeIndexCollection.add(like.indexData);
+  await onCreateLike(like, { userLikeIndexCollection });
 
-  return receiver;
+  return usersCollection.findOne(userId);
 };
