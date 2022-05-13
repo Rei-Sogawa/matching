@@ -98,6 +98,21 @@ type MessageConnection {
   pageInfo: PageInfo!
 }
 
+type Viewer {
+  uid: ID!
+
+  me: Me!
+  user(userId: ID!): User!
+  users(input: PageInput!): UserConnection!
+  receiveLikeUsers: [User!]!
+  sendLikeUsers(input: PageInput!): UserConnection!
+
+  newMessageRooms(input: PageInput!): MessageRoomConnection!
+  openedMessageRooms(input: PageInput!): MessageRoomConnection!
+  messageRoom(messageRoomId: ID!): MessageRoom!
+  message(messageId: ID!): Message!
+}
+
 type Query {
   me: Me!
   user(userId: ID!): User!
@@ -109,6 +124,8 @@ type Query {
   openedMessageRooms(input: PageInput!): MessageRoomConnection!
   messageRoom(messageRoomId: ID!): MessageRoom!
   message(messageId: ID!): Message!
+
+  viewer: Viewer!
 }
 
 #

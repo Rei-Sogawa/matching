@@ -14,6 +14,7 @@ generates:
         DateTime: Timestamp
       contextType: ../context#Context
       mappers:
+        Viewer: ./query#ViewerType
         Me: ../fire/docs/user#UserDoc
         User: ../fire/docs/user#UserDoc
         MessageRoom: ../fire/docs/message-room#MessageRoomDoc

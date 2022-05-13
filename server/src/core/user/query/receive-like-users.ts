@@ -1,14 +1,11 @@
-import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
+import { ViewerType } from "../../../resolvers/query";
 
 export const receiveLikeUsersQuery = async (
-  _: unknown,
+  { uid }: ViewerType,
   __: unknown,
-  { auth, collections: { usersCollection, userLikeIndexCollection } }: Context
+  { collections: { usersCollection, userLikeIndexCollection } }: Context
 ) => {
-  authorize(auth);
-
-  const userIds = await userLikeIndexCollection.of(auth.uid).pendingReceiveLikeUserIds();
-
+  const userIds = await userLikeIndexCollection.of(uid).pendingReceiveLikeUserIds();
   return Promise.all(userIds.map((id) => usersCollection.findOne(id)));
 };

@@ -1,17 +1,15 @@
 import { last } from "lodash";
 
-import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { QuerySendLikeUsersArgs } from "../../../graphql/generated";
+import { ViewerType } from "../../../resolvers/query";
 
 export const sendLikeUsersQuery = async (
-  _: unknown,
+  { uid }: ViewerType,
   { input }: QuerySendLikeUsersArgs,
-  { auth, collections: { usersCollection, userLikeIndexCollection } }: Context
+  { collections: { usersCollection, userLikeIndexCollection } }: Context
 ) => {
-  authorize(auth);
-
-  const userIds = await userLikeIndexCollection.of(auth.uid).paginatedPendingSendLikeUserIds({
+  const userIds = await userLikeIndexCollection.of(uid).paginatedPendingSendLikeUserIds({
     first: input.first,
     after: input.after,
   });

@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { ViewerType } from './query';
 import { UserDoc } from '../fire/docs/user';
 import { MessageRoomDoc } from '../fire/docs/message-room';
 import { MessageDoc } from '../fire/docs/message';
@@ -165,6 +166,7 @@ export type Query = {
   sendLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
+  viewer: Viewer;
 };
 
 
@@ -236,6 +238,55 @@ export type UserEdge = {
   __typename?: 'UserEdge';
   cursor: Scalars['DateTime'];
   node: User;
+};
+
+export type Viewer = {
+  __typename?: 'Viewer';
+  me: Me;
+  message: Message;
+  messageRoom: MessageRoom;
+  newMessageRooms: MessageRoomConnection;
+  openedMessageRooms: MessageRoomConnection;
+  receiveLikeUsers: Array<User>;
+  sendLikeUsers: UserConnection;
+  uid: Scalars['ID'];
+  user: User;
+  users: UserConnection;
+};
+
+
+export type ViewerMessageArgs = {
+  messageId: Scalars['ID'];
+};
+
+
+export type ViewerMessageRoomArgs = {
+  messageRoomId: Scalars['ID'];
+};
+
+
+export type ViewerNewMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerOpenedMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerSendLikeUsersArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerUserArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type ViewerUsersArgs = {
+  input: PageInput;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -332,6 +383,7 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<UserDoc>;
   UserConnection: ResolverTypeWrapper<Omit<UserConnection, 'edges'> & { edges: Array<ResolversTypes['UserEdge']> }>;
   UserEdge: ResolverTypeWrapper<Omit<UserEdge, 'node'> & { node: ResolversTypes['User'] }>;
+  Viewer: ResolverTypeWrapper<ViewerType>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -358,6 +410,7 @@ export type ResolversParentTypes = ResolversObject<{
   User: UserDoc;
   UserConnection: Omit<UserConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserEdge']> };
   UserEdge: Omit<UserEdge, 'node'> & { node: ResolversParentTypes['User'] };
+  Viewer: ViewerType;
 }>;
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -443,6 +496,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QuerySendLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'input'>>;
+  viewer?: Resolver<ResolversTypes['Viewer'], ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -468,6 +522,20 @@ export type UserEdgeResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ViewerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Viewer'] = ResolversParentTypes['Viewer']> = ResolversObject<{
+  me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<ViewerMessageArgs, 'messageId'>>;
+  messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<ViewerMessageRoomArgs, 'messageRoomId'>>;
+  newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerNewMessageRoomsArgs, 'input'>>;
+  openedMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerOpenedMessageRoomsArgs, 'input'>>;
+  receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerSendLikeUsersArgs, 'input'>>;
+  uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<ViewerUserArgs, 'userId'>>;
+  users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerUsersArgs, 'input'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = Context> = ResolversObject<{
   DateTime?: GraphQLScalarType;
   Me?: MeResolvers<ContextType>;
@@ -483,5 +551,6 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;
+  Viewer?: ViewerResolvers<ContextType>;
 }>;
 

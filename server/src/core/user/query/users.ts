@@ -1,23 +1,21 @@
 import { last } from "lodash";
 
-import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { QueryUsersArgs } from "../../../graphql/generated";
+import { ViewerType } from "../../../resolvers/query";
 
 export const usersQuery = async (
-  _: unknown,
+  { uid }: ViewerType,
   { input }: QueryUsersArgs,
-  { auth, collections: { usersCollection, userIndexCollection, userLikeIndexCollection } }: Context
+  { collections: { usersCollection, userIndexCollection, userLikeIndexCollection } }: Context
 ) => {
-  authorize(auth);
-
   const userIds = await userIndexCollection.paginatedUserIds({
     first: input.first,
     after: input.after,
     excludeUserIds: [
-      auth.uid,
-      ...(await userLikeIndexCollection.of(auth.uid).sendLikeUserIds()),
-      ...(await userLikeIndexCollection.of(auth.uid).receiveLikeUserIds()),
+      uid,
+      ...(await userLikeIndexCollection.of(uid).sendLikeUserIds()),
+      ...(await userLikeIndexCollection.of(uid).receiveLikeUserIds()),
     ],
   });
   const users = await Promise.all(userIds.map((id) => usersCollection.findOne(id)));

@@ -1,20 +1,18 @@
 import { last } from "lodash";
 
-import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { QueryOpenedMessageRoomsArgs } from "../../../graphql/generated";
+import { ViewerType } from "../../../resolvers/query";
 
 export const openedMessageRooms = async (
-  _: unknown,
+  { uid }: ViewerType,
   { input }: QueryOpenedMessageRoomsArgs,
-  { auth, collections: { messageRoomsCollection } }: Context
+  { collections: { messageRoomsCollection } }: Context
 ) => {
-  authorize(auth);
-
   const messageRooms = await messageRoomsCollection.paginatedOpenedMessageRooms({
     first: input.first,
     after: input.after,
-    userId: auth.uid,
+    userId: uid,
   });
 
   const edges = messageRooms.map((mr) => ({ node: mr, cursor: mr.createdAt }));

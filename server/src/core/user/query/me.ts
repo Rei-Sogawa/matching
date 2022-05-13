@@ -1,8 +1,6 @@
-import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
+import { ViewerType } from "../../../resolvers/query";
 
-export const meQuery = async (_: unknown, __: unknown, { auth, collections: { usersCollection } }: Context) => {
-  authorize(auth);
-
-  return usersCollection.findOne(auth.uid);
+export const meQuery = async ({ uid }: ViewerType, __: unknown, { collections: { usersCollection } }: Context) => {
+  return usersCollection.findOne(uid);
 };

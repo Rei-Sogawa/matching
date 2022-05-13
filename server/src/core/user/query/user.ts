@@ -1,13 +1,6 @@
-import { authorize } from "../../../authorize";
 import { Context } from "../../../context";
 import { QueryUserArgs } from "../../../graphql/generated";
 
-export const userQuery = (
-  _: unknown,
-  { userId }: QueryUserArgs,
-  { auth, collections: { usersCollection } }: Context
-) => {
-  authorize(auth);
-
+export const userQuery = (_: unknown, { userId }: QueryUserArgs, { collections: { usersCollection } }: Context) => {
   return usersCollection.findOne(userId);
 };
