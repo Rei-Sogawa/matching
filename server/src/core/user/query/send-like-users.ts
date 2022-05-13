@@ -7,12 +7,11 @@ import { QuerySendLikeUsersArgs } from "../../../graphql/generated";
 export const sendLikeUsersQuery = async (
   _: unknown,
   { input }: QuerySendLikeUsersArgs,
-  { auth, collections: { usersCollection } }: Context
+  { auth, collections: { usersCollection, userLikeIndexCollection } }: Context
 ) => {
   authorize(auth);
 
-  const user = await usersCollection.findOne(auth.uid);
-  const userIds = await user.likeIndexCollection.paginatedPendingSendLikeUserIds({
+  const userIds = await userLikeIndexCollection.of(auth.uid).paginatedPendingSendLikeUserIds({
     first: input.first,
     after: input.after,
   });

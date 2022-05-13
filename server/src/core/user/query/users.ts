@@ -7,18 +7,17 @@ import { QueryUsersArgs } from "../../../graphql/generated";
 export const usersQuery = async (
   _: unknown,
   { input }: QueryUsersArgs,
-  { auth, collections: { usersCollection, userIndexCollection } }: Context
+  { auth, collections: { usersCollection, userIndexCollection, userLikeIndexCollection } }: Context
 ) => {
   authorize(auth);
 
-  const user = await usersCollection.findOne(auth.uid);
   const userIds = await userIndexCollection.paginatedUserIds({
     first: input.first,
     after: input.after,
     excludeUserIds: [
       auth.uid,
-      ...(await user.likeIndexCollection.sendLikeUserIds()),
-      ...(await user.likeIndexCollection.receiveLikeUserIds()),
+      ...(await userLikeIndexCollection.of(auth.uid).sendLikeUserIds()),
+      ...(await userLikeIndexCollection.of(auth.uid).receiveLikeUserIds()),
     ],
   });
   const users = await Promise.all(userIds.map((id) => usersCollection.findOne(id)));
