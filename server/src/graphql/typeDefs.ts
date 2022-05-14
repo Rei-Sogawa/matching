@@ -127,6 +127,7 @@ type Viewer {
   me: Me!
   message(messageId: ID!): Message!
   messageRoom(messageRoomId: ID!): MessageRoom!
+  messageRooms(input: PageInput!): MessageRoomConnection!
   newMessageRooms(input: PageInput!): MessageRoomConnection!
   openedMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!

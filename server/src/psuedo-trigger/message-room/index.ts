@@ -1,14 +1,16 @@
 import { MessageRoomEventsCollection } from "../../fire/collections/message-room-events";
 import { MessageDoc } from "../../fire/docs/message";
+import { MessageRoomDoc } from "../../fire/docs/message-room";
 import { MessageRoomEventDoc } from "../../fire/docs/message-room-event";
 
 export const onCreateMessage = async (
-  message: MessageDoc,
-  collections: { messageRoomEventsCollection: MessageRoomEventsCollection }
+  { messageRoom, message }: { messageRoom: MessageRoomDoc; message: MessageDoc },
+  { messageRoomEventsCollection }: { messageRoomEventsCollection: MessageRoomEventsCollection }
 ) => {
-  await MessageRoomEventDoc.create(collections.messageRoomEventsCollection, {
+  await MessageRoomEventDoc.create(messageRoomEventsCollection, {
     action: "CREATE",
-    messageRoomId: message.messageRoomId,
+    messageRoomId: messageRoom.id,
     messageId: message.id,
+    userIds: messageRoom.userIds,
   }).save();
 };

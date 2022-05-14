@@ -8,13 +8,19 @@ export type MessageRoomEventData = {
   createdAt: Timestamp;
   messageRoomId: string;
   messageId: string;
+  userIds: [string, string];
 };
 
 export interface MessageRoomEventDoc extends MessageRoomEventData {}
 export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> {
   static create(
     collection: MessageRoomEventsCollection,
-    { action, messageRoomId, messageId }: Pick<MessageRoomEventData, "action" | "messageRoomId" | "messageId">
+    {
+      action,
+      messageRoomId,
+      messageId,
+      userIds,
+    }: Pick<MessageRoomEventData, "action" | "messageRoomId" | "messageId" | "userIds">
   ) {
     const createdAt = Timestamp.now();
     const data: MessageRoomEventData = {
@@ -22,6 +28,7 @@ export class MessageRoomEventDoc extends FireDocument<MessageRoomEventData> {
       createdAt,
       messageRoomId,
       messageId,
+      userIds,
     };
     return new MessageRoomEventDoc(this.makeCreateInput(collection, null, data));
   }

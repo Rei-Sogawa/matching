@@ -1,7 +1,9 @@
+import { auth } from "firebase-admin";
 import { head, last } from "lodash";
 
 import { messageQuery } from "../core/message-room/query/message";
 import { messageRoomQuery } from "../core/message-room/query/message-room";
+import { messageRoomsQuery } from "../core/message-room/query/message-rooms";
 import { newMessageRoomsQuery } from "../core/message-room/query/new-message-rooms";
 import { openedMessageRooms } from "../core/message-room/query/opened-message-rooms";
 import { meQuery } from "../core/user/query/me";
@@ -9,6 +11,7 @@ import { receiveLikeUsersQuery } from "../core/user/query/receive-like-users";
 import { sendLikeUsersQuery } from "../core/user/query/send-like-users";
 import { userQuery } from "../core/user/query/user";
 import { usersQuery } from "../core/user/query/users";
+import { MessageDoc } from "../fire/docs/message";
 import { Resolvers } from "../graphql/generated";
 import { assertDefined } from "../utils/assert-defined";
 import { getSignedUrl } from "../utils/get-signed-url";
@@ -22,6 +25,7 @@ export const Viewer: Resolvers["Viewer"] = {
 
   newMessageRooms: newMessageRoomsQuery,
   openedMessageRooms: openedMessageRooms,
+  messageRooms: messageRoomsQuery,
   messageRoom: messageRoomQuery,
   message: messageQuery,
 };
@@ -49,9 +53,8 @@ export const User: Resolvers["User"] = {
 export const MessageRoom: Resolvers["MessageRoom"] = {
   partner: async (parent, _args, context) => {
     assertDefined(context.auth);
-    const { uid } = context.auth;
     const { usersCollection } = context.collections;
-    return usersCollection.findOne(parent.partnerId(uid));
+    return usersCollection.findOne(parent.partnerId(context.auth.uid));
   },
 
   messages: async (parent, args) => {
@@ -61,8 +64,16 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
     return { edges, pageInfo: { endCursor: last(edges)?.cursor, hasNextPage: input.first === edges.length } };
   },
 
-  latestMessage: async (parent) => {
-    return parent.messagesCollection.last();
+  latestMessage: async (parent, _args, context) => {
+    assertDefined(context.auth);
+    const latest = await parent.messagesCollection.latest();
+    return (
+      latest ??
+      MessageDoc.create(parent.messagesCollection, {
+        userId: context.auth.uid,
+        content: "メッセージを送信してみましょう！",
+      })
+    );
   },
 };
 

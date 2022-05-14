@@ -14,7 +14,7 @@ export const cancelLikeMutation = async (
   if (!sendLike) throw new Error("Can't cancelLike, because like don't exist");
 
   await sendLike.delete();
-  await onDeleteLike(sendLike, { userLikeIndexCollection });
+  await onDeleteLike({ like: sendLike }, { userLikeIndexCollection });
 
   return usersCollection.findOne(sendLike.receiverId);
 };

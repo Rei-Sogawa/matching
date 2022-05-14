@@ -17,7 +17,7 @@ export const createLikeMutation = async (
   const like = LikeDoc.create(likesCollection, { senderId: auth.uid, receiverId: userId });
 
   await like.save();
-  await onCreateLike(like, { userLikeIndexCollection });
+  await onCreateLike({ like }, { userLikeIndexCollection });
 
   return usersCollection.findOne(userId);
 };

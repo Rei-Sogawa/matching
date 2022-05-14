@@ -13,7 +13,7 @@ export const signUpMutation = async (
   const user = UserDoc.create(usersCollection, uid);
 
   await user.save();
-  await onCreateUser(user, { userIndexCollection });
+  await onCreateUser({ user }, { userIndexCollection });
 
   return user;
 };

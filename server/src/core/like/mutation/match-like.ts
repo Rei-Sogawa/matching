@@ -22,7 +22,7 @@ export const matchLikeMutation = async (
 
   await receiveLike.save();
   await messageRoom.save();
-  await onUpdateLike(receiveLike, { userLikeIndexCollection });
+  await onUpdateLike({ like: receiveLike }, { userLikeIndexCollection });
 
   return usersCollection.findOne(receiveLike.senderId);
 };

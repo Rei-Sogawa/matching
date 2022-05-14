@@ -61,4 +61,22 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
             .limit(first)
         );
   }
+
+  async paginatedMessageRooms({
+    first,
+    after,
+    userId,
+  }: {
+    first: number;
+    after: Timestamp | null | undefined;
+    userId: string;
+  }) {
+    return after
+      ? this.findManyByQuery((ref) =>
+          ref.orderBy("createdAt", "desc").where("userIds", "array-contains", userId).startAfter(after).limit(first)
+        )
+      : this.findManyByQuery((ref) =>
+          ref.orderBy("createdAt", "desc").where("userIds", "array-contains", userId).limit(first)
+        );
+  }
 }

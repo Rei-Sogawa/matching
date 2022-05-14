@@ -111,6 +111,7 @@ type Viewer {
   openedMessageRooms(input: PageInput!): MessageRoomConnection!
   messageRoom(messageRoomId: ID!): MessageRoom!
   message(messageId: ID!): Message!
+  messageRooms(input: PageInput!): MessageRoomConnection!
 }
 
 type Query {
