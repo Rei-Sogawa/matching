@@ -6,6 +6,7 @@ import {
   useReceiveLikeUsersQuery,
   useSendLikeUsersQuery,
   useSignUpMutation,
+  useUpdateUserLastAccessMutation,
   useUpdateUserProfileMutation,
   useUsersQuery,
 } from "../../graphql/generated";
@@ -99,6 +100,24 @@ export const useSendLikeUsers = () => {
 };
 
 // MUTATION
+gql`
+  mutation UpdateUserLastAccess {
+    updateUserLastAccess {
+      id
+    }
+  }
+`;
+
+export const useUpdateUserLastAccess = () => {
+  const [mutate] = useUpdateUserLastAccessMutation();
+
+  const updateUserLastAccess = async () => {
+    await mutate();
+  };
+
+  return { updateUserLastAccess };
+};
+
 gql`
   mutation SignUp($input: SignUpInput!) {
     signUp(input: $input) {
