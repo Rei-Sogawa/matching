@@ -3,6 +3,8 @@ import { LikeDoc } from "../src/fire/docs/like";
 import { MessageDoc } from "../src/fire/docs/message";
 import { MessageRoomDoc } from "../src/fire/docs/message-room";
 import { UserDoc } from "../src/fire/docs/user";
+import { onCreateLike } from "../src/psuedo-trigger/like";
+import { onCreateUser } from "../src/psuedo-trigger/user";
 import { prefs } from "../src/utils/contants";
 import { clearAuth, clearFirestore, getAuth, getDb, getStorage, id, randomInt } from "./test-utils";
 
@@ -35,7 +37,7 @@ const seed = async () => {
         photoPaths: [`https://i.pravatar.cc/?img=${i}`], // NOTE: img は 70 まで
       })
       .save();
-    await userIndexCollection.add(user.indexData);
+    await onCreateUser(user, { userIndexCollection });
 
     fakeUsers.push(user);
     i++;
@@ -64,7 +66,7 @@ const seed = async () => {
     }
 
     await user.edit({ gender: "FEMALE", nickName: "Nao", age: 34, livingPref: "新潟県", photoPaths: paths }).save();
-    await userIndexCollection.add(user.indexData);
+    await onCreateUser(user, { userIndexCollection });
 
     nao = user;
   }
@@ -87,7 +89,7 @@ const seed = async () => {
     }
 
     await user.edit({ gender: "FEMALE", nickName: "Megu", age: 32, livingPref: "新潟県", photoPaths: paths }).save();
-    await userIndexCollection.add(user.indexData);
+    await onCreateUser(user, { userIndexCollection });
 
     megu = user;
   }
@@ -110,23 +112,24 @@ const seed = async () => {
     }
 
     await user.edit({ gender: "FEMALE", nickName: "Kaede", age: 30, livingPref: "新潟県", photoPaths: paths }).save();
-    await userIndexCollection.add(user.indexData);
+    await onCreateUser(user, { userIndexCollection });
 
     kaede = user;
   }
 
   for (const fakeUser of fakeUsers) {
+    const receiverId = [nao, megu, kaede][randomInt(2)].id;
     const like = LikeDoc.create(likesCollection, {
       senderId: fakeUser.id,
-      receiverId: [nao, megu, kaede][randomInt(2)].id,
+      receiverId,
     });
     await like.save();
-    await userLikeIndexCollection.of(fakeUser.id).add(like.indexData);
+    await onCreateLike(like, { userLikeIndexCollection });
   }
 
   const like = await LikeDoc.create(likesCollection, { senderId: nao.id, receiverId: megu.id }).match().save();
-  await userLikeIndexCollection.of(nao.id).add(like.indexData);
-  await userLikeIndexCollection.of(megu.id).add(like.indexData);
+  await onCreateLike(like, { userLikeIndexCollection });
+
   const messageRoom = await MessageRoomDoc.create(messageRoomsCollection, {
     likeId: like.id,
     userIds: [like.senderId, like.receiverId],
