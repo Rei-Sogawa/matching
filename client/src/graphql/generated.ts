@@ -97,6 +97,7 @@ export type Mutation = {
   createLike: User;
   createMessage: Message;
   matchLike: User;
+  matchSkippedLike: User;
   signUp: Me;
   skipLike: User;
   updateUserLastAccess: Me;
@@ -120,6 +121,11 @@ export type MutationCreateMessageArgs = {
 
 
 export type MutationMatchLikeArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type MutationMatchSkippedLikeArgs = {
   userId: Scalars['ID'];
 };
 
@@ -199,6 +205,7 @@ export type Viewer = {
   messageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
+  skipLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
 };
@@ -220,6 +227,11 @@ export type ViewerMessageRoomsArgs = {
 
 
 export type ViewerSendLikeUsersArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerSkipLikeUsersArgs = {
   input: PageInput;
 };
 
@@ -266,6 +278,13 @@ export type CancelLikeMutationVariables = Exact<{
 
 
 export type CancelLikeMutation = { __typename?: 'Mutation', cancelLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+
+export type MatchSkippedLikeMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type MatchSkippedLikeMutation = { __typename?: 'Mutation', matchSkippedLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
 export type CreateLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -322,6 +341,13 @@ export type SendLikeUsersQueryVariables = Exact<{
 
 export type SendLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
+export type SkipLikeUsersQueryVariables = Exact<{
+  input: PageInput;
+}>;
+
+
+export type SkipLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, skipLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+
 export type UpdateUserLastAccessMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -342,6 +368,8 @@ export type UpdateUserProfileMutationVariables = Exact<{
 export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
 export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
+export type SkipLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
 
@@ -387,6 +415,22 @@ export const UserForLikePageFragmentDoc = gql`
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
+export const UserActionCardFragmentDoc = gql`
+    fragment UserActionCard on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
+  topPhotoUrl
+}
+    `;
+export const SkipLikeUserItemFragmentDoc = gql`
+    fragment SkipLikeUserItem on User {
+  id
+  ...UserActionCard
+}
+    ${UserActionCardFragmentDoc}`;
 export const MessageItemFragmentDoc = gql`
     fragment MessageItem on Message {
   id
@@ -412,16 +456,6 @@ export const MessageRoomItemFragmentDoc = gql`
     content
     createdAt
   }
-}
-    `;
-export const UserActionCardFragmentDoc = gql`
-    fragment UserActionCard on User {
-  id
-  gender
-  nickName
-  age
-  livingPref
-  topPhotoUrl
 }
     `;
 export const SendLikeUserItemFragmentDoc = gql`
@@ -576,6 +610,40 @@ export function useCancelLikeMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CancelLikeMutationHookResult = ReturnType<typeof useCancelLikeMutation>;
 export type CancelLikeMutationResult = Apollo.MutationResult<CancelLikeMutation>;
 export type CancelLikeMutationOptions = Apollo.BaseMutationOptions<CancelLikeMutation, CancelLikeMutationVariables>;
+export const MatchSkippedLikeDocument = gql`
+    mutation MatchSkippedLike($userId: ID!) {
+  matchSkippedLike(userId: $userId) {
+    id
+    ...UserForUserPage
+  }
+}
+    ${UserForUserPageFragmentDoc}`;
+export type MatchSkippedLikeMutationFn = Apollo.MutationFunction<MatchSkippedLikeMutation, MatchSkippedLikeMutationVariables>;
+
+/**
+ * __useMatchSkippedLikeMutation__
+ *
+ * To run a mutation, you first call `useMatchSkippedLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMatchSkippedLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [matchSkippedLikeMutation, { data, loading, error }] = useMatchSkippedLikeMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useMatchSkippedLikeMutation(baseOptions?: Apollo.MutationHookOptions<MatchSkippedLikeMutation, MatchSkippedLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MatchSkippedLikeMutation, MatchSkippedLikeMutationVariables>(MatchSkippedLikeDocument, options);
+      }
+export type MatchSkippedLikeMutationHookResult = ReturnType<typeof useMatchSkippedLikeMutation>;
+export type MatchSkippedLikeMutationResult = Apollo.MutationResult<MatchSkippedLikeMutation>;
+export type MatchSkippedLikeMutationOptions = Apollo.BaseMutationOptions<MatchSkippedLikeMutation, MatchSkippedLikeMutationVariables>;
 export const CreateLikeDocument = gql`
     mutation CreateLike($userId: ID!) {
   createLike(userId: $userId) {
@@ -924,6 +992,54 @@ export function useSendLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type SendLikeUsersQueryHookResult = ReturnType<typeof useSendLikeUsersQuery>;
 export type SendLikeUsersLazyQueryHookResult = ReturnType<typeof useSendLikeUsersLazyQuery>;
 export type SendLikeUsersQueryResult = Apollo.QueryResult<SendLikeUsersQuery, SendLikeUsersQueryVariables>;
+export const SkipLikeUsersDocument = gql`
+    query SkipLikeUsers($input: PageInput!) {
+  viewer {
+    id
+    skipLikeUsers(input: $input) {
+      edges {
+        node {
+          id
+          ...SkipLikeUserItem
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+    ${SkipLikeUserItemFragmentDoc}`;
+
+/**
+ * __useSkipLikeUsersQuery__
+ *
+ * To run a query within a React component, call `useSkipLikeUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSkipLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSkipLikeUsersQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSkipLikeUsersQuery(baseOptions: Apollo.QueryHookOptions<SkipLikeUsersQuery, SkipLikeUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SkipLikeUsersQuery, SkipLikeUsersQueryVariables>(SkipLikeUsersDocument, options);
+      }
+export function useSkipLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SkipLikeUsersQuery, SkipLikeUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SkipLikeUsersQuery, SkipLikeUsersQueryVariables>(SkipLikeUsersDocument, options);
+        }
+export type SkipLikeUsersQueryHookResult = ReturnType<typeof useSkipLikeUsersQuery>;
+export type SkipLikeUsersLazyQueryHookResult = ReturnType<typeof useSkipLikeUsersLazyQuery>;
+export type SkipLikeUsersQueryResult = Apollo.QueryResult<SkipLikeUsersQuery, SkipLikeUsersQueryVariables>;
 export const UpdateUserLastAccessDocument = gql`
     mutation UpdateUserLastAccess {
   updateUserLastAccess {

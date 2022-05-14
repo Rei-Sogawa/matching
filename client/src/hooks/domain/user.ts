@@ -6,6 +6,7 @@ import {
   useReceiveLikeUsersQuery,
   useSendLikeUsersQuery,
   useSignUpMutation,
+  useSkipLikeUsersQuery,
   useUpdateUserLastAccessMutation,
   useUpdateUserProfileMutation,
   useUsersQuery,
@@ -93,6 +94,41 @@ export const useSendLikeUsers = () => {
   const onLoadMore = async () => {
     await fetchMore({
       variables: { input: { first: QUERY_SIZE, after: data?.viewer.sendLikeUsers.pageInfo.endCursor } },
+    });
+  };
+
+  return { data, onLoadMore };
+};
+
+gql`
+  query SkipLikeUsers($input: PageInput!) {
+    viewer {
+      id
+      skipLikeUsers(input: $input) {
+        edges {
+          node {
+            id
+            ...SkipLikeUserItem
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
+export const useSkipLikeUsers = () => {
+  const QUERY_SIZE = 6;
+
+  const { data, fetchMore } = useSkipLikeUsersQuery({ variables: { input: { first: QUERY_SIZE } } });
+
+  const onLoadMore = async () => {
+    await fetchMore({
+      variables: { input: { first: QUERY_SIZE, after: data?.viewer.skipLikeUsers.pageInfo.endCursor } },
     });
   };
 

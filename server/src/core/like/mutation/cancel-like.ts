@@ -10,7 +10,7 @@ export const cancelLikeMutation = async (
 ) => {
   authorize(auth);
 
-  const sendLike = await likesCollection.findBySenderAndReceiver({ senderId: userId, receiverId: auth.uid });
+  const sendLike = await likesCollection.findBySenderAndReceiver({ senderId: auth.uid, receiverId: userId });
   if (!sendLike) throw new Error("Can't cancelLike, because like don't exist");
 
   await sendLike.delete();

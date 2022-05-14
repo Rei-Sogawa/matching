@@ -5,6 +5,7 @@ import {
   useCancelLikeMutation,
   useCreateLikeMutation,
   useMatchLikeMutation,
+  useMatchSkippedLikeMutation,
   useSkipLikeMutation,
 } from "../../graphql/generated";
 import { assertDefined } from "../../utils/assert-defined";
@@ -80,7 +81,6 @@ gql`
   mutation CancelLike($userId: ID!) {
     cancelLike(userId: $userId) {
       id
-      ...UserForUserPage
     }
   }
 `;
@@ -95,7 +95,10 @@ export const useCancelLike = (userId: string) => {
         id: cache.identify({ __typename: "Viewer", id: me.id }),
         fields: {
           sendLikeUsers(existing, { readField }) {
-            return existing.filter((u: Reference) => readField("id", u) !== userId);
+            return {
+              ...existing,
+              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
+            };
           },
         },
       });
@@ -107,6 +110,41 @@ export const useCancelLike = (userId: string) => {
   };
 
   return { cancelLike };
+};
+
+gql`
+  mutation MatchSkippedLike($userId: ID!) {
+    matchSkippedLike(userId: $userId) {
+      id
+    }
+  }
+`;
+
+export const useMatchSkippedLike = (userId: string) => {
+  const { me } = useMe();
+
+  const [mutate] = useMatchSkippedLikeMutation({
+    variables: { userId },
+    update(cache) {
+      cache.modify({
+        id: cache.identify({ __typename: "Viewer", id: me.id }),
+        fields: {
+          skipLikeUsers(existing, { readField }) {
+            return {
+              ...existing,
+              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
+            };
+          },
+        },
+      });
+    },
+  });
+
+  const matchSkippedLike = async () => {
+    await mutate();
+  };
+
+  return { matchSkippedLike };
 };
 
 gql`

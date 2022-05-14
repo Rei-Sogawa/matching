@@ -5,6 +5,7 @@ import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
 import { IndexPage } from "./pages/Index";
 import { LikesPage } from "./pages/likes";
 import { LikePage } from "./pages/likes/[likeId]";
+import { LikesSkippedPage } from "./pages/likes/skipped";
 import { LogInPage } from "./pages/log-in";
 import { MessageRoomsPage } from "./pages/message-rooms";
 import { MessageRoomPage } from "./pages/message-rooms/[messageRoomId]";
@@ -24,6 +25,7 @@ const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
 const USERS_PATH = "/users";
 const USER_PATH = "/users/:userId";
 const LIKES_PATH = "/likes";
+const LIKES_SKIPPED_PATH = "/likes/skipped";
 const LIKE_PATH = "/likes/:userId";
 const MESSAGE_ROOMS_PATH = "/message-rooms";
 const MESSAGE_ROOM_PATH = "/message-rooms/:messageRoomId";
@@ -72,6 +74,11 @@ export const routes = {
   [LIKES_PATH]: {
     path: pathBuilder(LIKES_PATH),
     Component: LikesPage,
+    middleware: [Authenticated],
+  },
+  [LIKES_SKIPPED_PATH]: {
+    path: pathBuilder(LIKES_SKIPPED_PATH),
+    Component: LikesSkippedPage,
     middleware: [Authenticated],
   },
   [LIKE_PATH]: {

@@ -1,11 +1,13 @@
-import { Box, Stack } from "@chakra-ui/react";
+import { Box, Center, Flex, Stack } from "@chakra-ui/react";
 import { head } from "lodash-es";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { AppLink } from "../../components/base/AppLink";
 import { Loading } from "../../components/base/Loading";
 import { useReceiveLikeUsers } from "../../hooks/domain/user";
 import { AppFooter } from "../../layouts/AppFooter";
+import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
@@ -25,6 +27,16 @@ export const LikesPage: FC = () => {
     }
   }, [users]);
 
+  const header = (
+    <AppHeader>
+      <Flex justifyContent="center">
+        <Box fontWeight="bold" fontSize="2xl">
+          いいね！
+        </Box>
+      </Flex>
+    </AppHeader>
+  );
+
   const footer = (
     <AppFooter>
       <AppMenu />
@@ -35,13 +47,15 @@ export const LikesPage: FC = () => {
   if (users.length > 0) return <Loading />;
 
   return (
-    <AppLayout header={null} footer={footer}>
+    <AppLayout header={header} footer={footer}>
       <AppMain>
-        <Stack spacing="8">
-          <Box fontWeight="bold" fontSize="2xl">
-            いいね！
-          </Box>
-        </Stack>
+        <Center h="full">
+          <AppLink to={routes["/likes/skipped"].path()}>
+            <Box fontWeight="bold" color="primary.500">
+              スキップしたお相手を確認する
+            </Box>
+          </AppLink>
+        </Center>
       </AppMain>
     </AppLayout>
   );

@@ -43,4 +43,9 @@ export class LikeDoc extends FireDocument<LikeData> {
     if (this.status !== "PENDING") throw new Error("Can't match, because status is not PENDING");
     return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
   }
+
+  matchFromSkipped() {
+    if (this.status !== "SKIPPED") throw new Error("Can't matchFromSkip, because status is not SKIPPED");
+    return this.edit({ status: "MATCHED", updatedAt: Timestamp.now() });
+  }
 }

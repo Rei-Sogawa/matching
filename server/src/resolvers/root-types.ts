@@ -6,6 +6,7 @@ import { messageRoomsQuery } from "../core/message-room/query/message-rooms";
 import { meQuery } from "../core/user/query/me";
 import { receiveLikeUsersQuery } from "../core/user/query/receive-like-users";
 import { sendLikeUsersQuery } from "../core/user/query/send-like-users";
+import { skipLikeUsersQuery } from "../core/user/query/skip-like-users";
 import { userQuery } from "../core/user/query/user";
 import { usersQuery } from "../core/user/query/users";
 import { MessageDoc } from "../fire/docs/message";
@@ -19,6 +20,7 @@ export const Viewer: Resolvers["Viewer"] = {
   users: usersQuery,
   receiveLikeUsers: receiveLikeUsersQuery,
   sendLikeUsers: sendLikeUsersQuery,
+  skipLikeUsers: skipLikeUsersQuery,
 
   messageRooms: messageRoomsQuery,
   messageRoom: messageRoomQuery,

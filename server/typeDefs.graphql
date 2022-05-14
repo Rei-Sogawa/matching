@@ -106,6 +106,7 @@ type Viewer {
   users(input: PageInput!): UserConnection!
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
+  skipLikeUsers(input: PageInput!): UserConnection!
 
   messageRooms(input: PageInput!): MessageRoomConnection!
   messageRoom(messageRoomId: ID!): MessageRoom!
@@ -146,6 +147,7 @@ type Mutation {
   cancelLike(userId: ID!): User!
   skipLike(userId: ID!): User!
   matchLike(userId: ID!): User!
+  matchSkippedLike(userId: ID!): User!
 
   createMessage(input: CreateMessageInput!): Message!
 }

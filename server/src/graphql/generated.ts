@@ -103,6 +103,7 @@ export type Mutation = {
   createLike: User;
   createMessage: Message;
   matchLike: User;
+  matchSkippedLike: User;
   signUp: Me;
   skipLike: User;
   updateUserLastAccess: Me;
@@ -126,6 +127,11 @@ export type MutationCreateMessageArgs = {
 
 
 export type MutationMatchLikeArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type MutationMatchSkippedLikeArgs = {
   userId: Scalars['ID'];
 };
 
@@ -205,6 +211,7 @@ export type Viewer = {
   messageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
+  skipLikeUsers: UserConnection;
   user: User;
   users: UserConnection;
 };
@@ -226,6 +233,11 @@ export type ViewerMessageRoomsArgs = {
 
 
 export type ViewerSendLikeUsersArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerSkipLikeUsersArgs = {
   input: PageInput;
 };
 
@@ -424,6 +436,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateLikeArgs, 'userId'>>;
   createMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'input'>>;
   matchLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationMatchLikeArgs, 'userId'>>;
+  matchSkippedLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationMatchSkippedLikeArgs, 'userId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
   skipLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSkipLikeArgs, 'userId'>>;
   updateUserLastAccess?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
@@ -471,6 +484,7 @@ export type ViewerResolvers<ContextType = Context, ParentType extends ResolversP
   messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerMessageRoomsArgs, 'input'>>;
   receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerSendLikeUsersArgs, 'input'>>;
+  skipLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerSkipLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<ViewerUserArgs, 'userId'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerUsersArgs, 'input'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
