@@ -277,14 +277,14 @@ export type CancelLikeMutationVariables = Exact<{
 }>;
 
 
-export type CancelLikeMutation = { __typename?: 'Mutation', cancelLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type CancelLikeMutation = { __typename?: 'Mutation', cancelLike: { __typename?: 'User', id: string } };
 
 export type MatchSkippedLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
 }>;
 
 
-export type MatchSkippedLikeMutation = { __typename?: 'Mutation', matchSkippedLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type MatchSkippedLikeMutation = { __typename?: 'Mutation', matchSkippedLike: { __typename?: 'User', id: string } };
 
 export type CreateLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -580,10 +580,9 @@ export const CancelLikeDocument = gql`
     mutation CancelLike($userId: ID!) {
   cancelLike(userId: $userId) {
     id
-    ...UserForUserPage
   }
 }
-    ${UserForUserPageFragmentDoc}`;
+    `;
 export type CancelLikeMutationFn = Apollo.MutationFunction<CancelLikeMutation, CancelLikeMutationVariables>;
 
 /**
@@ -614,10 +613,9 @@ export const MatchSkippedLikeDocument = gql`
     mutation MatchSkippedLike($userId: ID!) {
   matchSkippedLike(userId: $userId) {
     id
-    ...UserForUserPage
   }
 }
-    ${UserForUserPageFragmentDoc}`;
+    `;
 export type MatchSkippedLikeMutationFn = Apollo.MutationFunction<MatchSkippedLikeMutation, MatchSkippedLikeMutationVariables>;
 
 /**
