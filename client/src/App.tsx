@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Apollo } from "./contexts/Apollo";
 import { AuthProvider } from "./contexts/Auth";
 import { GlobalProvider } from "./contexts/Global";
+import { GlobalSubscriber } from "./contexts/GlobalSubscriber";
 import { MeProvider } from "./contexts/Me";
 import { useUpdateUserLastAccess } from "./hooks/domain/user";
 import { Compose } from "./middleware/Compose";
@@ -43,7 +44,9 @@ export const App: FC = () => {
         <AuthProvider>
           <Apollo>
             <MeProvider>
-              <Pages />
+              <GlobalSubscriber>
+                <Pages />
+              </GlobalSubscriber>
             </MeProvider>
           </Apollo>
         </AuthProvider>

@@ -148,6 +148,26 @@ export const useSubscribeMessage = (messageRoomId: string) => {
   }, []);
 };
 
+// export const useSubscribeMessageRooms = () => {
+//   const { me } = useMe();
+
+//   useEffect(() => {
+//     return onSnapshot(
+//       query(
+//         collection(getFirestore(), "messageRoomEvents"),
+//         where("userIds", "array-contains", me.id),
+//         where("createdAt", ">=", Timestamp.now()),
+//         orderBy("createdAt", "desc")
+//       ),
+//       (snap) => {
+//         snap.docChanges().forEach(async (dc) => {
+//           const messageRoomId = dc.doc.data().messageRoomId;
+//         });
+//       }
+//     );
+//   }, []);
+// };
+
 // MUTATION
 gql`
   mutation CreateMessage($input: CreateMessageInput!) {
