@@ -6,12 +6,8 @@ import { FC } from "react";
 import { BiHeart, BiMessageRoundedDots } from "react-icons/bi";
 
 import { AppLink } from "../../components/base/AppLink";
-import {
-  MessageRoomItemFragment,
-  NewMessageRoomItemFragment,
-  useMessageRoomsQuery,
-  useNewMessageRoomsQuery,
-} from "../../graphql/generated";
+import { NewMessageRoomItemFragment, OpenedMessageRoomItemFragment } from "../../graphql/generated";
+import { useNewMessageRooms, useOpenedMessageRooms } from "../../hooks/domain/useMessageRoom";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
@@ -30,53 +26,17 @@ gql`
 `;
 
 gql`
-  fragment MessageRoomItem on MessageRoom {
+  fragment OpenedMessageRoomItem on MessageRoom {
     id
     partner {
       id
       nickName
       photoUrls
     }
-    lastMessage {
+    latestMessage {
       id
       content
       createdAt
-    }
-  }
-`;
-
-gql`
-  query NewMessageRooms($input: PageInput!) {
-    newMessageRooms(input: $input) {
-      edges {
-        node {
-          id
-          ...NewMessageRoomItem
-        }
-        cursor
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-  }
-`;
-
-gql`
-  query MessageRooms($input: PageInput!) {
-    messageRooms(input: $input) {
-      edges {
-        node {
-          id
-          ...MessageRoomItem
-        }
-        cursor
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
     }
   }
 `;
@@ -104,11 +64,11 @@ const NewMessageRoomItem: FC<NewMessageRoomItemProps> = ({ messageRoom }) => {
   );
 };
 
-type MessageRoomItemProps = {
-  messageRoom: MessageRoomItemFragment;
+type OpenedMessageRoomItemProps = {
+  messageRoom: OpenedMessageRoomItemFragment;
 };
 
-const MessageRoomItem: FC<MessageRoomItemProps> = ({ messageRoom }) => {
+const OpenedMessageRoomItem: FC<OpenedMessageRoomItemProps> = ({ messageRoom }) => {
   return (
     <AppLink
       to={routes["/message-rooms/:messageRoomId"].path({ messageRoomId: messageRoom.id })}
@@ -119,10 +79,10 @@ const MessageRoomItem: FC<MessageRoomItemProps> = ({ messageRoom }) => {
         <Box flex="1">
           <Flex justifyContent="space-between">
             <Box fontWeight="bold">{messageRoom.partner.nickName}</Box>
-            <Box color="gray.500">{format(new Date(messageRoom.lastMessage.createdAt), "yyyy/MM/dd")}</Box>
+            <Box color="gray.500">{format(new Date(messageRoom.latestMessage.createdAt), "yyyy/MM/dd")}</Box>
           </Flex>
           <Box color="gray.500" noOfLines={1}>
-            {messageRoom.lastMessage?.content}
+            {messageRoom.latestMessage.content}
           </Box>
         </Box>
       </HStack>
@@ -130,15 +90,11 @@ const MessageRoomItem: FC<MessageRoomItemProps> = ({ messageRoom }) => {
   );
 };
 
-const QUERY_SIZE = 6;
-
 const NewMessageRooms: FC = () => {
-  const { data, fetchMore } = useNewMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
-  const messageRooms = data?.newMessageRooms.edges.map((e) => e.node) ?? [];
-  const hasMore = data?.newMessageRooms.pageInfo.hasNextPage ?? false;
-  const onLoadMore = async () => {
-    await fetchMore({ variables: { input: { first: QUERY_SIZE, after: data?.newMessageRooms.pageInfo.endCursor } } });
-  };
+  const { data, onLoadMore } = useNewMessageRooms();
+
+  const messageRooms = data?.viewer.newMessageRooms.edges.map((e) => e.node) ?? [];
+  const hasMore = data?.viewer.newMessageRooms.pageInfo.hasNextPage ?? false;
 
   return (
     <Stack spacing="6">
@@ -155,18 +111,16 @@ const NewMessageRooms: FC = () => {
   );
 };
 
-const MessageRooms: FC = () => {
-  const { data, fetchMore } = useMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
-  const messageRooms = data?.messageRooms.edges.map((e) => e.node) ?? [];
-  const hasMore = data?.messageRooms.pageInfo.hasNextPage ?? false;
-  const onLoadMore = async () => {
-    await fetchMore({ variables: { input: { first: QUERY_SIZE, after: data?.messageRooms.pageInfo.endCursor } } });
-  };
+const OpenedMessageRooms: FC = () => {
+  const { data, onLoadMore } = useOpenedMessageRooms();
+
+  const messageRooms = data?.viewer.openedMessageRooms.edges.map((e) => e.node) ?? [];
+  const hasMore = data?.viewer.openedMessageRooms.pageInfo.hasNextPage ?? false;
 
   return (
     <Stack spacing="6">
       {messageRooms.map((mr) => (
-        <MessageRoomItem key={mr.id} messageRoom={mr} />
+        <OpenedMessageRoomItem key={mr.id} messageRoom={mr} />
       ))}
 
       {hasMore && (
@@ -210,7 +164,7 @@ export const MessageRoomsPage: FC = () => {
                 <NewMessageRooms />
               </TabPanel>
               <TabPanel>
-                <MessageRooms />
+                <OpenedMessageRooms />
               </TabPanel>
             </TabPanels>
           </Tabs>

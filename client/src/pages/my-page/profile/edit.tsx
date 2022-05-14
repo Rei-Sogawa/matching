@@ -1,34 +1,24 @@
-import { gql } from "@apollo/client";
-import { Box, Container, Flex, Stack, useToast } from "@chakra-ui/react";
+import { Box, Flex, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 
-import { BackButton } from "../../../components/common/BackButton";
+import { BackButton } from "../../../components/case/BackButton";
 import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
 import { useMe } from "../../../contexts/Me";
-import { useUpdateUserMutation } from "../../../graphql/generated";
+import { useUpdateUserProfile } from "../../../hooks/domain/useUser";
 import { AppHeader } from "../../../layouts/AppHeader";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";
-
-gql`
-  mutation UpdateUser($input: UpdateUserInput!) {
-    updateUser(input: $input) {
-      id
-      ...MeForMe
-    }
-  }
-`;
 
 export const MyPageProfileEditPage: FC = () => {
   const toast = useToast();
 
   const { me } = useMe();
 
-  const [updateUserMutation] = useUpdateUserMutation();
+  const { updateUserProfile } = useUpdateUserProfile();
 
-  const updateUser: UserProfileUpdateFormProps["onSubmit"] = async (values) => {
-    await updateUserMutation({ variables: { input: values } });
+  const onSubmit: UserProfileUpdateFormProps["onSubmit"] = async (values) => {
+    await updateUserProfile(values);
     toast({ title: "更新しました。", status: "success", position: "top-right", duration: 2_500 });
   };
 
@@ -49,7 +39,7 @@ export const MyPageProfileEditPage: FC = () => {
     <AppLayout header={header} footer={null}>
       <AppMain>
         <Stack spacing="6">
-          <UserProfileUpdateForm initialValues={me} onSubmit={updateUser} />
+          <UserProfileUpdateForm initialValues={me} onSubmit={onSubmit} />
         </Stack>
       </AppMain>
     </AppLayout>

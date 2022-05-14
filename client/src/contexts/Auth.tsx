@@ -2,7 +2,7 @@ import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
 import { createContext, FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Loading } from "../components/case/Loading";
+import { Loading } from "../components/base/Loading";
 import { assertDefined } from "../utils/assert-defined";
 import { useGlobal } from "./Global";
 

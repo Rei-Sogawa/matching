@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import { Box, Container, Stack } from "@chakra-ui/react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
@@ -6,30 +5,17 @@ import { FC } from "react";
 import { AppLink } from "../components/base/AppLink";
 import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
-import { useSignUpMutation } from "../graphql/generated";
+import { useSignUp } from "../hooks/domain/useLike";
 import { routes } from "../routes";
-import { assertDefined } from "../utils/assert-defined";
-
-gql`
-  mutation SignUp($input: SignUpInput!) {
-    signUp(input: $input) {
-      id
-      ...MeForMe
-    }
-  }
-`;
 
 export const SignUpPage: FC = () => {
   const { setRedirect } = useGlobal();
 
-  const [signUpMutate] = useSignUpMutation();
+  const { signUp } = useSignUp();
 
-  const signUp: SignUpFormProps["onSubmit"] = async ({ email, password }) => {
-    const { data } = await signUpMutate({
-      variables: { input: { email, password } },
-    });
+  const onSubmit: SignUpFormProps["onSubmit"] = async ({ email, password }) => {
+    await signUp({ email, password });
 
-    assertDefined(data);
     const redirect = routes["/my-page/profile/edit"].path();
     setRedirect(redirect);
 
@@ -44,7 +30,7 @@ export const SignUpPage: FC = () => {
             Matching!
           </Box>
 
-          <SignUpForm onSubmit={signUp} />
+          <SignUpForm onSubmit={onSubmit} />
 
           <AppLink to={routes["/log-in"].path()}>ログインはこちら</AppLink>
         </Stack>

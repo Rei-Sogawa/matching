@@ -16,7 +16,7 @@ import {
 import { FC, useEffect, useRef, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 
-import { useObjectURL } from "../../hooks/useObjectURL";
+import { useObjectURL } from "../../hooks/common/useObjectURL";
 
 const getBlobFromCanvas = (canvas: HTMLCanvasElement, file: File): Promise<File> =>
   new Promise((resolve, reject) => {

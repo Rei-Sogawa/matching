@@ -1,22 +1,16 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Avatar, Box, Button, HStack, IconButton, Stack } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { head } from "lodash-es";
 import { FC, FormEventHandler, useEffect, useMemo, useRef } from "react";
 import { BiSend } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 
 import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
-import { BackButton } from "../../components/common/BackButton";
-import {
-  MessageItemFragment,
-  useCreateMessageMutation,
-  useMessageLazyQuery,
-  useMessageRoomPageQuery,
-  User,
-} from "../../graphql/generated";
-import { useTextInput } from "../../hooks/useTextInput";
+import { BackButton } from "../../components/case/BackButton";
+import { MessageItemFragment, User } from "../../graphql/generated";
+import { useTextInput } from "../../hooks/common/useTextInput";
+import { useCreateMessage, useMessageRoom, useSubscribeMessage } from "../../hooks/domain/useMessageRoom";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
@@ -66,25 +60,6 @@ const PartnerMessageItem: FC<PartnerMessageItemProps> = ({ message }) => {
       </Box>
     </HStack>
   );
-};
-
-gql`
-  mutation CreateMessage($input: CreateMessageInput!) {
-    createMessage(input: $input) {
-      id
-      ...MessageItem
-    }
-  }
-`;
-
-const useCreateMessage = (messageRoomId: string) => {
-  const [mutate] = useCreateMessageMutation();
-
-  const createMessage = async (content: string) => {
-    await mutate({ variables: { input: { messageRoomId, content } } });
-  };
-
-  return { createMessage };
 };
 
 type MessageRoomPageTemplateProps = {
@@ -163,107 +138,18 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
   );
 };
 
-gql`
-  query Message($id: ID!) {
-    message(id: $id) {
-      id
-      ...MessageItem
-    }
-  }
-`;
-
-const useSubscribeMessage = (messageRoomId: string) => {
-  const client = useApolloClient();
-
-  const [fetch] = useMessageLazyQuery();
-
-  useEffect(() => {
-    return onSnapshot(
-      query(
-        collection(getFirestore(), "messageRoomEvents"),
-        where("messageRoomId", "==", messageRoomId),
-        where("createdAt", ">=", Timestamp.now()),
-        orderBy("createdAt", "desc")
-      ),
-      (snap) => {
-        snap.docChanges().forEach(async (dc) => {
-          const messageRoomId = dc.doc.data().messageRoomId;
-          const messageId = dc.doc.data().messageId;
-          const { data } = await fetch({ variables: { id: messageId } });
-          if (!data) return;
-          client.cache.modify({
-            id: client.cache.identify({ __typename: "MessageRoom", id: messageRoomId }),
-            fields: {
-              messages(existing, { toReference }) {
-                const edge = {
-                  __typename: "MessageEdge",
-                  node: toReference(data.message),
-                  cursor: data.message.createdAt,
-                };
-                return { ...existing, edges: [edge, ...existing.edges] };
-              },
-              // lastMessage(_existing, { toReference }) {
-              //   return toReference(data.message);
-              // },
-            },
-          });
-        });
-      }
-    );
-  }, []);
-};
-
-gql`
-  query MessageRoomPage($id: ID!, $input: PageInput!) {
-    messageRoom(id: $id) {
-      id
-      partner {
-        id
-        nickName
-        topPhotoUrl
-      }
-      messages(input: $input) {
-        edges {
-          node {
-            id
-            ...MessageItem
-          }
-          cursor
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
-
-const QUERY_SIZE = 20;
-
 export const MessageRoomPage: FC = () => {
   const { messageRoomId } = useParams();
   assertDefined(messageRoomId);
 
-  const { data, fetchMore } = useMessageRoomPageQuery({
-    variables: { id: messageRoomId, input: { first: QUERY_SIZE } },
-  });
-
+  const { data, onLoadMore } = useMessageRoom(messageRoomId);
   useSubscribeMessage(messageRoomId);
 
   if (!data) return null;
 
-  const partner = data.messageRoom.partner;
-  const messages = data.messageRoom.messages.edges.map((e) => e.node);
-  const hasNextPage = data.messageRoom.messages.pageInfo.hasNextPage ?? false;
-  const onLoadMore = async () => {
-    await fetchMore({
-      variables: {
-        id: messageRoomId,
-        input: { first: QUERY_SIZE, after: data.messageRoom.messages.pageInfo.endCursor },
-      },
-    });
-  };
+  const partner = data.viewer.messageRoom.partner;
+  const messages = data.viewer.messageRoom.messages.edges.map((e) => e.node);
+  const hasNextPage = data.viewer.messageRoom.messages.pageInfo.hasNextPage ?? false;
 
   return (
     <MessageRoomPageTemplate partner={partner} messages={messages} hasNextPage={hasNextPage} onLoadMore={onLoadMore} />

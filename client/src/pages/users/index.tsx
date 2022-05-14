@@ -1,47 +1,19 @@
-import { gql } from "@apollo/client";
 import { Button, Flex, IconButton, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import { FC } from "react";
 import { BiSearch } from "react-icons/bi";
 
 import { UserSmallCard } from "../../components/domain/UserSmallCard";
-import { useUsersQuery } from "../../graphql/generated";
+import { useUsers } from "../../hooks/domain/useLike";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 
-gql`
-  query Users($input: PageInput!) {
-    users(input: $input) {
-      edges {
-        node {
-          id
-          ...UserSmallCard
-          ...UserForUserPage
-        }
-        cursor
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-  }
-`;
-
-const QUERY_SIZE = 6;
-
 export const UsersPage: FC = () => {
-  const { data, fetchMore } = useUsersQuery({ variables: { input: { first: QUERY_SIZE } } });
+  const { data, onLoadMore } = useUsers();
 
-  const users = data?.users.edges.map((v) => v.node) ?? [];
-  const hasMore = data?.users.pageInfo.hasNextPage ?? false;
-
-  const onLoadMore = async () => {
-    await fetchMore({
-      variables: { input: { first: QUERY_SIZE, after: data?.users.pageInfo.endCursor } },
-    });
-  };
+  const users = data?.viewer.users.edges.map((v) => v.node) ?? [];
+  const hasMore = data?.viewer.users.pageInfo.hasNextPage ?? false;
 
   const footer = (
     <AppFooter>

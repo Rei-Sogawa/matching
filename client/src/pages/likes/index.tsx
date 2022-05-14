@@ -1,31 +1,21 @@
-import { gql } from "@apollo/client";
 import { Box, Stack } from "@chakra-ui/react";
 import { head } from "lodash-es";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useReceiveLikeUsersQuery } from "../../graphql/generated";
+import { useReceiveLikeUsers } from "../../hooks/domain/useLike";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
-gql`
-  query ReceiveLikeUsers {
-    receiveLikeUsers {
-      id
-      ...UserForLikePage
-    }
-  }
-`;
-
 export const LikesPage: FC = () => {
   const navigate = useNavigate();
 
-  const { data } = useReceiveLikeUsersQuery();
+  const { data } = useReceiveLikeUsers();
 
-  const users = data?.receiveLikeUsers ?? [];
+  const users = data?.viewer.receiveLikeUsers ?? [];
 
   useEffect(() => {
     const user = head(users);

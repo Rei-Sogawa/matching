@@ -1,52 +1,19 @@
-import { gql, Reference, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Box, Center, HStack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiLike, BiShare } from "react-icons/bi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 
+import { BackButton } from "../../../components/case/BackButton";
 import { LikeButton } from "../../../components/case/LikeButton";
 import { SkipButton } from "../../../components/case/SkipButton";
-import { BackButton } from "../../../components/common/BackButton";
 import { UserTopCard } from "../../../components/domain/UserTopCard";
-import { useLikeMutation, UserForUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
+import { UserForUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
+import { useCreateLike } from "../../../hooks/domain/useLike";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";
-import { assertDefined } from "../../../utils/assert-defined";
-
-gql`
-  mutation Like($userId: ID!) {
-    like(userId: $userId) {
-      id
-      ...UserForUserPage
-    }
-  }
-`;
-
-const useLike = (userId: string) => {
-  const [mutate] = useLikeMutation({
-    variables: { userId },
-    update(cache, { data }) {
-      assertDefined(data);
-
-      cache.modify({
-        fields: {
-          users(existing, { readField }) {
-            return {
-              ...existing,
-              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
-            };
-          },
-        },
-      });
-    },
-  });
-
-  const like = () => mutate();
-
-  return { like };
-};
 
 gql`
   fragment UserForUserPage on User {
@@ -64,7 +31,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
 
   const getRedirectPath = () => {
     const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
-    const users = data?.users.edges.map((e) => e.node) ?? [];
+    const users = data?.viewer.users.edges.map((e) => e.node) ?? [];
 
     const currIndex = users.findIndex((u) => u.id === user.id);
     const nextUser = users[currIndex + 1];
@@ -76,7 +43,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     }
   };
 
-  const { like } = useLike(user.id);
+  const { createLike } = useCreateLike(user.id);
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
   const [liked, setLiked] = useState(false);
@@ -101,7 +68,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   const onLike = async () => {
     likeAnimation();
     const redirectPath = getRedirectPath();
-    await like();
+    await createLike();
 
     setTimeout(() => {
       resetAnimation();
@@ -165,7 +132,7 @@ export const UserPage: FC = () => {
   const { userId } = useParams();
   const client = useApolloClient();
   const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
-  const users = data?.users.edges.map((e) => e.node) ?? [];
+  const users = data?.viewer.users.edges.map((e) => e.node) ?? [];
   const user = users.find((u) => u.id === userId);
   return user ? <UserPageTemplate user={user} /> : <Navigate to={routes["/users"].path()} />;
 };

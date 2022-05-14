@@ -17,6 +17,7 @@ export const BackButton: FC<BackButtonProps> = ({ path, ...rest }) => {
       variant="ghost"
       aria-label="back"
       icon={<BiArrowBack fontSize="28px" />}
+      // TODO: 親から渡す
       onClick={() => navigate(path)}
       {...rest}
     />

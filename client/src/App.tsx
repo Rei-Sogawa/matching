@@ -6,25 +6,30 @@ import { Apollo } from "./contexts/Apollo";
 import { AuthProvider } from "./contexts/Auth";
 import { GlobalProvider } from "./contexts/Global";
 import { MeProvider } from "./contexts/Me";
-import { useAccessMutation } from "./graphql/generated";
+import { useUpdateUserLastAccessMutation } from "./graphql/generated";
 import { Compose } from "./middleware/Compose";
 import { paths, routes } from "./routes";
 
 gql`
-  mutation Access {
-    access {
+  mutation UpdateUserLastAccess {
+    updateUserLastAccess {
       id
-      ...MeForMe
     }
   }
 `;
 
-const Pages: FC = () => {
-  const [access] = useAccessMutation();
+const useUpdateUserLastAccess = () => {
+  const [mutate] = useUpdateUserLastAccessMutation();
 
   useEffect(() => {
-    access();
+    (async () => {
+      await mutate();
+    })();
   }, []);
+};
+
+const Pages: FC = () => {
+  useUpdateUserLastAccess();
 
   return (
     <Routes>
