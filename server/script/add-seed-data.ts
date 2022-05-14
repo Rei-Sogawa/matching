@@ -12,14 +12,9 @@ const auth = getAuth();
 const db = getDb();
 const storage = getStorage();
 
-<<<<<<< HEAD
-const { usersCollection, likesCollection, messageRoomsCollection, userIndexCollection, userLikeIndexCollection } =
-  createCollections(db);
-=======
 const collections = createCollections(db);
 const { usersCollection, likesCollection, messageRoomsCollection, userIndexCollection, userLikeIndexCollection } =
   collections;
->>>>>>> refactor-client
 
 const seed = async () => {
   const fakeAuthUsers = await Promise.all(
@@ -134,10 +129,7 @@ const seed = async () => {
 
   const like = await LikeDoc.create(likesCollection, { senderId: nao.id, receiverId: megu.id }).match().save();
   await onCreateLike(like, { userLikeIndexCollection });
-<<<<<<< HEAD
-=======
 
->>>>>>> refactor-client
   const messageRoom = await MessageRoomDoc.create(messageRoomsCollection, {
     likeId: like.id,
     userIds: [like.senderId, like.receiverId],
@@ -145,11 +137,7 @@ const seed = async () => {
     .touch()
     .save();
 
-<<<<<<< HEAD
-  for (const i of Array.from({ length: 10 }).map((_, i) => i)) {
-=======
   for (const i of Array.from({ length: 30 }).map((_, i) => i)) {
->>>>>>> refactor-client
     const message = MessageDoc.create(messageRoom.messagesCollection, {
       userId: messageRoom.userIds[i % 2],
       content: i.toString(),
