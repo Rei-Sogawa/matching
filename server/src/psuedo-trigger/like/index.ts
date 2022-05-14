@@ -14,7 +14,7 @@ export const onUpdateLike = async (
   collections: { userLikeIndexCollection: UserLikeIndexCollection }
 ) => {
   await collections.userLikeIndexCollection.of(like.senderId).update(like.indexData);
-  await collections.userLikeIndexCollection.of(like.receiverId).update(like);
+  await collections.userLikeIndexCollection.of(like.receiverId).update(like.indexData);
 };
 
 export const onDeleteLike = async (

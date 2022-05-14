@@ -19,7 +19,7 @@ const getClient = (token?: string) => {
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
   const cache = new InMemoryCache({
     typePolicies: {
-      Query: {
+      Viewer: {
         fields: {
           users: {
             keyArgs: false,
@@ -36,6 +36,13 @@ const getClient = (token?: string) => {
             },
           },
           newMessageRooms: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+          openedMessageRooms: {
             keyArgs: false,
             merge: (existing, incoming) => {
               if (!existing) return incoming;

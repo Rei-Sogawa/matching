@@ -1,31 +1,22 @@
-import { gql } from "@apollo/client";
 import { Box, Stack } from "@chakra-ui/react";
 import { head } from "lodash-es";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useReceiveLikeUsersQuery } from "../../graphql/generated";
+import { Loading } from "../../components/base/Loading";
+import { useReceiveLikeUsers } from "../../hooks/domain/useUser";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
 
-gql`
-  query ReceiveLikeUsers {
-    receiveLikeUsers {
-      id
-      ...UserForLikePage
-    }
-  }
-`;
-
 export const LikesPage: FC = () => {
   const navigate = useNavigate();
 
-  const { data } = useReceiveLikeUsersQuery();
+  const { data } = useReceiveLikeUsers();
 
-  const users = data?.receiveLikeUsers ?? [];
+  const users = data?.viewer.receiveLikeUsers ?? [];
 
   useEffect(() => {
     const user = head(users);
@@ -39,6 +30,9 @@ export const LikesPage: FC = () => {
       <AppMenu />
     </AppFooter>
   );
+
+  if (!data) return <Loading />;
+  if (users.length > 0) return <Loading />;
 
   return (
     <AppLayout header={null} footer={footer}>

@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
 import { createContext, FC, useContext } from "react";
 
-import { Loading } from "../components/case/Loading";
-import { MeForMeFragment, useMeQuery } from "../graphql/generated";
+import { Loading } from "../components/base/Loading";
+import { MeProviderFragment, useMeQuery } from "../graphql/generated";
 import { assertDefined } from "../utils/assert-defined";
 import { useAuth } from "./Auth";
 
 gql`
-  fragment MeForMe on Me {
+  fragment MeProvider on Me {
     id
     gender
     nickName
@@ -20,14 +20,17 @@ gql`
 
 gql`
   query me {
-    me {
+    viewer {
       id
-      ...MeForMe
+      me {
+        id
+        ...MeProvider
+      }
     }
   }
 `;
 
-const MeContext = createContext<MeForMeFragment | undefined>(undefined);
+const MeContext = createContext<MeProviderFragment | undefined>(undefined);
 
 export const MeProvider: FC = ({ children }) => {
   const { uid } = useAuth();
@@ -37,7 +40,7 @@ export const MeProvider: FC = ({ children }) => {
   if (loading) return <Loading />;
   if (!data) throw new Error("Not found me");
 
-  return <MeContext.Provider value={data.me}>{children}</MeContext.Provider>;
+  return <MeContext.Provider value={data.viewer.me}>{children}</MeContext.Provider>;
 };
 
 export const useMe = () => {

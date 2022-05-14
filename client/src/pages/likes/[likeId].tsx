@@ -1,4 +1,4 @@
-import { gql, Reference, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Box, Center, HStack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
 import { BiHeart, BiShare } from "react-icons/bi";
@@ -11,72 +11,14 @@ import { UserTopCard } from "../../components/domain/UserTopCard";
 import {
   ReceiveLikeUsersDocument,
   ReceiveLikeUsersQueryResult,
-  useMatchMutation,
   UserForLikePageFragment,
-  useSkipMutation,
 } from "../../graphql/generated";
+import { useMatchLike, useSkipLike } from "../../hooks/domain/useLike";
 import { AppFooter } from "../../layouts/AppFooter";
-import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 import { routes } from "../../routes";
-
-gql`
-  mutation Match($userId: ID!) {
-    like(userId: $userId) {
-      id
-      ...UserForLikePage
-    }
-  }
-`;
-
-const useMatch = (userId: string) => {
-  const [mutate] = useMatchMutation({
-    variables: { userId },
-    update(cache) {
-      cache.modify({
-        fields: {
-          receiveLikeUsers(existing, { readField }) {
-            return existing.filter((u: Reference) => readField("id", u) !== userId);
-          },
-        },
-      });
-    },
-  });
-
-  const match = () => mutate();
-
-  return { match };
-};
-
-gql`
-  mutation Skip($userId: ID!) {
-    skip(userId: $userId) {
-      id
-      ...UserForLikePage
-    }
-  }
-`;
-
-const useSkip = (userId: string) => {
-  const [mutate] = useSkipMutation({
-    variables: { userId },
-    update(cache) {
-      cache.modify({
-        fields: {
-          receiveLikeUsers(existing, { readField }) {
-            return existing.filter((u: Reference) => readField("id", u) !== userId);
-          },
-        },
-      });
-    },
-  });
-
-  const skip = () => mutate();
-
-  return { skip };
-};
 
 gql`
   fragment UserForLikePage on User {
@@ -94,7 +36,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
 
   const getRedirectPath = () => {
     const data = client.cache.readQuery({ query: ReceiveLikeUsersDocument }) as ReceiveLikeUsersQueryResult["data"];
-    const users = data?.receiveLikeUsers ?? [];
+    const users = data?.viewer.receiveLikeUsers ?? [];
 
     const currIndex = users.findIndex((u) => u.id === user.id);
     const nextUser = users[currIndex + 1];
@@ -106,8 +48,8 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
     }
   };
 
-  const { match } = useMatch(user.id);
-  const { skip } = useSkip(user.id);
+  const { matchLike } = useMatchLike(user.id);
+  const { skipLike } = useSkipLike(user.id);
 
   const [imageStyles, imageStylesApi] = useSpring(() => ({ opacity: 0 }));
   const [liked, setLiked] = useState(false);
@@ -132,7 +74,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
   const onMatch = async () => {
     likeAnimation();
     const redirectPath = getRedirectPath();
-    await match();
+    await matchLike();
 
     setTimeout(() => {
       resetAnimation();
@@ -143,7 +85,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
   const onSkip = async () => {
     skipAnimation();
     const redirectPath = getRedirectPath();
-    await skip();
+    await skipLike();
 
     setTimeout(() => {
       resetAnimation();
@@ -202,7 +144,7 @@ export const LikePage: FC = () => {
   const { userId } = useParams();
   const client = useApolloClient();
   const data = client.cache.readQuery({ query: ReceiveLikeUsersDocument }) as ReceiveLikeUsersQueryResult["data"];
-  const users = data?.receiveLikeUsers ?? [];
+  const users = data?.viewer.receiveLikeUsers ?? [];
   const user = users.find((u) => u.id === userId);
   return user ? <LikePageTemplate user={user} /> : <Navigate to={routes["/likes"].path()} />;
 };

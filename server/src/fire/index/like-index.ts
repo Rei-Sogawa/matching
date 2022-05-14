@@ -18,7 +18,7 @@ export class LikeIndexCollection extends FireIndex<LikeIndexData> {
 
   get userId() {
     assertDefined(this.ref.parent);
-    return this.ref.parent.parent.id;
+    return this.ref.parent.id;
   }
 
   async sendLikeUserIds() {

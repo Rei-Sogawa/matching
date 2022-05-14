@@ -49,7 +49,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
-            .where("open", "==", false)
+            .where("opened", "==", false)
             .startAfter(after)
             .limit(first)
         )
@@ -57,7 +57,7 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
           ref
             .orderBy("createdAt", "desc")
             .where("userIds", "array-contains", userId)
-            .where("open", "==", false)
+            .where("opened", "==", false)
             .limit(first)
         );
   }

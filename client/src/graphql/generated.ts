@@ -18,7 +18,7 @@ export type Scalars = {
 
 export type CreateMessageInput = {
   content: Scalars['String'];
-  messageRoomId: Scalars['String'];
+  messageRoomId: Scalars['ID'];
 };
 
 export const Gender = {
@@ -69,7 +69,7 @@ export type MessageEdge = {
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   id: Scalars['ID'];
-  lastMessage: Message;
+  latestMessage: Message;
   messages: MessageConnection;
   partner: User;
 };
@@ -93,13 +93,24 @@ export type MessageRoomEdge = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  access: Me;
+  cancelLike: User;
+  createLike: User;
   createMessage: Message;
-  like: User;
+  matchLike: User;
   signUp: Me;
-  skip: User;
-  unlike: User;
-  updateUser: Me;
+  skipLike: User;
+  updateUserLastAccess: Me;
+  updateUserProfile: Me;
+};
+
+
+export type MutationCancelLikeArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type MutationCreateLikeArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -108,7 +119,7 @@ export type MutationCreateMessageArgs = {
 };
 
 
-export type MutationLikeArgs = {
+export type MutationMatchLikeArgs = {
   userId: Scalars['ID'];
 };
 
@@ -118,18 +129,13 @@ export type MutationSignUpArgs = {
 };
 
 
-export type MutationSkipArgs = {
+export type MutationSkipLikeArgs = {
   userId: Scalars['ID'];
 };
 
 
-export type MutationUnlikeArgs = {
-  userId: Scalars['ID'];
-};
-
-
-export type MutationUpdateUserArgs = {
-  input: UpdateUserInput;
+export type MutationUpdateUserProfileArgs = {
+  input: UpdateUserProfileInput;
 };
 
 export type PageInfo = {
@@ -145,50 +151,7 @@ export type PageInput = {
 
 export type Query = {
   __typename?: 'Query';
-  me: Me;
-  message: Message;
-  messageRoom: MessageRoom;
-  messageRooms: MessageRoomConnection;
-  newMessageRooms: MessageRoomConnection;
-  receiveLikeUsers: Array<User>;
-  sendLikeUsers: UserConnection;
-  user: User;
-  users: UserConnection;
-};
-
-
-export type QueryMessageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryMessageRoomArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type QueryNewMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type QuerySendLikeUsersArgs = {
-  input: PageInput;
-};
-
-
-export type QueryUserArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryUsersArgs = {
-  input: PageInput;
+  viewer: Viewer;
 };
 
 export type SignUpInput = {
@@ -196,7 +159,7 @@ export type SignUpInput = {
   password: Scalars['String'];
 };
 
-export type UpdateUserInput = {
+export type UpdateUserProfileInput = {
   age: Scalars['Int'];
   gender: Gender;
   livingPref: Scalars['String'];
@@ -227,10 +190,59 @@ export type UserEdge = {
   node: User;
 };
 
-export type AccessMutationVariables = Exact<{ [key: string]: never; }>;
+export type Viewer = {
+  __typename?: 'Viewer';
+  id: Scalars['ID'];
+  me: Me;
+  message: Message;
+  messageRoom: MessageRoom;
+  newMessageRooms: MessageRoomConnection;
+  openedMessageRooms: MessageRoomConnection;
+  receiveLikeUsers: Array<User>;
+  sendLikeUsers: UserConnection;
+  user: User;
+  users: UserConnection;
+};
 
 
-export type AccessMutation = { __typename?: 'Mutation', access: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type ViewerMessageArgs = {
+  messageId: Scalars['ID'];
+};
+
+
+export type ViewerMessageRoomArgs = {
+  messageRoomId: Scalars['ID'];
+};
+
+
+export type ViewerNewMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerOpenedMessageRoomsArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerSendLikeUsersArgs = {
+  input: PageInput;
+};
+
+
+export type ViewerUserArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type ViewerUsersArgs = {
+  input: PageInput;
+};
+
+export type UpdateUserLastAccessMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateUserLastAccessMutation = { __typename?: 'Mutation', updateUserLastAccess: { __typename?: 'Me', id: string } };
 
 export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
@@ -238,35 +250,69 @@ export type UserSmallCardFragment = { __typename?: 'User', id: string, gender: G
 
 export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type MeForMeFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
+export type MeProviderFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type MeQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } } };
 
-export type MatchMutationVariables = Exact<{
+export type MatchLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
 }>;
 
 
-export type MatchMutation = { __typename?: 'Mutation', like: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type MatchLikeMutation = { __typename?: 'Mutation', matchLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
-export type SkipMutationVariables = Exact<{
+export type SkipLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
 }>;
 
 
-export type SkipMutation = { __typename?: 'Mutation', skip: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type SkipLikeMutation = { __typename?: 'Mutation', skipLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
 
-export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type CancelLikeMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
 
-export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+export type CancelLikeMutation = { __typename?: 'Mutation', cancelLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+
+export type CreateLikeMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
 
 
-export type ReceiveLikeUsersQuery = { __typename?: 'Query', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> };
+export type CreateLikeMutation = { __typename?: 'Mutation', createLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } };
 
-export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
+export type NewMessageRoomsQueryVariables = Exact<{
+  input: PageInput;
+}>;
+
+
+export type NewMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+
+export type OpenedMessageRoomsQueryVariables = Exact<{
+  input: PageInput;
+}>;
+
+
+export type OpenedMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, openedMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+
+export type MessageRoomQueryVariables = Exact<{
+  messageRoomId: Scalars['ID'];
+  input: PageInput;
+}>;
+
+
+export type MessageRoomQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, topPhotoUrl?: string | null }, messages: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } } };
+
+export type CreatedMessageQueryVariables = Exact<{
+  messageId: Scalars['ID'];
+}>;
+
+
+export type CreatedMessageQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } } };
 
 export type CreateMessageMutationVariables = Exact<{
   input: CreateMessageInput;
@@ -275,61 +321,24 @@ export type CreateMessageMutationVariables = Exact<{
 
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } };
 
-export type MessageQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type MessageQuery = { __typename?: 'Query', message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } };
-
-export type MessageRoomPageQueryVariables = Exact<{
-  id: Scalars['ID'];
+export type UsersQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type MessageRoomPageQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, topPhotoUrl?: string | null }, messages: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+export type UsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null, nickName: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
-export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } };
-
-export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, lastMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
-
-export type NewMessageRoomsQueryVariables = Exact<{
-  input: PageInput;
-}>;
+export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewMessageRoomsQuery = { __typename?: 'Query', newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
-
-export type MessageRoomsQueryVariables = Exact<{
-  input: PageInput;
-}>;
-
-
-export type MessageRoomsQuery = { __typename?: 'Query', messageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, lastMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
-
-export type UnlikeMutationVariables = Exact<{
-  userId: Scalars['ID'];
-}>;
-
-
-export type UnlikeMutation = { __typename?: 'Mutation', unlike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } };
-
-export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
+export type ReceiveLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> } };
 
 export type SendLikeUsersQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type SendLikeUsersQuery = { __typename?: 'Query', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
-
-export type UpdateUserMutationVariables = Exact<{
-  input: UpdateUserInput;
-}>;
-
-
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+export type SendLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
@@ -338,21 +347,24 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
 
-export type LikeMutationVariables = Exact<{
-  userId: Scalars['ID'];
+export type UpdateUserProfileMutationVariables = Exact<{
+  input: UpdateUserProfileInput;
 }>;
 
 
-export type LikeMutation = { __typename?: 'Mutation', like: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } };
+
+export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
+export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
+
+export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } };
+
+export type OpenedMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
+
+export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type UserForUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
-
-export type UsersQueryVariables = Exact<{
-  input: PageInput;
-}>;
-
-
-export type UsersQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null, nickName: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } };
 
 export const UserSmallCardFragmentDoc = gql`
     fragment UserSmallCard on User {
@@ -363,8 +375,8 @@ export const UserSmallCardFragmentDoc = gql`
   topPhotoUrl
 }
     `;
-export const MeForMeFragmentDoc = gql`
-    fragment MeForMe on Me {
+export const MeProviderFragmentDoc = gql`
+    fragment MeProvider on Me {
   id
   gender
   nickName
@@ -412,15 +424,15 @@ export const NewMessageRoomItemFragmentDoc = gql`
   }
 }
     `;
-export const MessageRoomItemFragmentDoc = gql`
-    fragment MessageRoomItem on MessageRoom {
+export const OpenedMessageRoomItemFragmentDoc = gql`
+    fragment OpenedMessageRoomItem on MessageRoom {
   id
   partner {
     id
     nickName
     photoUrls
   }
-  lastMessage {
+  latestMessage {
     id
     content
     createdAt
@@ -449,47 +461,49 @@ export const UserForUserPageFragmentDoc = gql`
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
-export const AccessDocument = gql`
-    mutation Access {
-  access {
+export const UpdateUserLastAccessDocument = gql`
+    mutation UpdateUserLastAccess {
+  updateUserLastAccess {
     id
-    ...MeForMe
   }
 }
-    ${MeForMeFragmentDoc}`;
-export type AccessMutationFn = Apollo.MutationFunction<AccessMutation, AccessMutationVariables>;
+    `;
+export type UpdateUserLastAccessMutationFn = Apollo.MutationFunction<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>;
 
 /**
- * __useAccessMutation__
+ * __useUpdateUserLastAccessMutation__
  *
- * To run a mutation, you first call `useAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAccessMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateUserLastAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserLastAccessMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [accessMutation, { data, loading, error }] = useAccessMutation({
+ * const [updateUserLastAccessMutation, { data, loading, error }] = useUpdateUserLastAccessMutation({
  *   variables: {
  *   },
  * });
  */
-export function useAccessMutation(baseOptions?: Apollo.MutationHookOptions<AccessMutation, AccessMutationVariables>) {
+export function useUpdateUserLastAccessMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AccessMutation, AccessMutationVariables>(AccessDocument, options);
+        return Apollo.useMutation<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>(UpdateUserLastAccessDocument, options);
       }
-export type AccessMutationHookResult = ReturnType<typeof useAccessMutation>;
-export type AccessMutationResult = Apollo.MutationResult<AccessMutation>;
-export type AccessMutationOptions = Apollo.BaseMutationOptions<AccessMutation, AccessMutationVariables>;
+export type UpdateUserLastAccessMutationHookResult = ReturnType<typeof useUpdateUserLastAccessMutation>;
+export type UpdateUserLastAccessMutationResult = Apollo.MutationResult<UpdateUserLastAccessMutation>;
+export type UpdateUserLastAccessMutationOptions = Apollo.BaseMutationOptions<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>;
 export const MeDocument = gql`
     query me {
-  me {
+  viewer {
     id
-    ...MeForMe
+    me {
+      id
+      ...MeProvider
+    }
   }
 }
-    ${MeForMeFragmentDoc}`;
+    ${MeProviderFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -517,109 +531,334 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const MatchDocument = gql`
-    mutation Match($userId: ID!) {
-  like(userId: $userId) {
+export const MatchLikeDocument = gql`
+    mutation MatchLike($userId: ID!) {
+  matchLike(userId: $userId) {
     id
     ...UserForLikePage
   }
 }
     ${UserForLikePageFragmentDoc}`;
-export type MatchMutationFn = Apollo.MutationFunction<MatchMutation, MatchMutationVariables>;
+export type MatchLikeMutationFn = Apollo.MutationFunction<MatchLikeMutation, MatchLikeMutationVariables>;
 
 /**
- * __useMatchMutation__
+ * __useMatchLikeMutation__
  *
- * To run a mutation, you first call `useMatchMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMatchMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useMatchLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMatchLikeMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [matchMutation, { data, loading, error }] = useMatchMutation({
+ * const [matchLikeMutation, { data, loading, error }] = useMatchLikeMutation({
  *   variables: {
  *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useMatchMutation(baseOptions?: Apollo.MutationHookOptions<MatchMutation, MatchMutationVariables>) {
+export function useMatchLikeMutation(baseOptions?: Apollo.MutationHookOptions<MatchLikeMutation, MatchLikeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MatchMutation, MatchMutationVariables>(MatchDocument, options);
+        return Apollo.useMutation<MatchLikeMutation, MatchLikeMutationVariables>(MatchLikeDocument, options);
       }
-export type MatchMutationHookResult = ReturnType<typeof useMatchMutation>;
-export type MatchMutationResult = Apollo.MutationResult<MatchMutation>;
-export type MatchMutationOptions = Apollo.BaseMutationOptions<MatchMutation, MatchMutationVariables>;
-export const SkipDocument = gql`
-    mutation Skip($userId: ID!) {
-  skip(userId: $userId) {
+export type MatchLikeMutationHookResult = ReturnType<typeof useMatchLikeMutation>;
+export type MatchLikeMutationResult = Apollo.MutationResult<MatchLikeMutation>;
+export type MatchLikeMutationOptions = Apollo.BaseMutationOptions<MatchLikeMutation, MatchLikeMutationVariables>;
+export const SkipLikeDocument = gql`
+    mutation SkipLike($userId: ID!) {
+  skipLike(userId: $userId) {
     id
     ...UserForLikePage
   }
 }
     ${UserForLikePageFragmentDoc}`;
-export type SkipMutationFn = Apollo.MutationFunction<SkipMutation, SkipMutationVariables>;
+export type SkipLikeMutationFn = Apollo.MutationFunction<SkipLikeMutation, SkipLikeMutationVariables>;
 
 /**
- * __useSkipMutation__
+ * __useSkipLikeMutation__
  *
- * To run a mutation, you first call `useSkipMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSkipMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSkipLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSkipLikeMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [skipMutation, { data, loading, error }] = useSkipMutation({
+ * const [skipLikeMutation, { data, loading, error }] = useSkipLikeMutation({
  *   variables: {
  *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useSkipMutation(baseOptions?: Apollo.MutationHookOptions<SkipMutation, SkipMutationVariables>) {
+export function useSkipLikeMutation(baseOptions?: Apollo.MutationHookOptions<SkipLikeMutation, SkipLikeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SkipMutation, SkipMutationVariables>(SkipDocument, options);
+        return Apollo.useMutation<SkipLikeMutation, SkipLikeMutationVariables>(SkipLikeDocument, options);
       }
-export type SkipMutationHookResult = ReturnType<typeof useSkipMutation>;
-export type SkipMutationResult = Apollo.MutationResult<SkipMutation>;
-export type SkipMutationOptions = Apollo.BaseMutationOptions<SkipMutation, SkipMutationVariables>;
-export const ReceiveLikeUsersDocument = gql`
-    query ReceiveLikeUsers {
-  receiveLikeUsers {
+export type SkipLikeMutationHookResult = ReturnType<typeof useSkipLikeMutation>;
+export type SkipLikeMutationResult = Apollo.MutationResult<SkipLikeMutation>;
+export type SkipLikeMutationOptions = Apollo.BaseMutationOptions<SkipLikeMutation, SkipLikeMutationVariables>;
+export const CancelLikeDocument = gql`
+    mutation CancelLike($userId: ID!) {
+  cancelLike(userId: $userId) {
     id
-    ...UserForLikePage
+    ...UserForUserPage
   }
 }
-    ${UserForLikePageFragmentDoc}`;
+    ${UserForUserPageFragmentDoc}`;
+export type CancelLikeMutationFn = Apollo.MutationFunction<CancelLikeMutation, CancelLikeMutationVariables>;
 
 /**
- * __useReceiveLikeUsersQuery__
+ * __useCancelLikeMutation__
  *
- * To run a query within a React component, call `useReceiveLikeUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useReceiveLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a mutation, you first call `useCancelLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelLikeMutation, { data, loading, error }] = useCancelLikeMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useCancelLikeMutation(baseOptions?: Apollo.MutationHookOptions<CancelLikeMutation, CancelLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelLikeMutation, CancelLikeMutationVariables>(CancelLikeDocument, options);
+      }
+export type CancelLikeMutationHookResult = ReturnType<typeof useCancelLikeMutation>;
+export type CancelLikeMutationResult = Apollo.MutationResult<CancelLikeMutation>;
+export type CancelLikeMutationOptions = Apollo.BaseMutationOptions<CancelLikeMutation, CancelLikeMutationVariables>;
+export const CreateLikeDocument = gql`
+    mutation CreateLike($userId: ID!) {
+  createLike(userId: $userId) {
+    id
+    ...SendLikeUserItem
+  }
+}
+    ${SendLikeUserItemFragmentDoc}`;
+export type CreateLikeMutationFn = Apollo.MutationFunction<CreateLikeMutation, CreateLikeMutationVariables>;
+
+/**
+ * __useCreateLikeMutation__
+ *
+ * To run a mutation, you first call `useCreateLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLikeMutation, { data, loading, error }] = useCreateLikeMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useCreateLikeMutation(baseOptions?: Apollo.MutationHookOptions<CreateLikeMutation, CreateLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLikeMutation, CreateLikeMutationVariables>(CreateLikeDocument, options);
+      }
+export type CreateLikeMutationHookResult = ReturnType<typeof useCreateLikeMutation>;
+export type CreateLikeMutationResult = Apollo.MutationResult<CreateLikeMutation>;
+export type CreateLikeMutationOptions = Apollo.BaseMutationOptions<CreateLikeMutation, CreateLikeMutationVariables>;
+export const NewMessageRoomsDocument = gql`
+    query NewMessageRooms($input: PageInput!) {
+  viewer {
+    id
+    newMessageRooms(input: $input) {
+      edges {
+        node {
+          id
+          ...NewMessageRoomItem
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+    ${NewMessageRoomItemFragmentDoc}`;
+
+/**
+ * __useNewMessageRoomsQuery__
+ *
+ * To run a query within a React component, call `useNewMessageRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useReceiveLikeUsersQuery({
+ * const { data, loading, error } = useNewMessageRoomsQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useReceiveLikeUsersQuery(baseOptions?: Apollo.QueryHookOptions<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>) {
+export function useNewMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>(ReceiveLikeUsersDocument, options);
+        return Apollo.useQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
       }
-export function useReceiveLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>) {
+export function useNewMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>(ReceiveLikeUsersDocument, options);
+          return Apollo.useLazyQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
         }
-export type ReceiveLikeUsersQueryHookResult = ReturnType<typeof useReceiveLikeUsersQuery>;
-export type ReceiveLikeUsersLazyQueryHookResult = ReturnType<typeof useReceiveLikeUsersLazyQuery>;
-export type ReceiveLikeUsersQueryResult = Apollo.QueryResult<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>;
+export type NewMessageRoomsQueryHookResult = ReturnType<typeof useNewMessageRoomsQuery>;
+export type NewMessageRoomsLazyQueryHookResult = ReturnType<typeof useNewMessageRoomsLazyQuery>;
+export type NewMessageRoomsQueryResult = Apollo.QueryResult<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>;
+export const OpenedMessageRoomsDocument = gql`
+    query OpenedMessageRooms($input: PageInput!) {
+  viewer {
+    id
+    openedMessageRooms(input: $input) {
+      edges {
+        node {
+          id
+          ...OpenedMessageRoomItem
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+    ${OpenedMessageRoomItemFragmentDoc}`;
+
+/**
+ * __useOpenedMessageRoomsQuery__
+ *
+ * To run a query within a React component, call `useOpenedMessageRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOpenedMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOpenedMessageRoomsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useOpenedMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>(OpenedMessageRoomsDocument, options);
+      }
+export function useOpenedMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>(OpenedMessageRoomsDocument, options);
+        }
+export type OpenedMessageRoomsQueryHookResult = ReturnType<typeof useOpenedMessageRoomsQuery>;
+export type OpenedMessageRoomsLazyQueryHookResult = ReturnType<typeof useOpenedMessageRoomsLazyQuery>;
+export type OpenedMessageRoomsQueryResult = Apollo.QueryResult<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>;
+export const MessageRoomDocument = gql`
+    query MessageRoom($messageRoomId: ID!, $input: PageInput!) {
+  viewer {
+    id
+    messageRoom(messageRoomId: $messageRoomId) {
+      id
+      partner {
+        id
+        nickName
+        topPhotoUrl
+      }
+      messages(input: $input) {
+        edges {
+          node {
+            id
+            ...MessageItem
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+}
+    ${MessageItemFragmentDoc}`;
+
+/**
+ * __useMessageRoomQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomQuery({
+ *   variables: {
+ *      messageRoomId: // value for 'messageRoomId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMessageRoomQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomQuery, MessageRoomQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomQuery, MessageRoomQueryVariables>(MessageRoomDocument, options);
+      }
+export function useMessageRoomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomQuery, MessageRoomQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomQuery, MessageRoomQueryVariables>(MessageRoomDocument, options);
+        }
+export type MessageRoomQueryHookResult = ReturnType<typeof useMessageRoomQuery>;
+export type MessageRoomLazyQueryHookResult = ReturnType<typeof useMessageRoomLazyQuery>;
+export type MessageRoomQueryResult = Apollo.QueryResult<MessageRoomQuery, MessageRoomQueryVariables>;
+export const CreatedMessageDocument = gql`
+    query CreatedMessage($messageId: ID!) {
+  viewer {
+    id
+    message(messageId: $messageId) {
+      id
+      ...MessageItem
+    }
+  }
+}
+    ${MessageItemFragmentDoc}`;
+
+/**
+ * __useCreatedMessageQuery__
+ *
+ * To run a query within a React component, call `useCreatedMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCreatedMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCreatedMessageQuery({
+ *   variables: {
+ *      messageId: // value for 'messageId'
+ *   },
+ * });
+ */
+export function useCreatedMessageQuery(baseOptions: Apollo.QueryHookOptions<CreatedMessageQuery, CreatedMessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CreatedMessageQuery, CreatedMessageQueryVariables>(CreatedMessageDocument, options);
+      }
+export function useCreatedMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CreatedMessageQuery, CreatedMessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CreatedMessageQuery, CreatedMessageQueryVariables>(CreatedMessageDocument, options);
+        }
+export type CreatedMessageQueryHookResult = ReturnType<typeof useCreatedMessageQuery>;
+export type CreatedMessageLazyQueryHookResult = ReturnType<typeof useCreatedMessageLazyQuery>;
+export type CreatedMessageQueryResult = Apollo.QueryResult<CreatedMessageQuery, CreatedMessageQueryVariables>;
 export const CreateMessageDocument = gql`
     mutation CreateMessage($input: CreateMessageInput!) {
   createMessage(input: $input) {
@@ -654,56 +893,16 @@ export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
-export const MessageDocument = gql`
-    query Message($id: ID!) {
-  message(id: $id) {
+export const UsersDocument = gql`
+    query Users($input: PageInput!) {
+  viewer {
     id
-    ...MessageItem
-  }
-}
-    ${MessageItemFragmentDoc}`;
-
-/**
- * __useMessageQuery__
- *
- * To run a query within a React component, call `useMessageQuery` and pass it any options that fit your needs.
- * When your component renders, `useMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMessageQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useMessageQuery(baseOptions: Apollo.QueryHookOptions<MessageQuery, MessageQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
-      }
-export function useMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageQuery, MessageQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
-        }
-export type MessageQueryHookResult = ReturnType<typeof useMessageQuery>;
-export type MessageLazyQueryHookResult = ReturnType<typeof useMessageLazyQuery>;
-export type MessageQueryResult = Apollo.QueryResult<MessageQuery, MessageQueryVariables>;
-export const MessageRoomPageDocument = gql`
-    query MessageRoomPage($id: ID!, $input: PageInput!) {
-  messageRoom(id: $id) {
-    id
-    partner {
-      id
-      nickName
-      topPhotoUrl
-    }
-    messages(input: $input) {
+    users(input: $input) {
       edges {
         node {
           id
-          ...MessageItem
+          ...UserSmallCard
+          ...UserForUserPage
         }
         cursor
       }
@@ -711,324 +910,6 @@ export const MessageRoomPageDocument = gql`
         endCursor
         hasNextPage
       }
-    }
-  }
-}
-    ${MessageItemFragmentDoc}`;
-
-/**
- * __useMessageRoomPageQuery__
- *
- * To run a query within a React component, call `useMessageRoomPageQuery` and pass it any options that fit your needs.
- * When your component renders, `useMessageRoomPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMessageRoomPageQuery({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useMessageRoomPageQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomPageQuery, MessageRoomPageQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MessageRoomPageQuery, MessageRoomPageQueryVariables>(MessageRoomPageDocument, options);
-      }
-export function useMessageRoomPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomPageQuery, MessageRoomPageQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MessageRoomPageQuery, MessageRoomPageQueryVariables>(MessageRoomPageDocument, options);
-        }
-export type MessageRoomPageQueryHookResult = ReturnType<typeof useMessageRoomPageQuery>;
-export type MessageRoomPageLazyQueryHookResult = ReturnType<typeof useMessageRoomPageLazyQuery>;
-export type MessageRoomPageQueryResult = Apollo.QueryResult<MessageRoomPageQuery, MessageRoomPageQueryVariables>;
-export const NewMessageRoomsDocument = gql`
-    query NewMessageRooms($input: PageInput!) {
-  newMessageRooms(input: $input) {
-    edges {
-      node {
-        id
-        ...NewMessageRoomItem
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-    ${NewMessageRoomItemFragmentDoc}`;
-
-/**
- * __useNewMessageRoomsQuery__
- *
- * To run a query within a React component, call `useNewMessageRoomsQuery` and pass it any options that fit your needs.
- * When your component renders, `useNewMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNewMessageRoomsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useNewMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
-      }
-export function useNewMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
-        }
-export type NewMessageRoomsQueryHookResult = ReturnType<typeof useNewMessageRoomsQuery>;
-export type NewMessageRoomsLazyQueryHookResult = ReturnType<typeof useNewMessageRoomsLazyQuery>;
-export type NewMessageRoomsQueryResult = Apollo.QueryResult<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>;
-export const MessageRoomsDocument = gql`
-    query MessageRooms($input: PageInput!) {
-  messageRooms(input: $input) {
-    edges {
-      node {
-        id
-        ...MessageRoomItem
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-    ${MessageRoomItemFragmentDoc}`;
-
-/**
- * __useMessageRoomsQuery__
- *
- * To run a query within a React component, call `useMessageRoomsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMessageRoomsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomsQuery, MessageRoomsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MessageRoomsQuery, MessageRoomsQueryVariables>(MessageRoomsDocument, options);
-      }
-export function useMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomsQuery, MessageRoomsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MessageRoomsQuery, MessageRoomsQueryVariables>(MessageRoomsDocument, options);
-        }
-export type MessageRoomsQueryHookResult = ReturnType<typeof useMessageRoomsQuery>;
-export type MessageRoomsLazyQueryHookResult = ReturnType<typeof useMessageRoomsLazyQuery>;
-export type MessageRoomsQueryResult = Apollo.QueryResult<MessageRoomsQuery, MessageRoomsQueryVariables>;
-export const UnlikeDocument = gql`
-    mutation Unlike($userId: ID!) {
-  unlike(userId: $userId) {
-    id
-    ...SendLikeUserItem
-  }
-}
-    ${SendLikeUserItemFragmentDoc}`;
-export type UnlikeMutationFn = Apollo.MutationFunction<UnlikeMutation, UnlikeMutationVariables>;
-
-/**
- * __useUnlikeMutation__
- *
- * To run a mutation, you first call `useUnlikeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnlikeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unlikeMutation, { data, loading, error }] = useUnlikeMutation({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useUnlikeMutation(baseOptions?: Apollo.MutationHookOptions<UnlikeMutation, UnlikeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnlikeMutation, UnlikeMutationVariables>(UnlikeDocument, options);
-      }
-export type UnlikeMutationHookResult = ReturnType<typeof useUnlikeMutation>;
-export type UnlikeMutationResult = Apollo.MutationResult<UnlikeMutation>;
-export type UnlikeMutationOptions = Apollo.BaseMutationOptions<UnlikeMutation, UnlikeMutationVariables>;
-export const SendLikeUsersDocument = gql`
-    query SendLikeUsers($input: PageInput!) {
-  sendLikeUsers(input: $input) {
-    edges {
-      node {
-        id
-        ...SendLikeUserItem
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-    ${SendLikeUserItemFragmentDoc}`;
-
-/**
- * __useSendLikeUsersQuery__
- *
- * To run a query within a React component, call `useSendLikeUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useSendLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSendLikeUsersQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSendLikeUsersQuery(baseOptions: Apollo.QueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
-      }
-export function useSendLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
-        }
-export type SendLikeUsersQueryHookResult = ReturnType<typeof useSendLikeUsersQuery>;
-export type SendLikeUsersLazyQueryHookResult = ReturnType<typeof useSendLikeUsersLazyQuery>;
-export type SendLikeUsersQueryResult = Apollo.QueryResult<SendLikeUsersQuery, SendLikeUsersQueryVariables>;
-export const UpdateUserDocument = gql`
-    mutation UpdateUser($input: UpdateUserInput!) {
-  updateUser(input: $input) {
-    id
-    ...MeForMe
-  }
-}
-    ${MeForMeFragmentDoc}`;
-export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
-
-/**
- * __useUpdateUserMutation__
- *
- * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
-      }
-export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
-export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
-export const SignUpDocument = gql`
-    mutation SignUp($input: SignUpInput!) {
-  signUp(input: $input) {
-    id
-    ...MeForMe
-  }
-}
-    ${MeForMeFragmentDoc}`;
-export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
-
-/**
- * __useSignUpMutation__
- *
- * To run a mutation, you first call `useSignUpMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSignUpMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [signUpMutation, { data, loading, error }] = useSignUpMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignUpMutation, SignUpMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument, options);
-      }
-export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
-export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
-export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
-export const LikeDocument = gql`
-    mutation Like($userId: ID!) {
-  like(userId: $userId) {
-    id
-    ...UserForUserPage
-  }
-}
-    ${UserForUserPageFragmentDoc}`;
-export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
-
-/**
- * __useLikeMutation__
- *
- * To run a mutation, you first call `useLikeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLikeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [likeMutation, { data, loading, error }] = useLikeMutation({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useLikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeMutation, LikeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
-      }
-export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
-export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
-export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
-export const UsersDocument = gql`
-    query Users($input: PageInput!) {
-  users(input: $input) {
-    edges {
-      node {
-        id
-        ...UserSmallCard
-        ...UserForUserPage
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
     }
   }
 }
@@ -1062,3 +943,157 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const ReceiveLikeUsersDocument = gql`
+    query ReceiveLikeUsers {
+  viewer {
+    id
+    receiveLikeUsers {
+      id
+      ...UserForLikePage
+    }
+  }
+}
+    ${UserForLikePageFragmentDoc}`;
+
+/**
+ * __useReceiveLikeUsersQuery__
+ *
+ * To run a query within a React component, call `useReceiveLikeUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReceiveLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReceiveLikeUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useReceiveLikeUsersQuery(baseOptions?: Apollo.QueryHookOptions<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>(ReceiveLikeUsersDocument, options);
+      }
+export function useReceiveLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>(ReceiveLikeUsersDocument, options);
+        }
+export type ReceiveLikeUsersQueryHookResult = ReturnType<typeof useReceiveLikeUsersQuery>;
+export type ReceiveLikeUsersLazyQueryHookResult = ReturnType<typeof useReceiveLikeUsersLazyQuery>;
+export type ReceiveLikeUsersQueryResult = Apollo.QueryResult<ReceiveLikeUsersQuery, ReceiveLikeUsersQueryVariables>;
+export const SendLikeUsersDocument = gql`
+    query SendLikeUsers($input: PageInput!) {
+  viewer {
+    id
+    sendLikeUsers(input: $input) {
+      edges {
+        node {
+          id
+          ...SendLikeUserItem
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+    ${SendLikeUserItemFragmentDoc}`;
+
+/**
+ * __useSendLikeUsersQuery__
+ *
+ * To run a query within a React component, call `useSendLikeUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSendLikeUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSendLikeUsersQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendLikeUsersQuery(baseOptions: Apollo.QueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
+      }
+export function useSendLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SendLikeUsersQuery, SendLikeUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SendLikeUsersQuery, SendLikeUsersQueryVariables>(SendLikeUsersDocument, options);
+        }
+export type SendLikeUsersQueryHookResult = ReturnType<typeof useSendLikeUsersQuery>;
+export type SendLikeUsersLazyQueryHookResult = ReturnType<typeof useSendLikeUsersLazyQuery>;
+export type SendLikeUsersQueryResult = Apollo.QueryResult<SendLikeUsersQuery, SendLikeUsersQueryVariables>;
+export const SignUpDocument = gql`
+    mutation SignUp($input: SignUpInput!) {
+  signUp(input: $input) {
+    id
+    ...MeProvider
+  }
+}
+    ${MeProviderFragmentDoc}`;
+export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
+
+/**
+ * __useSignUpMutation__
+ *
+ * To run a mutation, you first call `useSignUpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpMutation, { data, loading, error }] = useSignUpMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignUpMutation, SignUpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument, options);
+      }
+export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
+export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
+export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const UpdateUserProfileDocument = gql`
+    mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
+  updateUserProfile(input: $input) {
+    id
+    ...MeProvider
+  }
+}
+    ${MeProviderFragmentDoc}`;
+export type UpdateUserProfileMutationFn = Apollo.MutationFunction<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>;
+
+/**
+ * __useUpdateUserProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserProfileMutation, { data, loading, error }] = useUpdateUserProfileMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>(UpdateUserProfileDocument, options);
+      }
+export type UpdateUserProfileMutationHookResult = ReturnType<typeof useUpdateUserProfileMutation>;
+export type UpdateUserProfileMutationResult = Apollo.MutationResult<UpdateUserProfileMutation>;
+export type UpdateUserProfileMutationOptions = Apollo.BaseMutationOptions<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>;

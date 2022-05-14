@@ -1,4 +1,4 @@
-import { Box, Container, Flex, HStack } from "@chakra-ui/react";
+import { Box, Flex, HStack } from "@chakra-ui/react";
 import { FC } from "react";
 import { BiLike, BiMessageRoundedDots, BiSearch, BiUser } from "react-icons/bi";
 import { useLocation } from "react-router-dom";

@@ -65,14 +65,14 @@ type MessageRoomEdge {
 }
 
 type Mutation {
-  cancelLike(likeId: ID!): User!
+  cancelLike(userId: ID!): User!
   createLike(userId: ID!): User!
   createMessage(input: CreateMessageInput!): Message!
-  matchLike(likeId: ID!): User!
+  matchLike(userId: ID!): User!
   signUp(input: SignUpInput!): Me!
-  skipLike(likeId: ID!): User!
+  skipLike(userId: ID!): User!
   updateUserLastAccess: Me!
-  updateUserProfile(input: UpdateUserInput!): Me!
+  updateUserProfile(input: UpdateUserProfileInput!): Me!
 }
 
 type PageInfo {
@@ -94,7 +94,7 @@ input SignUpInput {
   password: String!
 }
 
-input UpdateUserInput {
+input UpdateUserProfileInput {
   age: Int!
   gender: Gender!
   livingPref: String!
@@ -123,6 +123,7 @@ type UserEdge {
 }
 
 type Viewer {
+  id: ID!
   me: Me!
   message(messageId: ID!): Message!
   messageRoom(messageRoomId: ID!): MessageRoom!
@@ -130,7 +131,6 @@ type Viewer {
   openedMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
-  uid: ID!
   user(userId: ID!): User!
   users(input: PageInput!): UserConnection!
 }

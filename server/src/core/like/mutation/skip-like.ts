@@ -5,12 +5,12 @@ import { onUpdateLike } from "../../../psuedo-trigger/like";
 
 export const skipLikeMutation = async (
   _: unknown,
-  { likeId }: MutationSkipLikeArgs,
+  { userId }: MutationSkipLikeArgs,
   { auth, collections: { usersCollection, likesCollection, userLikeIndexCollection } }: Context
 ) => {
   authorize(auth);
 
-  const sendLike = await likesCollection.findOneById(likeId);
+  const sendLike = await likesCollection.findBySenderAndReceiver({ senderId: userId, receiverId: auth.uid });
   if (!sendLike) throw new Error("Can't skipLike, because like don't exist");
 
   sendLike.skip();

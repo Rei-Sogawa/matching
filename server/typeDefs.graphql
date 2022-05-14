@@ -99,7 +99,7 @@ type MessageConnection {
 }
 
 type Viewer {
-  uid: ID!
+  id: ID!
 
   me: Me!
   user(userId: ID!): User!
@@ -125,7 +125,7 @@ input SignUpInput {
   password: String!
 }
 
-input UpdateUserInput {
+input UpdateUserProfileInput {
   gender: Gender!
   nickName: String!
   age: Int!
@@ -140,13 +140,13 @@ input CreateMessageInput {
 
 type Mutation {
   signUp(input: SignUpInput!): Me!
-  updateUserProfile(input: UpdateUserInput!): Me!
+  updateUserProfile(input: UpdateUserProfileInput!): Me!
   updateUserLastAccess: Me!
 
   createLike(userId: ID!): User!
-  cancelLike(likeId: ID!): User!
-  skipLike(likeId: ID!): User!
-  matchLike(likeId: ID!): User!
+  cancelLike(userId: ID!): User!
+  skipLike(userId: ID!): User!
+  matchLike(userId: ID!): User!
 
   createMessage(input: CreateMessageInput!): Message!
 }
