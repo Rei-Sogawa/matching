@@ -5,6 +5,10 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "userIds",
+          "arrayConfig": "CONTAINS"
+        },
+        {
           "fieldPath": "messageRoomId",
           "order": "ASCENDING"
         },
@@ -23,11 +27,7 @@
           "arrayConfig": "CONTAINS"
         },
         {
-          "fieldPath": "opened",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
+          "fieldPath": "updatedAt",
           "order": "DESCENDING"
         }
       ]

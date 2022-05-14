@@ -6,7 +6,7 @@ service cloud.firestore {
     }
 
     match /messageRoomEvents/{messageRoomEventId} {
-      allow read: if true
+      allow read: if request.auth.uid in resource.data.userIds
     }
   }
 }
