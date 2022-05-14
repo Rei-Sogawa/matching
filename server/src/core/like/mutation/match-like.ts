@@ -6,12 +6,12 @@ import { onUpdateLike } from "../../../psuedo-trigger/like";
 
 export const matchLikeMutation = async (
   _: unknown,
-  { likeId }: MutationMatchLikeArgs,
+  { userId }: MutationMatchLikeArgs,
   { auth, collections: { usersCollection, likesCollection, messageRoomsCollection, userLikeIndexCollection } }: Context
 ) => {
   authorize(auth);
 
-  const receiveLike = await likesCollection.findOneById(likeId);
+  const receiveLike = await likesCollection.findBySenderAndReceiver({ senderId: userId, receiverId: auth.uid });
   if (!receiveLike) throw new Error("Can't matchLike, because like don't exist");
 
   receiveLike.match();
