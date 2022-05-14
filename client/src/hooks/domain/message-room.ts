@@ -2,6 +2,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { useEffect } from "react";
 
+import { useMe } from "../../contexts/Me";
 import {
   useCreatedMessageLazyQuery,
   useCreateMessageMutation,
@@ -109,12 +110,15 @@ gql`
 export const useSubscribeMessage = (messageRoomId: string) => {
   const client = useApolloClient();
 
+  const { me } = useMe();
+
   const [fetch] = useCreatedMessageLazyQuery();
 
   useEffect(() => {
     return onSnapshot(
       query(
         collection(getFirestore(), "messageRoomEvents"),
+        where("userIds", "array-contains", me.id),
         where("messageRoomId", "==", messageRoomId),
         where("createdAt", ">=", Timestamp.now()),
         orderBy("createdAt", "desc")
