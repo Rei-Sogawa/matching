@@ -13,6 +13,7 @@ import {
 gql`
   query MessageRoom($messageRoomId: ID!, $input: PageInput!) {
     viewer {
+      id
       messageRoom(messageRoomId: $messageRoomId) {
         id
         partner {
@@ -61,6 +62,7 @@ export const useMessageRoom = (messageRoomId: string) => {
 gql`
   query Message($messageId: ID!) {
     viewer {
+      id
       message(messageId: $messageId) {
         id
         ...MessageItem
@@ -129,6 +131,7 @@ export const useCreateMessage = (messageRoomId: string) => {
 gql`
   query NewMessageRooms($input: PageInput!) {
     viewer {
+      id
       newMessageRooms(input: $input) {
         edges {
           node {
@@ -163,6 +166,7 @@ export const useNewMessageRooms = () => {
 gql`
   query OpenedMessageRooms($input: PageInput!) {
     viewer {
+      id
       openedMessageRooms(input: $input) {
         edges {
           node {

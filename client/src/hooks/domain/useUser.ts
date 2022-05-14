@@ -24,6 +24,7 @@ export const useUpdateUserProfile = () => {
 gql`
   query SendLikeUsers($input: PageInput!) {
     viewer {
+      id
       sendLikeUsers(input: $input) {
         edges {
           node {

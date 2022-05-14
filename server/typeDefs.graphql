@@ -99,7 +99,7 @@ type MessageConnection {
 }
 
 type Viewer {
-  uid: ID!
+  id: ID!
 
   me: Me!
   user(userId: ID!): User!

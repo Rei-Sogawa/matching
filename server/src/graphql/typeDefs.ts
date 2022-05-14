@@ -123,6 +123,7 @@ type UserEdge {
 }
 
 type Viewer {
+  id: ID!
   me: Me!
   message(messageId: ID!): Message!
   messageRoom(messageRoomId: ID!): MessageRoom!
@@ -130,7 +131,6 @@ type Viewer {
   openedMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
-  uid: ID!
   user(userId: ID!): User!
   users(input: PageInput!): UserConnection!
 }

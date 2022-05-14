@@ -21,6 +21,7 @@ gql`
 gql`
   query me {
     viewer {
+      id
       me {
         id
         ...MeProvider

@@ -192,6 +192,7 @@ export type UserEdge = {
 
 export type Viewer = {
   __typename?: 'Viewer';
+  id: Scalars['ID'];
   me: Me;
   message: Message;
   messageRoom: MessageRoom;
@@ -199,7 +200,6 @@ export type Viewer = {
   openedMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
-  uid: Scalars['ID'];
   user: User;
   users: UserConnection;
 };
@@ -255,12 +255,12 @@ export type MeProviderFragment = { __typename?: 'Me', id: string, gender: Gender
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } } };
+export type MeQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, me: { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> } } };
 
 export type ReceiveLikeUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ReceiveLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> } };
+export type ReceiveLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, receiveLikeUsers: Array<{ __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> }> } };
 
 export type MatchLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -295,7 +295,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null, nickName: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+export type UsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, users: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null, nickName: string, photoUrls: Array<string> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
@@ -310,14 +310,14 @@ export type MessageRoomQueryVariables = Exact<{
 }>;
 
 
-export type MessageRoomQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, topPhotoUrl?: string | null }, messages: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } } };
+export type MessageRoomQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, topPhotoUrl?: string | null }, messages: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } } };
 
 export type MessageQueryVariables = Exact<{
   messageId: Scalars['ID'];
 }>;
 
 
-export type MessageQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } } };
+export type MessageQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } } };
 
 export type CreateMessageMutationVariables = Exact<{
   input: CreateMessageInput;
@@ -331,14 +331,14 @@ export type NewMessageRoomsQueryVariables = Exact<{
 }>;
 
 
-export type NewMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+export type NewMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type OpenedMessageRoomsQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type OpenedMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', openedMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+export type OpenedMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, openedMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type UpdateUserProfileMutationVariables = Exact<{
   input: UpdateUserProfileInput;
@@ -352,7 +352,7 @@ export type SendLikeUsersQueryVariables = Exact<{
 }>;
 
 
-export type SendLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+export type SendLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -496,6 +496,7 @@ export type UpdateUserLastAccessMutationOptions = Apollo.BaseMutationOptions<Upd
 export const MeDocument = gql`
     query me {
   viewer {
+    id
     me {
       id
       ...MeProvider
@@ -533,6 +534,7 @@ export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const ReceiveLikeUsersDocument = gql`
     query ReceiveLikeUsers {
   viewer {
+    id
     receiveLikeUsers {
       id
       ...UserForLikePage
@@ -706,6 +708,7 @@ export type CreateLikeMutationOptions = Apollo.BaseMutationOptions<CreateLikeMut
 export const UsersDocument = gql`
     query Users($input: PageInput!) {
   viewer {
+    id
     users(input: $input) {
       edges {
         node {
@@ -789,6 +792,7 @@ export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, S
 export const MessageRoomDocument = gql`
     query MessageRoom($messageRoomId: ID!, $input: PageInput!) {
   viewer {
+    id
     messageRoom(messageRoomId: $messageRoomId) {
       id
       partner {
@@ -845,6 +849,7 @@ export type MessageRoomQueryResult = Apollo.QueryResult<MessageRoomQuery, Messag
 export const MessageDocument = gql`
     query Message($messageId: ID!) {
   viewer {
+    id
     message(messageId: $messageId) {
       id
       ...MessageItem
@@ -917,6 +922,7 @@ export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMess
 export const NewMessageRoomsDocument = gql`
     query NewMessageRooms($input: PageInput!) {
   viewer {
+    id
     newMessageRooms(input: $input) {
       edges {
         node {
@@ -964,6 +970,7 @@ export type NewMessageRoomsQueryResult = Apollo.QueryResult<NewMessageRoomsQuery
 export const OpenedMessageRoomsDocument = gql`
     query OpenedMessageRooms($input: PageInput!) {
   viewer {
+    id
     openedMessageRooms(input: $input) {
       edges {
         node {
@@ -1045,6 +1052,7 @@ export type UpdateUserProfileMutationOptions = Apollo.BaseMutationOptions<Update
 export const SendLikeUsersDocument = gql`
     query SendLikeUsers($input: PageInput!) {
   viewer {
+    id
     sendLikeUsers(input: $input) {
       edges {
         node {

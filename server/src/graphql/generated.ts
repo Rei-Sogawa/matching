@@ -198,6 +198,7 @@ export type UserEdge = {
 
 export type Viewer = {
   __typename?: 'Viewer';
+  id: Scalars['ID'];
   me: Me;
   message: Message;
   messageRoom: MessageRoom;
@@ -205,7 +206,6 @@ export type Viewer = {
   openedMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
-  uid: Scalars['ID'];
   user: User;
   users: UserConnection;
 };
@@ -470,6 +470,7 @@ export type UserEdgeResolvers<ContextType = Context, ParentType extends Resolver
 }>;
 
 export type ViewerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Viewer'] = ResolversParentTypes['Viewer']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<ViewerMessageArgs, 'messageId'>>;
   messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<ViewerMessageRoomArgs, 'messageRoomId'>>;
@@ -477,7 +478,6 @@ export type ViewerResolvers<ContextType = Context, ParentType extends ResolversP
   openedMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerOpenedMessageRoomsArgs, 'input'>>;
   receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerSendLikeUsersArgs, 'input'>>;
-  uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<ViewerUserArgs, 'userId'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerUsersArgs, 'input'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

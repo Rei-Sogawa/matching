@@ -14,6 +14,7 @@ import {
 gql`
   query ReceiveLikeUsers {
     viewer {
+      id
       receiveLikeUsers {
         id
         ...UserForLikePage
@@ -107,6 +108,7 @@ export const useCreateLike = (userId: string) => {
 gql`
   query Users($input: PageInput!) {
     viewer {
+      id
       users(input: $input) {
         edges {
           node {
