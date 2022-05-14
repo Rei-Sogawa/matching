@@ -239,11 +239,6 @@ export type ViewerUsersArgs = {
   input: PageInput;
 };
 
-export type UpdateUserLastAccessMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UpdateUserLastAccessMutation = { __typename?: 'Mutation', updateUserLastAccess: { __typename?: 'Me', id: string } };
-
 export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type UserSmallCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null };
@@ -339,6 +334,11 @@ export type SendLikeUsersQueryVariables = Exact<{
 
 
 export type SendLikeUsersQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, sendLikeUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+
+export type UpdateUserLastAccessMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateUserLastAccessMutation = { __typename?: 'Mutation', updateUserLastAccess: { __typename?: 'Me', id: string } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
@@ -461,38 +461,6 @@ export const UserForUserPageFragmentDoc = gql`
   ...UserTopCard
 }
     ${UserTopCardFragmentDoc}`;
-export const UpdateUserLastAccessDocument = gql`
-    mutation UpdateUserLastAccess {
-  updateUserLastAccess {
-    id
-  }
-}
-    `;
-export type UpdateUserLastAccessMutationFn = Apollo.MutationFunction<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>;
-
-/**
- * __useUpdateUserLastAccessMutation__
- *
- * To run a mutation, you first call `useUpdateUserLastAccessMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserLastAccessMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateUserLastAccessMutation, { data, loading, error }] = useUpdateUserLastAccessMutation({
- *   variables: {
- *   },
- * });
- */
-export function useUpdateUserLastAccessMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>(UpdateUserLastAccessDocument, options);
-      }
-export type UpdateUserLastAccessMutationHookResult = ReturnType<typeof useUpdateUserLastAccessMutation>;
-export type UpdateUserLastAccessMutationResult = Apollo.MutationResult<UpdateUserLastAccessMutation>;
-export type UpdateUserLastAccessMutationOptions = Apollo.BaseMutationOptions<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>;
 export const MeDocument = gql`
     query me {
   viewer {
@@ -1029,6 +997,38 @@ export function useSendLikeUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type SendLikeUsersQueryHookResult = ReturnType<typeof useSendLikeUsersQuery>;
 export type SendLikeUsersLazyQueryHookResult = ReturnType<typeof useSendLikeUsersLazyQuery>;
 export type SendLikeUsersQueryResult = Apollo.QueryResult<SendLikeUsersQuery, SendLikeUsersQueryVariables>;
+export const UpdateUserLastAccessDocument = gql`
+    mutation UpdateUserLastAccess {
+  updateUserLastAccess {
+    id
+  }
+}
+    `;
+export type UpdateUserLastAccessMutationFn = Apollo.MutationFunction<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>;
+
+/**
+ * __useUpdateUserLastAccessMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserLastAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserLastAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserLastAccessMutation, { data, loading, error }] = useUpdateUserLastAccessMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateUserLastAccessMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>(UpdateUserLastAccessDocument, options);
+      }
+export type UpdateUserLastAccessMutationHookResult = ReturnType<typeof useUpdateUserLastAccessMutation>;
+export type UpdateUserLastAccessMutationResult = Apollo.MutationResult<UpdateUserLastAccessMutation>;
+export type UpdateUserLastAccessMutationOptions = Apollo.BaseMutationOptions<UpdateUserLastAccessMutation, UpdateUserLastAccessMutationVariables>;
 export const SignUpDocument = gql`
     mutation SignUp($input: SignUpInput!) {
   signUp(input: $input) {
