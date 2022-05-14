@@ -18,7 +18,7 @@ const { usersCollection, likesCollection, messageRoomsCollection, userIndexColle
 
 const seed = async () => {
   const fakeAuthUsers = await Promise.all(
-    Array.from({ length: 10 }).map((_, i) => {
+    Array.from({ length: 50 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
     })
   );
@@ -137,7 +137,7 @@ const seed = async () => {
     .touch()
     .save();
 
-  for (const i of Array.from({ length: 10 }).map((_, i) => i)) {
+  for (const i of Array.from({ length: 30 }).map((_, i) => i)) {
     const message = MessageDoc.create(messageRoom.messagesCollection, {
       userId: messageRoom.userIds[i % 2],
       content: i.toString(),

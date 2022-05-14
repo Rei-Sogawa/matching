@@ -1,24 +1,66 @@
 import { gql } from "@apollo/client";
 
-import { UpdateUserProfileInput, useSendLikeUsersQuery, useUpdateUserProfileMutation } from "../../graphql/generated";
+import {
+  SignUpInput,
+  UpdateUserProfileInput,
+  useReceiveLikeUsersQuery,
+  useSendLikeUsersQuery,
+  useSignUpMutation,
+  useUpdateUserProfileMutation,
+  useUsersQuery,
+} from "../../graphql/generated";
 
+// QUERY
 gql`
-  mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
-    updateUserProfile(input: $input) {
+  query Users($input: PageInput!) {
+    viewer {
       id
-      ...MeProvider
+      users(input: $input) {
+        edges {
+          node {
+            id
+            ...UserSmallCard
+            ...UserForUserPage
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
     }
   }
 `;
 
-export const useUpdateUserProfile = () => {
-  const [mutate] = useUpdateUserProfileMutation();
+export const useUsers = () => {
+  const QUERY_SIZE = 6;
 
-  const updateUserProfile = async (data: UpdateUserProfileInput) => {
-    await mutate({ variables: { input: data } });
+  const { data, fetchMore } = useUsersQuery({ variables: { input: { first: QUERY_SIZE } } });
+
+  const onLoadMore = async () => {
+    await fetchMore({ variables: { input: { first: QUERY_SIZE, after: data?.viewer.users.pageInfo.endCursor } } });
   };
 
-  return { updateUserProfile };
+  return { data, onLoadMore };
+};
+
+gql`
+  query ReceiveLikeUsers {
+    viewer {
+      id
+      receiveLikeUsers {
+        id
+        ...UserForLikePage
+      }
+    }
+  }
+`;
+
+export const useReceiveLikeUsers = () => {
+  const { data } = useReceiveLikeUsersQuery();
+
+  return { data };
 };
 
 gql`
@@ -54,4 +96,43 @@ export const useSendLikeUsers = () => {
   };
 
   return { data, onLoadMore };
+};
+
+// MUTATION
+gql`
+  mutation SignUp($input: SignUpInput!) {
+    signUp(input: $input) {
+      id
+      ...MeProvider
+    }
+  }
+`;
+
+export const useSignUp = () => {
+  const [mutate] = useSignUpMutation();
+
+  const signUp = async (data: SignUpInput) => {
+    await mutate({ variables: { input: data } });
+  };
+
+  return { signUp };
+};
+
+gql`
+  mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
+    updateUserProfile(input: $input) {
+      id
+      ...MeProvider
+    }
+  }
+`;
+
+export const useUpdateUserProfile = () => {
+  const [mutate] = useUpdateUserProfileMutation();
+
+  const updateUserProfile = async (data: UpdateUserProfileInput) => {
+    await mutate({ variables: { input: data } });
+  };
+
+  return { updateUserProfile };
 };

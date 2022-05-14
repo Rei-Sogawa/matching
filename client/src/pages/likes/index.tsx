@@ -3,7 +3,7 @@ import { head } from "lodash-es";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useReceiveLikeUsers } from "../../hooks/domain/useLike";
+import { useReceiveLikeUsers } from "../../hooks/domain/useUser";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";

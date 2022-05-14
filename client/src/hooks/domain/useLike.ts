@@ -1,34 +1,15 @@
-import { gql } from "@apollo/client";
+import { gql, Reference } from "@apollo/client";
 
+import { useMe } from "../../contexts/Me";
 import {
-  SignUpInput,
   useCancelLikeMutation,
   useCreateLikeMutation,
   useMatchLikeMutation,
-  useReceiveLikeUsersQuery,
-  useSignUpMutation,
   useSkipLikeMutation,
-  useUsersQuery,
 } from "../../graphql/generated";
+import { assertDefined } from "../../utils/assert-defined";
 
-gql`
-  query ReceiveLikeUsers {
-    viewer {
-      id
-      receiveLikeUsers {
-        id
-        ...UserForLikePage
-      }
-    }
-  }
-`;
-
-export const useReceiveLikeUsers = () => {
-  const { data } = useReceiveLikeUsersQuery();
-
-  return { data };
-};
-
+// MUTATION
 gql`
   mutation MatchLike($userId: ID!) {
     matchLike(userId: $userId) {
@@ -39,7 +20,21 @@ gql`
 `;
 
 export const useMatchLike = (userId: string) => {
-  const [mutate] = useMatchLikeMutation({ variables: { userId } });
+  const { me } = useMe();
+
+  const [mutate] = useMatchLikeMutation({
+    variables: { userId },
+    update(cache) {
+      cache.modify({
+        id: cache.identify({ __typename: "Viewer", id: me.id }),
+        fields: {
+          receiveLikeUsers(existing, { readField }) {
+            return existing.filter((u: Reference) => readField("id", u) !== userId);
+          },
+        },
+      });
+    },
+  });
 
   const matchLike = async () => {
     await mutate();
@@ -58,7 +53,21 @@ gql`
 `;
 
 export const useSkipLike = (userId: string) => {
-  const [mutate] = useSkipLikeMutation({ variables: { userId } });
+  const { me } = useMe();
+
+  const [mutate] = useSkipLikeMutation({
+    variables: { userId },
+    update(cache) {
+      cache.modify({
+        id: cache.identify({ __typename: "Viewer", id: me.id }),
+        fields: {
+          receiveLikeUsers(existing, { readField }) {
+            return existing.filter((u: Reference) => readField("id", u) !== userId);
+          },
+        },
+      });
+    },
+  });
 
   const skipLike = async () => {
     await mutate();
@@ -77,7 +86,21 @@ gql`
 `;
 
 export const useCancelLike = (userId: string) => {
-  const [mutate] = useCancelLikeMutation({ variables: { userId } });
+  const { me } = useMe();
+
+  const [mutate] = useCancelLikeMutation({
+    variables: { userId },
+    update(cache) {
+      cache.modify({
+        id: cache.identify({ __typename: "Viewer", id: me.id }),
+        fields: {
+          sendLikeUsers(existing, { readField }) {
+            return existing.filter((u: Reference) => readField("id", u) !== userId);
+          },
+        },
+      });
+    },
+  });
 
   const cancelLike = async () => {
     await mutate();
@@ -96,64 +119,29 @@ gql`
 `;
 
 export const useCreateLike = (userId: string) => {
-  const [mutate] = useCreateLikeMutation({ variables: { userId } });
+  const { me } = useMe();
+
+  const [mutate] = useCreateLikeMutation({
+    variables: { userId },
+    update(cache, { data }) {
+      assertDefined(data);
+      cache.modify({
+        id: cache.identify({ __typename: "Viewer", id: me.id }),
+        fields: {
+          users(existing, { readField }) {
+            return {
+              ...existing,
+              edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
+            };
+          },
+        },
+      });
+    },
+  });
 
   const createLike = async () => {
     await mutate();
   };
 
   return { createLike };
-};
-
-gql`
-  query Users($input: PageInput!) {
-    viewer {
-      id
-      users(input: $input) {
-        edges {
-          node {
-            id
-            ...UserSmallCard
-            ...UserForUserPage
-          }
-          cursor
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
-
-export const useUsers = () => {
-  const QUERY_SIZE = 6;
-
-  const { data, fetchMore } = useUsersQuery({ variables: { input: { first: QUERY_SIZE } } });
-
-  const onLoadMore = async () => {
-    await fetchMore({ variables: { input: { first: QUERY_SIZE, after: data?.viewer.users.pageInfo.endCursor } } });
-  };
-
-  return { data, onLoadMore };
-};
-
-gql`
-  mutation SignUp($input: SignUpInput!) {
-    signUp(input: $input) {
-      id
-      ...MeProvider
-    }
-  }
-`;
-
-export const useSignUp = () => {
-  const [mutate] = useSignUpMutation();
-
-  const signUp = async (data: SignUpInput) => {
-    await mutate({ variables: { input: data } });
-  };
-
-  return { signUp };
 };

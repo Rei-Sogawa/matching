@@ -10,6 +10,77 @@ import {
   useOpenedMessageRoomsQuery,
 } from "../../graphql/generated";
 
+// QUERY
+gql`
+  query NewMessageRooms($input: PageInput!) {
+    viewer {
+      id
+      newMessageRooms(input: $input) {
+        edges {
+          node {
+            id
+            ...NewMessageRoomItem
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
+export const useNewMessageRooms = () => {
+  const QUERY_SIZE = 6;
+
+  const { data, fetchMore } = useNewMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
+
+  const onLoadMore = async () => {
+    await fetchMore({
+      variables: { input: { first: QUERY_SIZE, after: data?.viewer.newMessageRooms.pageInfo.endCursor } },
+    });
+  };
+
+  return { data, onLoadMore };
+};
+
+gql`
+  query OpenedMessageRooms($input: PageInput!) {
+    viewer {
+      id
+      openedMessageRooms(input: $input) {
+        edges {
+          node {
+            id
+            ...OpenedMessageRoomItem
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
+export const useOpenedMessageRooms = () => {
+  const QUERY_SIZE = 6;
+
+  const { data, fetchMore } = useOpenedMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
+
+  const onLoadMore = async () => {
+    await fetchMore({
+      variables: { input: { first: QUERY_SIZE, after: data?.viewer.openedMessageRooms.pageInfo.endCursor } },
+    });
+  };
+
+  return { data, onLoadMore };
+};
+
 gql`
   query MessageRoom($messageRoomId: ID!, $input: PageInput!) {
     viewer {
@@ -109,6 +180,7 @@ export const useSubscribeMessage = (messageRoomId: string) => {
   }, []);
 };
 
+// MUTATION
 gql`
   mutation CreateMessage($input: CreateMessageInput!) {
     createMessage(input: $input) {
@@ -126,74 +198,4 @@ export const useCreateMessage = (messageRoomId: string) => {
   };
 
   return { createMessage };
-};
-
-gql`
-  query NewMessageRooms($input: PageInput!) {
-    viewer {
-      id
-      newMessageRooms(input: $input) {
-        edges {
-          node {
-            id
-            ...NewMessageRoomItem
-          }
-          cursor
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
-
-export const useNewMessageRooms = () => {
-  const QUERY_SIZE = 6;
-
-  const { data, fetchMore } = useNewMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
-
-  const onLoadMore = async () => {
-    await fetchMore({
-      variables: { input: { first: QUERY_SIZE, after: data?.viewer.newMessageRooms.pageInfo.endCursor } },
-    });
-  };
-
-  return { data, onLoadMore };
-};
-
-gql`
-  query OpenedMessageRooms($input: PageInput!) {
-    viewer {
-      id
-      openedMessageRooms(input: $input) {
-        edges {
-          node {
-            id
-            ...OpenedMessageRoomItem
-          }
-          cursor
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
-
-export const useOpenedMessageRooms = () => {
-  const QUERY_SIZE = 6;
-
-  const { data, fetchMore } = useOpenedMessageRoomsQuery({ variables: { input: { first: QUERY_SIZE } } });
-
-  const onLoadMore = async () => {
-    await fetchMore({
-      variables: { input: { first: QUERY_SIZE, after: data?.viewer.openedMessageRooms.pageInfo.endCursor } },
-    });
-  };
-
-  return { data, onLoadMore };
 };

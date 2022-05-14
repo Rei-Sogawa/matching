@@ -3,7 +3,7 @@ import { FC } from "react";
 import { BiSearch } from "react-icons/bi";
 
 import { UserSmallCard } from "../../components/domain/UserSmallCard";
-import { useUsers } from "../../hooks/domain/useLike";
+import { useUsers } from "../../hooks/domain/useUser";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";

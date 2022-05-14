@@ -19,49 +19,49 @@ const getClient = (token?: string) => {
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
   const cache = new InMemoryCache({
     typePolicies: {
-      // Viewer: {
-      //   fields: {
-      //     users: {
-      //       keyArgs: false,
-      //       merge: (existing, incoming) => {
-      //         if (!existing) return incoming;
-      //         return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
-      //       },
-      //     },
-      //     sendLikeUsers: {
-      //       keyArgs: false,
-      //       merge: (existing, incoming) => {
-      //         if (!existing) return incoming;
-      //         return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
-      //       },
-      //     },
-      //     newMessageRooms: {
-      //       keyArgs: false,
-      //       merge: (existing, incoming) => {
-      //         if (!existing) return incoming;
-      //         return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
-      //       },
-      //     },
-      //     openedMessageRooms: {
-      //       keyArgs: false,
-      //       merge: (existing, incoming) => {
-      //         if (!existing) return incoming;
-      //         return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
-      //       },
-      //     },
-      //   },
-      // },
-      // MessageRoom: {
-      //   fields: {
-      //     messages: {
-      //       keyArgs: false,
-      //       merge: (existing, incoming) => {
-      //         if (!existing) return incoming;
-      //         return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
-      //       },
-      //     },
-      //   },
-      // },
+      Viewer: {
+        fields: {
+          users: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+          sendLikeUsers: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+          newMessageRooms: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+          openedMessageRooms: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+        },
+      },
+      MessageRoom: {
+        fields: {
+          messages: {
+            keyArgs: false,
+            merge: (existing, incoming) => {
+              if (!existing) return incoming;
+              return { ...incoming, edges: [...existing.edges, ...incoming.edges] };
+            },
+          },
+        },
+      },
     },
   });
 

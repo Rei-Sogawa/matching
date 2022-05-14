@@ -10,5 +10,5 @@ export const onCreateMessage = async (
     action: "CREATE",
     messageRoomId: message.messageRoomId,
     messageId: message.id,
-  });
+  }).save();
 };
