@@ -74,6 +74,7 @@ export const LikesSkippedPage: FC = () => {
   );
 
   if (!data) return <Loading />;
+
   return (
     <AppLayout header={header} footer={null}>
       <AppMain>

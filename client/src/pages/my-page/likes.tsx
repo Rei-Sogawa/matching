@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Box, Button, Divider, Flex, Stack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 
 import { Loading } from "../../components/base/Loading";
@@ -25,9 +25,16 @@ type SendLikeUserItemProps = {
 };
 
 const SendLikeUserItem: FC<SendLikeUserItemProps> = ({ user }) => {
+  const toast = useToast();
+
   const { cancelLike } = useCancelLike(user.id);
 
-  const actionButton = <Button onClick={cancelLike}>いいねを取り消す</Button>;
+  const onClick = async () => {
+    await cancelLike();
+    toast({ title: "いいねを取り消しました", status: "info", position: "top-right" });
+  };
+
+  const actionButton = <Button onClick={onClick}>いいねを取り消す</Button>;
 
   return <UserActionCard user={user} actionButton={actionButton} />;
 };
@@ -52,6 +59,7 @@ export const MyPageLikesPage: FC = () => {
   );
 
   if (!data) return <Loading />;
+
   return (
     <AppLayout header={header} footer={null}>
       <AppMain>

@@ -9,13 +9,13 @@ export const sendLikeUsersQuery = async (
   { input }: ViewerSendLikeUsersArgs,
   { collections: { usersCollection, userLikeIndexCollection } }: Context
 ) => {
-  const userIds = await userLikeIndexCollection.of(uid).paginatedPendingSendLikeUserIds({
+  const likes = await userLikeIndexCollection.of(uid).paginatedPendingSendLikes({
     first: input.first,
     after: input.after,
   });
-  const users = await Promise.all(userIds.map((id) => usersCollection.findOne(id)));
+  const users = await Promise.all(likes.map((l) => usersCollection.findOne(l.receiverId)));
 
-  const edges = users.map((u) => ({ node: u, cursor: u.createdAt }));
+  const edges = users.map((u, i) => ({ node: u, cursor: likes[i].createdAt }));
 
   return { edges, pageInfo: { hasNextPage: input.first === edges.length, endCursor: last(edges)?.cursor } };
 };
