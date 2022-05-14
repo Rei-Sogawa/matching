@@ -4,7 +4,7 @@ import { FC } from "react";
 import { BackButton } from "../../../components/case/BackButton";
 import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
 import { useMe } from "../../../contexts/Me";
-import { useUpdateUserProfile } from "../../../hooks/domain/useUser";
+import { useUpdateUserProfile } from "../../../hooks/domain/user";
 import { AppHeader } from "../../../layouts/AppHeader";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { AppMain } from "../../../layouts/AppMain";

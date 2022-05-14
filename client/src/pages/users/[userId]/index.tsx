@@ -10,7 +10,7 @@ import { LikeButton } from "../../../components/case/LikeButton";
 import { SkipButton } from "../../../components/case/SkipButton";
 import { UserTopCard } from "../../../components/domain/UserTopCard";
 import { UserForUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
-import { useCreateLike } from "../../../hooks/domain/useLike";
+import { useCreateLike } from "../../../hooks/domain/like";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";

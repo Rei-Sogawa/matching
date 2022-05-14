@@ -5,7 +5,7 @@ import { FC } from "react";
 import { AppLink } from "../components/base/AppLink";
 import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
-import { useSignUp } from "../hooks/domain/useUser";
+import { useSignUp } from "../hooks/domain/user";
 import { routes } from "../routes";
 
 export const SignUpPage: FC = () => {

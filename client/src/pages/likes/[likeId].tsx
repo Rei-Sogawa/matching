@@ -13,7 +13,7 @@ import {
   ReceiveLikeUsersQueryResult,
   UserForLikePageFragment,
 } from "../../graphql/generated";
-import { useMatchLike, useSkipLike } from "../../hooks/domain/useLike";
+import { useMatchLike, useSkipLike } from "../../hooks/domain/like";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";

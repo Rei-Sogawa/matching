@@ -10,7 +10,7 @@ import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/case/BackButton";
 import { MessageItemFragment, User } from "../../graphql/generated";
 import { useTextInput } from "../../hooks/common/useTextInput";
-import { useCreateMessage, useMessageRoom, useSubscribeMessage } from "../../hooks/domain/useMessageRoom";
+import { useCreateMessage, useMessageRoom, useSubscribeMessage } from "../../hooks/domain/message-room";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";

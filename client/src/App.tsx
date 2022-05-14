@@ -5,7 +5,7 @@ import { Apollo } from "./contexts/Apollo";
 import { AuthProvider } from "./contexts/Auth";
 import { GlobalProvider } from "./contexts/Global";
 import { MeProvider } from "./contexts/Me";
-import { useUpdateUserLastAccess } from "./hooks/domain/useUser";
+import { useUpdateUserLastAccess } from "./hooks/domain/user";
 import { Compose } from "./middleware/Compose";
 import { paths, routes } from "./routes";
 

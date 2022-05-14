@@ -4,7 +4,7 @@ import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Loading } from "../../components/base/Loading";
-import { useReceiveLikeUsers } from "../../hooks/domain/useUser";
+import { useReceiveLikeUsers } from "../../hooks/domain/user";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";

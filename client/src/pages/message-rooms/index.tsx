@@ -6,7 +6,7 @@ import { FC } from "react";
 
 import { AppLink } from "../../components/base/AppLink";
 import { MessageRoomItemFragment } from "../../graphql/generated";
-import { useMessageRooms } from "../../hooks/domain/useMessageRoom";
+import { useMessageRooms } from "../../hooks/domain/message-room";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
