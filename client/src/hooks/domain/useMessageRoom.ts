@@ -3,8 +3,8 @@ import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where 
 import { useEffect } from "react";
 
 import {
+  useCreatedMessageLazyQuery,
   useCreateMessageMutation,
-  useMessageLazyQuery,
   useMessageRoomQuery,
   useNewMessageRoomsQuery,
   useOpenedMessageRoomsQuery,
@@ -131,7 +131,7 @@ export const useMessageRoom = (messageRoomId: string) => {
 };
 
 gql`
-  query Message($messageId: ID!) {
+  query CreatedMessage($messageId: ID!) {
     viewer {
       id
       message(messageId: $messageId) {
@@ -145,7 +145,7 @@ gql`
 export const useSubscribeMessage = (messageRoomId: string) => {
   const client = useApolloClient();
 
-  const [fetch] = useMessageLazyQuery();
+  const [fetch] = useCreatedMessageLazyQuery();
 
   useEffect(() => {
     return onSnapshot(

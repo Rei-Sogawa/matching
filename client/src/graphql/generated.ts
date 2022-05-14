@@ -307,12 +307,12 @@ export type MessageRoomQueryVariables = Exact<{
 
 export type MessageRoomQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, topPhotoUrl?: string | null }, messages: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } } };
 
-export type MessageQueryVariables = Exact<{
+export type CreatedMessageQueryVariables = Exact<{
   messageId: Scalars['ID'];
 }>;
 
 
-export type MessageQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } } };
+export type CreatedMessageQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } } };
 
 export type CreateMessageMutationVariables = Exact<{
   input: CreateMessageInput;
@@ -820,8 +820,8 @@ export function useMessageRoomLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type MessageRoomQueryHookResult = ReturnType<typeof useMessageRoomQuery>;
 export type MessageRoomLazyQueryHookResult = ReturnType<typeof useMessageRoomLazyQuery>;
 export type MessageRoomQueryResult = Apollo.QueryResult<MessageRoomQuery, MessageRoomQueryVariables>;
-export const MessageDocument = gql`
-    query Message($messageId: ID!) {
+export const CreatedMessageDocument = gql`
+    query CreatedMessage($messageId: ID!) {
   viewer {
     id
     message(messageId: $messageId) {
@@ -833,32 +833,32 @@ export const MessageDocument = gql`
     ${MessageItemFragmentDoc}`;
 
 /**
- * __useMessageQuery__
+ * __useCreatedMessageQuery__
  *
- * To run a query within a React component, call `useMessageQuery` and pass it any options that fit your needs.
- * When your component renders, `useMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCreatedMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCreatedMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMessageQuery({
+ * const { data, loading, error } = useCreatedMessageQuery({
  *   variables: {
  *      messageId: // value for 'messageId'
  *   },
  * });
  */
-export function useMessageQuery(baseOptions: Apollo.QueryHookOptions<MessageQuery, MessageQueryVariables>) {
+export function useCreatedMessageQuery(baseOptions: Apollo.QueryHookOptions<CreatedMessageQuery, CreatedMessageQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
+        return Apollo.useQuery<CreatedMessageQuery, CreatedMessageQueryVariables>(CreatedMessageDocument, options);
       }
-export function useMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageQuery, MessageQueryVariables>) {
+export function useCreatedMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CreatedMessageQuery, CreatedMessageQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MessageQuery, MessageQueryVariables>(MessageDocument, options);
+          return Apollo.useLazyQuery<CreatedMessageQuery, CreatedMessageQueryVariables>(CreatedMessageDocument, options);
         }
-export type MessageQueryHookResult = ReturnType<typeof useMessageQuery>;
-export type MessageLazyQueryHookResult = ReturnType<typeof useMessageLazyQuery>;
-export type MessageQueryResult = Apollo.QueryResult<MessageQuery, MessageQueryVariables>;
+export type CreatedMessageQueryHookResult = ReturnType<typeof useCreatedMessageQuery>;
+export type CreatedMessageLazyQueryHookResult = ReturnType<typeof useCreatedMessageLazyQuery>;
+export type CreatedMessageQueryResult = Apollo.QueryResult<CreatedMessageQuery, CreatedMessageQueryVariables>;
 export const CreateMessageDocument = gql`
     mutation CreateMessage($input: CreateMessageInput!) {
   createMessage(input: $input) {

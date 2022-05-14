@@ -3,6 +3,7 @@ import { head } from "lodash-es";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Loading } from "../../components/base/Loading";
 import { useReceiveLikeUsers } from "../../hooks/domain/useUser";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
@@ -29,6 +30,9 @@ export const LikesPage: FC = () => {
       <AppMenu />
     </AppFooter>
   );
+
+  if (!data) return <Loading />;
+  if (users.length > 0) return <Loading />;
 
   return (
     <AppLayout header={null} footer={footer}>
