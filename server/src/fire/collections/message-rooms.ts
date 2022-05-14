@@ -8,60 +8,6 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
     super(ref, (snap) => new MessageRoomDoc(snap));
   }
 
-  async paginatedOpenedMessageRooms({
-    first,
-    after,
-    userId,
-  }: {
-    first: number;
-    after: Timestamp | null | undefined;
-    userId: string;
-  }) {
-    return after
-      ? this.findManyByQuery((ref) =>
-          ref
-            .orderBy("createdAt", "desc")
-            .where("userIds", "array-contains", userId)
-            .where("opened", "==", true)
-            .startAfter(after)
-            .limit(first)
-        )
-      : this.findManyByQuery((ref) =>
-          ref
-            .orderBy("createdAt", "desc")
-            .where("userIds", "array-contains", userId)
-            .where("opened", "==", true)
-            .limit(first)
-        );
-  }
-
-  async paginatedNewMessageRooms({
-    first,
-    after,
-    userId,
-  }: {
-    first: number;
-    after: Timestamp | null | undefined;
-    userId: string;
-  }) {
-    return after
-      ? this.findManyByQuery((ref) =>
-          ref
-            .orderBy("createdAt", "desc")
-            .where("userIds", "array-contains", userId)
-            .where("opened", "==", false)
-            .startAfter(after)
-            .limit(first)
-        )
-      : this.findManyByQuery((ref) =>
-          ref
-            .orderBy("createdAt", "desc")
-            .where("userIds", "array-contains", userId)
-            .where("opened", "==", false)
-            .limit(first)
-        );
-  }
-
   async paginatedMessageRooms({
     first,
     after,
@@ -73,10 +19,10 @@ export class MessageRoomsCollection extends FireCollection<MessageRoomData, Mess
   }) {
     return after
       ? this.findManyByQuery((ref) =>
-          ref.orderBy("createdAt", "desc").where("userIds", "array-contains", userId).startAfter(after).limit(first)
+          ref.orderBy("updatedAt", "desc").where("userIds", "array-contains", userId).startAfter(after).limit(first)
         )
       : this.findManyByQuery((ref) =>
-          ref.orderBy("createdAt", "desc").where("userIds", "array-contains", userId).limit(first)
+          ref.orderBy("updatedAt", "desc").where("userIds", "array-contains", userId).limit(first)
         );
   }
 }

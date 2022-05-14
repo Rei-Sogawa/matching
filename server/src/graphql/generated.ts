@@ -203,8 +203,6 @@ export type Viewer = {
   message: Message;
   messageRoom: MessageRoom;
   messageRooms: MessageRoomConnection;
-  newMessageRooms: MessageRoomConnection;
-  openedMessageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
@@ -223,16 +221,6 @@ export type ViewerMessageRoomArgs = {
 
 
 export type ViewerMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type ViewerNewMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type ViewerOpenedMessageRoomsArgs = {
   input: PageInput;
 };
 
@@ -481,8 +469,6 @@ export type ViewerResolvers<ContextType = Context, ParentType extends ResolversP
   message?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<ViewerMessageArgs, 'messageId'>>;
   messageRoom?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<ViewerMessageRoomArgs, 'messageRoomId'>>;
   messageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerMessageRoomsArgs, 'input'>>;
-  newMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerNewMessageRoomsArgs, 'input'>>;
-  openedMessageRooms?: Resolver<ResolversTypes['MessageRoomConnection'], ParentType, ContextType, RequireFields<ViewerOpenedMessageRoomsArgs, 'input'>>;
   receiveLikeUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   sendLikeUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<ViewerSendLikeUsersArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<ViewerUserArgs, 'userId'>>;

@@ -1,11 +1,8 @@
-import { auth } from "firebase-admin";
 import { head, last } from "lodash";
 
 import { messageQuery } from "../core/message-room/query/message";
 import { messageRoomQuery } from "../core/message-room/query/message-room";
 import { messageRoomsQuery } from "../core/message-room/query/message-rooms";
-import { newMessageRoomsQuery } from "../core/message-room/query/new-message-rooms";
-import { openedMessageRooms } from "../core/message-room/query/opened-message-rooms";
 import { meQuery } from "../core/user/query/me";
 import { receiveLikeUsersQuery } from "../core/user/query/receive-like-users";
 import { sendLikeUsersQuery } from "../core/user/query/send-like-users";
@@ -23,8 +20,6 @@ export const Viewer: Resolvers["Viewer"] = {
   receiveLikeUsers: receiveLikeUsersQuery,
   sendLikeUsers: sendLikeUsersQuery,
 
-  newMessageRooms: newMessageRoomsQuery,
-  openedMessageRooms: openedMessageRooms,
   messageRooms: messageRoomsQuery,
   messageRoom: messageRoomQuery,
   message: messageQuery,
@@ -65,15 +60,14 @@ export const MessageRoom: Resolvers["MessageRoom"] = {
   },
 
   latestMessage: async (parent, _args, context) => {
-    assertDefined(context.auth);
     const latest = await parent.messagesCollection.latest();
-    return (
-      latest ??
-      MessageDoc.create(parent.messagesCollection, {
-        userId: context.auth.uid,
-        content: "メッセージを送信してみましょう！",
-      })
-    );
+    if (latest) return latest;
+
+    assertDefined(context.auth);
+    return MessageDoc.createLatestMessageAlternative(parent.messagesCollection, {
+      userId: context.auth.uid,
+      createdAt: parent.createdAt,
+    });
   },
 };
 

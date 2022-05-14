@@ -196,8 +196,7 @@ export type Viewer = {
   me: Me;
   message: Message;
   messageRoom: MessageRoom;
-  newMessageRooms: MessageRoomConnection;
-  openedMessageRooms: MessageRoomConnection;
+  messageRooms: MessageRoomConnection;
   receiveLikeUsers: Array<User>;
   sendLikeUsers: UserConnection;
   user: User;
@@ -215,12 +214,7 @@ export type ViewerMessageRoomArgs = {
 };
 
 
-export type ViewerNewMessageRoomsArgs = {
-  input: PageInput;
-};
-
-
-export type ViewerOpenedMessageRoomsArgs = {
+export type ViewerMessageRoomsArgs = {
   input: PageInput;
 };
 
@@ -280,19 +274,12 @@ export type CreateLikeMutationVariables = Exact<{
 
 export type CreateLikeMutation = { __typename?: 'Mutation', createLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null } };
 
-export type NewMessageRoomsQueryVariables = Exact<{
+export type MessageRoomsQueryVariables = Exact<{
   input: PageInput;
 }>;
 
 
-export type NewMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, newMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
-
-export type OpenedMessageRoomsQueryVariables = Exact<{
-  input: PageInput;
-}>;
-
-
-export type OpenedMessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, openedMessageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
+export type MessageRoomsQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, messageRooms: { __typename?: 'MessageRoomConnection', edges: Array<{ __typename?: 'MessageRoomEdge', cursor: string, node: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null } } } };
 
 export type MessageRoomQueryVariables = Exact<{
   messageRoomId: Scalars['ID'];
@@ -358,9 +345,7 @@ export type UserForLikePageFragment = { __typename?: 'User', id: string, gender:
 
 export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
 
-export type NewMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> } };
-
-export type OpenedMessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
+export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
 
 export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
@@ -414,18 +399,8 @@ export const MessageItemFragmentDoc = gql`
   createdAt
 }
     `;
-export const NewMessageRoomItemFragmentDoc = gql`
-    fragment NewMessageRoomItem on MessageRoom {
-  id
-  partner {
-    id
-    nickName
-    photoUrls
-  }
-}
-    `;
-export const OpenedMessageRoomItemFragmentDoc = gql`
-    fragment OpenedMessageRoomItem on MessageRoom {
+export const MessageRoomItemFragmentDoc = gql`
+    fragment MessageRoomItem on MessageRoom {
   id
   partner {
     id
@@ -635,15 +610,15 @@ export function useCreateLikeMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateLikeMutationHookResult = ReturnType<typeof useCreateLikeMutation>;
 export type CreateLikeMutationResult = Apollo.MutationResult<CreateLikeMutation>;
 export type CreateLikeMutationOptions = Apollo.BaseMutationOptions<CreateLikeMutation, CreateLikeMutationVariables>;
-export const NewMessageRoomsDocument = gql`
-    query NewMessageRooms($input: PageInput!) {
+export const MessageRoomsDocument = gql`
+    query MessageRooms($input: PageInput!) {
   viewer {
     id
-    newMessageRooms(input: $input) {
+    messageRooms(input: $input) {
       edges {
         node {
           id
-          ...NewMessageRoomItem
+          ...MessageRoomItem
         }
         cursor
       }
@@ -654,83 +629,35 @@ export const NewMessageRoomsDocument = gql`
     }
   }
 }
-    ${NewMessageRoomItemFragmentDoc}`;
+    ${MessageRoomItemFragmentDoc}`;
 
 /**
- * __useNewMessageRoomsQuery__
+ * __useMessageRoomsQuery__
  *
- * To run a query within a React component, call `useNewMessageRoomsQuery` and pass it any options that fit your needs.
- * When your component renders, `useNewMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMessageRoomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useNewMessageRoomsQuery({
+ * const { data, loading, error } = useMessageRoomsQuery({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useNewMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
+export function useMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomsQuery, MessageRoomsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
+        return Apollo.useQuery<MessageRoomsQuery, MessageRoomsQueryVariables>(MessageRoomsDocument, options);
       }
-export function useNewMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>) {
+export function useMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomsQuery, MessageRoomsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>(NewMessageRoomsDocument, options);
+          return Apollo.useLazyQuery<MessageRoomsQuery, MessageRoomsQueryVariables>(MessageRoomsDocument, options);
         }
-export type NewMessageRoomsQueryHookResult = ReturnType<typeof useNewMessageRoomsQuery>;
-export type NewMessageRoomsLazyQueryHookResult = ReturnType<typeof useNewMessageRoomsLazyQuery>;
-export type NewMessageRoomsQueryResult = Apollo.QueryResult<NewMessageRoomsQuery, NewMessageRoomsQueryVariables>;
-export const OpenedMessageRoomsDocument = gql`
-    query OpenedMessageRooms($input: PageInput!) {
-  viewer {
-    id
-    openedMessageRooms(input: $input) {
-      edges {
-        node {
-          id
-          ...OpenedMessageRoomItem
-        }
-        cursor
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-  }
-}
-    ${OpenedMessageRoomItemFragmentDoc}`;
-
-/**
- * __useOpenedMessageRoomsQuery__
- *
- * To run a query within a React component, call `useOpenedMessageRoomsQuery` and pass it any options that fit your needs.
- * When your component renders, `useOpenedMessageRoomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useOpenedMessageRoomsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useOpenedMessageRoomsQuery(baseOptions: Apollo.QueryHookOptions<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>(OpenedMessageRoomsDocument, options);
-      }
-export function useOpenedMessageRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>(OpenedMessageRoomsDocument, options);
-        }
-export type OpenedMessageRoomsQueryHookResult = ReturnType<typeof useOpenedMessageRoomsQuery>;
-export type OpenedMessageRoomsLazyQueryHookResult = ReturnType<typeof useOpenedMessageRoomsLazyQuery>;
-export type OpenedMessageRoomsQueryResult = Apollo.QueryResult<OpenedMessageRoomsQuery, OpenedMessageRoomsQueryVariables>;
+export type MessageRoomsQueryHookResult = ReturnType<typeof useMessageRoomsQuery>;
+export type MessageRoomsLazyQueryHookResult = ReturnType<typeof useMessageRoomsLazyQuery>;
+export type MessageRoomsQueryResult = Apollo.QueryResult<MessageRoomsQuery, MessageRoomsQueryVariables>;
 export const MessageRoomDocument = gql`
     query MessageRoom($messageRoomId: ID!, $input: PageInput!) {
   viewer {

@@ -107,11 +107,9 @@ type Viewer {
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
 
-  newMessageRooms(input: PageInput!): MessageRoomConnection!
-  openedMessageRooms(input: PageInput!): MessageRoomConnection!
+  messageRooms(input: PageInput!): MessageRoomConnection!
   messageRoom(messageRoomId: ID!): MessageRoom!
   message(messageId: ID!): Message!
-  messageRooms(input: PageInput!): MessageRoomConnection!
 }
 
 type Query {

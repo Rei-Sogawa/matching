@@ -17,6 +17,7 @@ export const createMessageMutation = async (
   const message = MessageDoc.create(messageRoom.messagesCollection, { userId: auth.uid, content: input.content });
 
   await message.save();
+  await messageRoom.touch().save();
   await onCreateMessage({ messageRoom, message }, { messageRoomEventsCollection });
 
   return message;

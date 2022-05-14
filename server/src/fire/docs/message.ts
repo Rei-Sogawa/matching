@@ -29,4 +29,21 @@ export class MessageDoc extends FireDocument<MessageData> {
     };
     return new MessageDoc(this.makeCreateInput(collection, data.__id, data));
   }
+
+  static createLatestMessageAlternative(
+    collection: MessagesCollection,
+    { userId, createdAt }: Pick<MessageData, "userId" | "createdAt">
+  ) {
+    const docRef = collection.ref.doc();
+    return new MessageDoc({
+      id: docRef.id,
+      ref: docRef,
+      data: () => ({
+        __id: docRef.id,
+        content: "メッセージを送信してみましょう！",
+        createdAt,
+        userId,
+      }),
+    });
+  }
 }

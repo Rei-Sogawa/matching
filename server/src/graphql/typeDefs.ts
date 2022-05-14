@@ -128,8 +128,6 @@ type Viewer {
   message(messageId: ID!): Message!
   messageRoom(messageRoomId: ID!): MessageRoom!
   messageRooms(input: PageInput!): MessageRoomConnection!
-  newMessageRooms(input: PageInput!): MessageRoomConnection!
-  openedMessageRooms(input: PageInput!): MessageRoomConnection!
   receiveLikeUsers: [User!]!
   sendLikeUsers(input: PageInput!): UserConnection!
   user(userId: ID!): User!
