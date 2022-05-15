@@ -191,12 +191,17 @@ export const useSubscribeMessageRooms = () => {
             id: client.cache.identify({ __typename: "Viewer", id: uid }),
             fields: {
               messageRooms(existing, { readField, toReference }) {
-                const cacheEdge = existing.edges.find(
+                const edge = {
+                  __typename: "MessageRoomEdge",
+                  node: toReference(data.viewer.messageRoom),
+                  cursor: new Date().toISOString(),
+                };
+
+                const hasCache = existing.edges.some(
                   ({ node }: { node: Reference }) => readField("id", node) === messageRoomId
                 );
 
-                if (cacheEdge) {
-                  const edge = { __typename: "MessageRoomEdge", node: cacheEdge, cursor: new Date().toISOString() };
+                if (hasCache) {
                   const filtered = existing.edges.filter(
                     ({ node }: { node: Reference }) => readField("id", node) !== messageRoomId
                   );
@@ -206,12 +211,6 @@ export const useSubscribeMessageRooms = () => {
                     edges: [edge, ...filtered],
                   };
                 }
-
-                const edge = {
-                  __typename: "MessageRoomEdge",
-                  node: toReference(data.viewer.messageRoom),
-                  cursor: new Date().toISOString(),
-                };
 
                 return {
                   ...existing,
