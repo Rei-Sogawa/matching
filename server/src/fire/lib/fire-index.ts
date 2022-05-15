@@ -65,16 +65,13 @@ export abstract class FireIndex<TData extends { id: string }> {
 
   async insert(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const _docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
-      const docs = _docs.map((d) => {
-        return { ...d, data: () => d.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] } };
-      });
+      const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
 
       // UPDATE
       for (const doc of docs) {
-        const exists = doc.data().value.some((v) => v.id === data.id);
+        const exists = doc.data()?.value.some((v) => v.id === data.id);
         if (!exists) continue;
-        const prevData = doc.data();
+        const prevData = doc.data()!;
         const nextData = {
           ...doc.data(),
           value: prevData.value.map((v) => (v.id === data.id ? data : v)),
@@ -86,7 +83,7 @@ export abstract class FireIndex<TData extends { id: string }> {
 
       // ADD
       const doc = docs[randomInt(this.docIds.length - 1)];
-      const prevData = doc.data();
+      const prevData = doc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
       const nextData = {
         ...prevData,
         value: [...prevData.value, data],
@@ -99,16 +96,13 @@ export abstract class FireIndex<TData extends { id: string }> {
 
   async delete(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const _docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
-      const docs = _docs.map((d) => {
-        return { ...d, data: () => d.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] } };
-      });
+      const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
 
       // DELETE
       for (const doc of docs) {
-        const exists = doc.data().value.some((v) => v.id === data.id);
+        const exists = doc.data()?.value.some((v) => v.id === data.id);
         if (!exists) continue;
-        const prevData = doc.data();
+        const prevData = doc.data()!;
         const nextData = {
           ...doc.data(),
           value: prevData.value.filter((v) => v.id !== data.id),

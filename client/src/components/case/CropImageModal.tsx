@@ -1,17 +1,6 @@
 import "react-image-crop/dist/ReactCrop.css";
 
-import {
-  Box,
-  Button,
-  HStack,
-  Image,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
-  Stack,
-  useToast,
-} from "@chakra-ui/react";
+import { Button, HStack, Image, Modal, ModalBody, ModalContent, ModalOverlay, Stack, useToast } from "@chakra-ui/react";
 import { FC, useEffect, useRef, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 
@@ -104,7 +93,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent py="4">
+      <ModalContent height="full" py="4">
         <ModalBody>
           <Stack maxW="container.sm" mx="auto" spacing="8">
             <AppHeading alignSelf="center">切り抜き</AppHeading>
