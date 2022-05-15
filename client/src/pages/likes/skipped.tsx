@@ -39,7 +39,7 @@ const SkipLikeUserItem: FC<SkipLikeUserItemProps> = ({ user }) => {
         <HStack px="4" py="3" rounded="md" bg="secondary.500">
           <FaHeart color="white" fontSize="20px" />
           <Box fontWeight="bold" color="white">
-            マッチングしました！
+            マッチング成立しました！
           </Box>
         </HStack>
       ),
