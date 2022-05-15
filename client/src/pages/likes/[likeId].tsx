@@ -101,7 +101,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
           <VStack color="red.400">
             <FaHeart fontSize="64px" />
             <Box fontWeight="bold" fontSize="2xl">
-              マッチング成立しました！
+              マッチング！
             </Box>
           </VStack>
         </Center>
