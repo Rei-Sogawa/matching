@@ -79,7 +79,7 @@ type ApolloProps = {
 export const Apollo: VFC<ApolloProps> = ({ children }) => {
   const { token } = useAuth();
   const client = useMemo(() => {
-    console.log("Apollo client initialized!");
+    console.log("[matching] Initialize Apollo Client.");
     return getClient(token);
   }, [token]);
   return <ApolloProvider client={client}>{children}</ApolloProvider>;

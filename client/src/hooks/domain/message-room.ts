@@ -117,6 +117,7 @@ export const useSubscribeMessage = (messageRoomId: string) => {
   const [fetch] = useCreatedMessageLazyQuery();
 
   useEffect(() => {
+    console.log("[matching] Listen Firestore messageRoomEvents to subscribe messages.");
     return onSnapshot(
       query(
         collection(getFirestore(), "messageRoomEvents"),
@@ -173,6 +174,8 @@ export const useSubscribeMessageRooms = () => {
 
   useEffect(() => {
     if (!uid) return;
+
+    console.log("[matching] Listen Firestore messageRoomEvents to subscribe messageRooms.");
     return onSnapshot(
       query(
         collection(getFirestore(), "messageRoomEvents"),
