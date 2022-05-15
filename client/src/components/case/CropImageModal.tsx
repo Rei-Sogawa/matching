@@ -1,19 +1,20 @@
 import "react-image-crop/dist/ReactCrop.css";
 
 import {
+  Box,
   Button,
-  Center,
+  Flex,
+  IconButton,
   Image,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
+  Stack,
   useToast,
 } from "@chakra-ui/react";
 import { FC, useEffect, useRef, useState } from "react";
+import { BiX } from "react-icons/bi";
 import ReactCrop, { Crop } from "react-image-crop";
 
 import { useObjectURL } from "../../hooks/common/useObjectURL";
@@ -104,23 +105,29 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
   return (
     <Modal size="full" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent margin="0" rounded="none">
-        <ModalHeader>切り抜き</ModalHeader>
-        <ModalCloseButton />
+      <ModalContent py="4" margin="0" rounded="none">
         <ModalBody>
-          {objectURL ? (
-            <Center>
-              <ReactCrop crop={crop} onChange={setCrop} aspect={1 / 1}>
-                <Image ref={imageRef} src={objectURL} w="full" h="auto" />
+          <Stack maxW="container.sm" mx="auto" spacing="8">
+            <Flex justifyContent="space-between">
+              <Box fontWeight="bold" fontSize="2xl">
+                トリミング
+              </Box>
+              <IconButton size="sm" aria-label="close" icon={<BiX fontSize="20px" />} onClick={onClose} />
+            </Flex>
+
+            {objectURL ? (
+              <ReactCrop crop={crop} onChange={setCrop} aspect={1 / 1} minWidth={100}>
+                <Image ref={imageRef} src={objectURL} w="full" />
               </ReactCrop>
-            </Center>
-          ) : null}
+            ) : null}
+
+            <Box alignSelf="end">
+              <Button onClick={handleOk} disabled={!crop}>
+                完了
+              </Button>
+            </Box>
+          </Stack>
         </ModalBody>
-        <ModalFooter>
-          <Button onClick={handleOk} disabled={!crop}>
-            完了
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

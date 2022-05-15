@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { Box, Button, Divider, Flex, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Loading } from "../../components/base/Loading";
 import { BackButton } from "../../components/case/BackButton";
@@ -40,6 +41,8 @@ const SendLikeUserItem: FC<SendLikeUserItemProps> = ({ user }) => {
 };
 
 export const MyPageLikesPage: FC = () => {
+  const navigate = useNavigate();
+
   const { data, onLoadMore } = useSendLikeUsers();
 
   const users = data?.viewer.sendLikeUsers.edges.map((v) => v.node) ?? [];
@@ -49,7 +52,7 @@ export const MyPageLikesPage: FC = () => {
     <AppHeader>
       <Flex w="full" position="relative" justifyContent="center" alignItems="center">
         <Box position="absolute" left="0">
-          <BackButton path={routes["/my-page"].path()} />
+          <BackButton onClick={() => navigate(routes["/my-page"].path())} />
         </Box>
         <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
           あなたから

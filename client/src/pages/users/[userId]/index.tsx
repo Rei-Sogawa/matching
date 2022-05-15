@@ -116,7 +116,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     <AppLayout header={null} footer={null}>
       <AppMain>
         <VStack spacing="8">
-          <BackButton alignSelf="start" path={routes["/users"].path()} />
+          <BackButton alignSelf="start" onClick={() => navigate(routes["/users"].path())} />
           <UserTopCard user={user} imageForeground={imageForeground} />
           <HStack spacing="8">
             <SkipButton onClick={onSkip} disabled={liked || skipped} />

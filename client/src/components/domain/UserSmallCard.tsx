@@ -28,6 +28,7 @@ export const UserSmallCard: FC<UserSmallCard> = ({ user }) => {
         <HStack>
           <Box fontWeight="bold">{user.age}歳</Box>
           <Box fontWeight="bold">{user.livingPref}</Box>
+          <Box fontWeight="bold">{user.gender === "MALE" ? "男性" : "女性"}</Box>
         </HStack>
       </VStack>
     </AppLink>

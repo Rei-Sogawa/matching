@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { head } from "lodash-es";
 import { FC, FormEventHandler, useEffect, useMemo, useRef } from "react";
 import { BiSend } from "react-icons/bi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { AutoResizeTextarea } from "../../components/base/AutoResizeTextarea";
 import { BackButton } from "../../components/case/BackButton";
@@ -70,10 +70,12 @@ type MessageRoomPageTemplateProps = {
 };
 
 const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, messages, hasNextPage, onLoadMore }) => {
+  const navigate = useNavigate();
+
   const header = (
     <AppHeader>
       <HStack spacing="4">
-        <BackButton path={routes["/message-rooms"].path()} />
+        <BackButton onClick={() => navigate(routes["/message-rooms"].path())} />
         <Avatar src={partner.topPhotoUrl ?? undefined} />
         <Box fontWeight="bold">{partner.nickName}</Box>
       </HStack>

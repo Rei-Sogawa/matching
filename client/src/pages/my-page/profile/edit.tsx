@@ -1,5 +1,6 @@
 import { Box, Flex, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { BackButton } from "../../../components/case/BackButton";
 import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
@@ -11,6 +12,8 @@ import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";
 
 export const MyPageProfileEditPage: FC = () => {
+  const navigate = useNavigate();
+
   const toast = useToast();
 
   const { me } = useMe();
@@ -26,7 +29,7 @@ export const MyPageProfileEditPage: FC = () => {
     <AppHeader>
       <Flex w="full" position="relative" justifyContent="center" alignItems="center">
         <Box position="absolute" left="0">
-          <BackButton path={routes["/my-page"].path()} />
+          <BackButton onClick={() => navigate(routes["/my-page"].path())} />
         </Box>
         <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
           プロフィール編集

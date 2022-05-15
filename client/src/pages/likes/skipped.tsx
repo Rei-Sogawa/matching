@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { Box, Button, Divider, Flex, HStack, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 import { FaHeart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import { Loading } from "../../components/base/Loading";
 import { BackButton } from "../../components/case/BackButton";
@@ -55,6 +56,8 @@ const SkipLikeUserItem: FC<SkipLikeUserItemProps> = ({ user }) => {
 };
 
 export const LikesSkippedPage: FC = () => {
+  const navigate = useNavigate();
+
   const { data, onLoadMore } = useSkipLikeUsers();
 
   const users = data?.viewer.skipLikeUsers.edges.map((v) => v.node) ?? [];
@@ -64,7 +67,7 @@ export const LikesSkippedPage: FC = () => {
     <AppHeader>
       <Flex w="full" position="relative" justifyContent="center" alignItems="center">
         <Box position="absolute" left="0">
-          <BackButton path={routes["/my-page"].path()} />
+          <BackButton onClick={() => navigate(routes["/likes"].path())} />
         </Box>
         <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
           スキップしたお相手
