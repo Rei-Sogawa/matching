@@ -3,6 +3,7 @@ import { Box, HStack, Stack } from "@chakra-ui/react";
 import { FC, ReactNode, useState } from "react";
 
 import { UserTopCardFragment } from "../../graphql/generated";
+import { AppHeading } from "../base/AppHeading";
 
 gql`
   fragment UserTopCard on User {
@@ -55,9 +56,7 @@ export const UserTopCard: FC<UserTopCardProps> = ({ user, imageForeground }) => 
         </Box>
 
         <Box>
-          <Box fontWeight="bold" fontSize="2xl">
-            {user.nickName}
-          </Box>
+          <AppHeading>{user.nickName}</AppHeading>
           <HStack>
             <Box color="gray" fontWeight="bold">
               {user.age}歳

@@ -16,6 +16,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 
 import { useObjectURL } from "../../hooks/common/useObjectURL";
+import { AppHeading } from "../base/AppHeading";
 
 const getBlobFromCanvas = (canvas: HTMLCanvasElement, file: File): Promise<File> =>
   new Promise((resolve, reject) => {
@@ -106,9 +107,7 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
       <ModalContent py="4" margin="0" rounded="none">
         <ModalBody>
           <Stack maxW="container.sm" mx="auto" spacing="8">
-            <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-              切り抜き
-            </Box>
+            <AppHeading alignSelf="center">切り抜き</AppHeading>
 
             {objectURL ? (
               <ReactCrop crop={crop} onChange={setCrop} aspect={1 / 1} minWidth={100}>

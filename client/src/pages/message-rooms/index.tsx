@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { head } from "lodash-es";
 import { FC } from "react";
 
+import { AppHeading } from "../../components/base/AppHeading";
 import { AppLink } from "../../components/base/AppLink";
 import { MessageRoomItemFragment } from "../../graphql/generated";
 import { useMessageRooms } from "../../hooks/domain/message-room";
@@ -81,9 +82,7 @@ export const MessageRoomsPage: FC = () => {
   const header = (
     <AppHeader>
       <Flex justifyContent="center">
-        <Box fontWeight="bold" fontSize="2xl">
-          メッセージ
-        </Box>
+        <AppHeading>メッセージ</AppHeading>
       </Flex>
     </AppHeader>
   );

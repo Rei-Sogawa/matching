@@ -3,6 +3,7 @@ import { Box, Button, Divider, Flex, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { AppHeading } from "../../components/base/AppHeading";
 import { Loading } from "../../components/base/Loading";
 import { BackButton } from "../../components/case/BackButton";
 import { UserActionCard } from "../../components/domain/UserActionCard";
@@ -54,9 +55,7 @@ export const MyPageLikesPage: FC = () => {
         <Box position="absolute" left="0">
           <BackButton onClick={() => navigate(routes["/my-page"].path())} />
         </Box>
-        <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-          あなたから
-        </Box>
+        <AppHeading alignSelf="center">あなたから</AppHeading>
       </Flex>
     </AppHeader>
   );

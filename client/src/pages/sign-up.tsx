@@ -2,6 +2,7 @@ import { Box, Container, Stack } from "@chakra-ui/react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 
+import { AppHeading } from "../components/base/AppHeading";
 import { AppLink } from "../components/base/AppLink";
 import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
@@ -26,9 +27,7 @@ export const SignUpPage: FC = () => {
     <Box minH="full" bg="white">
       <Container minH="full" py="10">
         <Stack>
-          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-            Matching!
-          </Box>
+          <AppHeading alignSelf="center">Matching!</AppHeading>
 
           <SignUpForm onSubmit={onSubmit} />
 

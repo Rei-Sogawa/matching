@@ -4,6 +4,7 @@ import { head } from "lodash-es";
 import { FC } from "react";
 import { BiLike, BiLogOut } from "react-icons/bi";
 
+import { AppHeading } from "../../components/base/AppHeading";
 import { AppLink } from "../../components/base/AppLink";
 import { useMe } from "../../contexts/Me";
 import { AppFooter } from "../../layouts/AppFooter";
@@ -32,9 +33,7 @@ export const MyPagePage: FC = () => {
           <HStack spacing="8" px="10" py="4">
             <Avatar src={head(me.photoUrls)} size="xl" ring="4px" ringColor="primary.500" />
             <Box>
-              <Box fontWeight="bold" fontSize="2xl">
-                {me.nickName}
-              </Box>
+              <AppHeading>{me.nickName}</AppHeading>
               <AppLink to={routes["/my-page/profile/edit"].path()} fontWeight="bold" color="primary.500">
                 プロフィール編集
               </AppLink>

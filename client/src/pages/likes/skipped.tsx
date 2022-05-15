@@ -4,6 +4,7 @@ import { FC } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+import { AppHeading } from "../../components/base/AppHeading";
 import { Loading } from "../../components/base/Loading";
 import { BackButton } from "../../components/case/BackButton";
 import { UserActionCard } from "../../components/domain/UserActionCard";
@@ -69,9 +70,7 @@ export const LikesSkippedPage: FC = () => {
         <Box position="absolute" left="0">
           <BackButton onClick={() => navigate(routes["/likes"].path())} />
         </Box>
-        <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-          スキップしたお相手
-        </Box>
+        <AppHeading alignSelf="center">スキップしたお相手</AppHeading>
       </Flex>
     </AppHeader>
   );

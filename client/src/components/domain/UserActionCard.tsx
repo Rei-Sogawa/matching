@@ -3,6 +3,7 @@ import { Box, HStack, Image, Stack } from "@chakra-ui/react";
 import { FC, ReactNode } from "react";
 
 import { UserActionCardFragment } from "../../graphql/generated";
+import { AppHeading } from "../base/AppHeading";
 
 gql`
   fragment UserActionCard on User {
@@ -23,9 +24,7 @@ export const UserActionCard: FC<UserActionCardProps> = ({ user, actionButton }) 
       <Image src={user.topPhotoUrl ?? undefined} rounded="md" />
 
       <Box>
-        <Box fontWeight="bold" fontSize="2xl">
-          {user.nickName}
-        </Box>
+        <AppHeading>{user.nickName}</AppHeading>
         <HStack>
           <Box color="gray" fontWeight="bold">
             {user.age}歳

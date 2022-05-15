@@ -3,6 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { AppHeading } from "../components/base/AppHeading";
 import { AppLink } from "../components/base/AppLink";
 import { LogInForm } from "../components/common/LogInForm";
 import { routes } from "../routes";
@@ -19,9 +20,7 @@ export const LogInPage: FC = () => {
     <Box h="full" bg="white">
       <Container h="full" py="10">
         <Stack>
-          <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
-            Matching!
-          </Box>
+          <AppHeading alignSelf="center">Matching!</AppHeading>
 
           <LogInForm onSubmit={logIn} />
 

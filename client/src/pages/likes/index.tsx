@@ -3,6 +3,7 @@ import { head } from "lodash-es";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { AppHeading } from "../../components/base/AppHeading";
 import { AppLink } from "../../components/base/AppLink";
 import { Loading } from "../../components/base/Loading";
 import { useReceiveLikeUsers } from "../../hooks/domain/user";
@@ -30,9 +31,7 @@ export const LikesPage: FC = () => {
   const header = (
     <AppHeader>
       <Flex justifyContent="center">
-        <Box fontWeight="bold" fontSize="2xl">
-          いいね！
-        </Box>
+        <AppHeading>いいね！</AppHeading>
       </Flex>
     </AppHeader>
   );
