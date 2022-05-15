@@ -102,9 +102,9 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
   }, [file]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal size="full" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent margin="0" rounded="none">
         <ModalHeader>切り抜き</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
