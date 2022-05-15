@@ -1,7 +1,8 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Box, Center, HStack, VStack } from "@chakra-ui/react";
 import { FC, useState } from "react";
-import { BiHeart, BiShare } from "react-icons/bi";
+import { BiShare } from "react-icons/bi";
+import { FaHeart } from "react-icons/fa";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { animated, useSpring } from "react-spring";
 
@@ -98,7 +99,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
       {liked && (
         <Center position="absolute" h="full" w="full" bg="pink.50">
           <VStack color="red.400">
-            <BiHeart fontSize="64px" />
+            <FaHeart fontSize="64px" />
             <Box fontWeight="bold" fontSize="2xl">
               マッチング！
             </Box>

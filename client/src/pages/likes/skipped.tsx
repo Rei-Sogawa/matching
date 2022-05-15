@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { Box, Button, Divider, Flex, HStack, Stack, useToast } from "@chakra-ui/react";
 import { FC } from "react";
-import { BiHeart } from "react-icons/bi";
+import { FaHeart } from "react-icons/fa";
 
 import { Loading } from "../../components/base/Loading";
 import { BackButton } from "../../components/case/BackButton";
@@ -36,7 +36,7 @@ const SkipLikeUserItem: FC<SkipLikeUserItemProps> = ({ user }) => {
       position: "top-right",
       render: () => (
         <HStack px="4" py="3" rounded="md" bg="secondary.500">
-          <BiHeart color="white" fontSize="20px" />
+          <FaHeart color="white" fontSize="20px" />
           <Box fontWeight="bold" color="white">
             マッチングしました！
           </Box>
