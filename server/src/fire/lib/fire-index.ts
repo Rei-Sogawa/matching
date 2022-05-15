@@ -65,59 +65,58 @@ export abstract class FireIndex<TData extends { id: string }> {
 
   async insert(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
-
-      // DELETE
-      const storedDoc = docs.find((doc) => {
-        const docData = doc.data();
-        return docData?.value.find((v) => v.id === data.id);
+      const _docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
+      const docs = _docs.map((d) => {
+        return { ...d, data: () => d.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] } };
       });
 
-      if (storedDoc) {
-        const storedDocData = storedDoc.data();
-        if (!storedDocData) throw new Error("storedDocData is not defined.");
-        const nextStoredDocData = {
-          ...storedDocData,
-          value: storedDocData.value.filter((v) => v.id !== data.id),
-          valueLength: storedDocData.value.length - 1,
+      // UPDATE
+      for (const doc of docs) {
+        const exists = doc.data().value.some((v) => v.id === data.id);
+        if (!exists) continue;
+        const prevData = doc.data();
+        const nextData = {
+          ...doc.data(),
+          value: prevData.value.map((v) => (v.id === data.id ? data : v)),
         };
-        const estimatedByteSize = calcObjectByte(nextStoredDocData);
-        t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
+        const estimatedByteSize = calcObjectByte(nextData);
+        t.set(doc.ref, { ...nextData, estimatedByteSize });
+        return;
       }
 
       // ADD
-      const randomDoc = docs[randomInt(this.docIds.length - 1)];
-      const randomDocData = randomDoc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
-      const nextRandomDocData = {
-        ...randomDocData,
-        value: [...randomDocData.value, data],
-        valueLength: randomDocData.value.length + 1,
+      const doc = docs[randomInt(this.docIds.length - 1)];
+      const prevData = doc.data();
+      const nextData = {
+        ...prevData,
+        value: [...prevData.value, data],
+        valueLength: prevData.value.length + 1,
       };
-      const estimatedByteSize = calcObjectByte(nextRandomDocData);
-      t.set(randomDoc.ref, { ...nextRandomDocData, estimatedByteSize });
+      const estimatedByteSize = calcObjectByte(nextData);
+      t.set(doc.ref, { ...nextData, estimatedByteSize });
     });
   }
 
   async delete(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
-
-      // DELETE
-      const storedDoc = docs.find((doc) => {
-        const docData = doc.data();
-        return docData?.value.find((v) => v.id === data.id);
+      const _docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
+      const docs = _docs.map((d) => {
+        return { ...d, data: () => d.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] } };
       });
 
-      if (storedDoc) {
-        const storedDocData = storedDoc.data();
-        if (!storedDocData) throw new Error("storedDocData is not defined.");
-        const nextStoredDocData = {
-          ...storedDocData,
-          value: storedDocData.value.filter((v) => v.id !== data.id),
-          valueLength: storedDocData.value.length - 1,
+      // DELETE
+      for (const doc of docs) {
+        const exists = doc.data().value.some((v) => v.id === data.id);
+        if (!exists) continue;
+        const prevData = doc.data();
+        const nextData = {
+          ...doc.data(),
+          value: prevData.value.filter((v) => v.id !== data.id),
+          valueLength: prevData.valueLength - 1,
         };
-        const estimatedByteSize = calcObjectByte(nextStoredDocData);
-        t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
+        const estimatedByteSize = calcObjectByte(nextData);
+        t.set(doc.ref, { ...nextData, estimatedByteSize });
+        return;
       }
     });
   }
