@@ -9,22 +9,22 @@ import { BackButton } from "../../../components/case/BackButton";
 import { LikeButton } from "../../../components/case/LikeButton";
 import { SkipButton } from "../../../components/case/SkipButton";
 import { UserTopCard } from "../../../components/domain/UserTopCard";
-import { UserForUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
+import { UserForSearchUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
 import { useCreateLike } from "../../../hooks/domain/like";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { AppMain } from "../../../layouts/AppMain";
 import { routes } from "../../../routes";
 
 gql`
-  fragment UserForUserPage on User {
+  fragment UserForSearchUserPage on User {
     id
     ...UserTopCard
   }
 `;
 
-type UserPageTemplateProps = { user: UserForUserPageFragment };
+type SearchUserPageTemplateProps = { user: UserForSearchUserPageFragment };
 
-const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
+const SearchUserPageTemplate: FC<SearchUserPageTemplateProps> = ({ user }) => {
   const navigate = useNavigate();
 
   const client = useApolloClient();
@@ -37,9 +37,9 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     const nextUser = users[currIndex + 1];
 
     if (nextUser) {
-      return routes["/users/:userId"].path({ userId: nextUser.id });
+      return routes["/search-users/:userId"].path({ userId: nextUser.id });
     } else {
-      return routes["/users"].path();
+      return routes["/search-users"].path();
     }
   };
 
@@ -116,7 +116,7 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
     <AppLayout header={null} footer={null}>
       <AppMain>
         <VStack spacing="8">
-          <BackButton alignSelf="start" onClick={() => navigate(routes["/users"].path())} />
+          <BackButton alignSelf="start" onClick={() => navigate(routes["/search-users"].path())} />
           <UserTopCard user={user} imageForeground={imageForeground} />
           <HStack spacing="8">
             <SkipButton onClick={onSkip} disabled={liked || skipped} />
@@ -128,11 +128,11 @@ const UserPageTemplate: FC<UserPageTemplateProps> = ({ user }) => {
   );
 };
 
-export const UserPage: FC = () => {
+export const SearchUserPage: FC = () => {
   const { userId } = useParams();
   const client = useApolloClient();
   const data = client.cache.readQuery({ query: UsersDocument }) as UsersQueryResult["data"];
   const users = data?.viewer.users.edges.map((e) => e.node) ?? [];
   const user = users.find((u) => u.id === userId);
-  return user ? <UserPageTemplate user={user} /> : <Navigate to={routes["/users"].path()} />;
+  return user ? <SearchUserPageTemplate user={user} /> : <Navigate to={routes["/search-users"].path()} />;
 };

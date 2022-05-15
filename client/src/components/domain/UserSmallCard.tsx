@@ -22,7 +22,7 @@ export type UserSmallCard = {
 
 export const UserSmallCard: FC<UserSmallCard> = ({ user }) => {
   return (
-    <AppLink to={routes["/users/:userId"].path({ userId: user.id })}>
+    <AppLink to={routes["/search-users/:userId"].path({ userId: user.id })}>
       <VStack>
         <Avatar src={user.topPhotoUrl ?? undefined} boxSize="36" />
         <HStack>

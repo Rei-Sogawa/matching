@@ -12,9 +12,9 @@ import { MessageRoomPage } from "./pages/message-rooms/[messageRoomId]";
 import { MyPagePage } from "./pages/my-page";
 import { MyPageLikesPage } from "./pages/my-page/likes";
 import { MyPageProfileEditPage } from "./pages/my-page/profile/edit";
+import { SearchUsersPage } from "./pages/search-users";
+import { SearchUserPage } from "./pages/search-users/[userId]";
 import { SignUpPage } from "./pages/sign-up";
-import { UsersPage } from "./pages/users";
-import { UserPage } from "./pages/users/[userId]";
 
 const INDEX_PATH = "/";
 const SIGN_UP_PATH = "/sign-up";
@@ -22,8 +22,8 @@ const LOG_IN_PATH = "/log-in";
 const MY_PAGE = "/my-page";
 const MY_PAGE_LIKES = "/my-page/likes";
 const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
-const USERS_PATH = "/users";
-const USER_PATH = "/users/:userId";
+const SEARCH_USERS_PATH = "/search-users";
+const SEARCH_USER_PATH = "/search-users/:userId";
 const LIKES_PATH = "/likes";
 const LIKES_SKIPPED_PATH = "/likes/skipped";
 const LIKE_PATH = "/likes/:userId";
@@ -61,14 +61,14 @@ export const routes = {
     Component: MyPageProfileEditPage,
     middleware: [Authenticated],
   },
-  [USERS_PATH]: {
-    path: pathBuilder(USERS_PATH),
-    Component: UsersPage,
+  [SEARCH_USERS_PATH]: {
+    path: pathBuilder(SEARCH_USERS_PATH),
+    Component: SearchUsersPage,
     middleware: [Authenticated],
   },
-  [USER_PATH]: {
-    path: pathBuilder(USER_PATH),
-    Component: UserPage,
+  [SEARCH_USER_PATH]: {
+    path: pathBuilder(SEARCH_USER_PATH),
+    Component: SearchUserPage,
     middleware: [Authenticated],
   },
   [LIKES_PATH]: {

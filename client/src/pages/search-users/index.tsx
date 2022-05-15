@@ -9,7 +9,7 @@ import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { AppMenu } from "../../layouts/AppMenu";
 
-export const UsersPage: FC = () => {
+export const SearchUsersPage: FC = () => {
   const { data, onLoadMore } = useUsers();
 
   const users = data?.viewer.users.edges.map((v) => v.node) ?? [];

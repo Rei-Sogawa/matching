@@ -15,7 +15,7 @@ export const AppMenu: FC = () => {
 
   return (
     <HStack justifyContent="space-around" alignItems="center">
-      <AppLink to={routes["/users"].path()} color={isActive("users") ? "black" : "gray.500"}>
+      <AppLink to={routes["/search-users"].path()} color={isActive("search-users") ? "black" : "gray.500"}>
         <Flex direction="column" alignItems="center">
           <BiSearch fontSize="28px" />
           <Box fontWeight="bold" fontSize="xs">

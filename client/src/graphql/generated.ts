@@ -384,7 +384,7 @@ export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, 
 
 export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
-export type UserForUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type UserForSearchUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export const UserSmallCardFragmentDoc = gql`
     fragment UserSmallCard on User {
@@ -471,8 +471,8 @@ export const SendLikeUserItemFragmentDoc = gql`
   ...UserActionCard
 }
     ${UserActionCardFragmentDoc}`;
-export const UserForUserPageFragmentDoc = gql`
-    fragment UserForUserPage on User {
+export const UserForSearchUserPageFragmentDoc = gql`
+    fragment UserForSearchUserPage on User {
   id
   ...UserTopCard
 }
@@ -910,7 +910,7 @@ export const UsersDocument = gql`
         node {
           id
           ...UserSmallCard
-          ...UserForUserPage
+          ...UserForSearchUserPage
         }
         cursor
       }
@@ -922,7 +922,7 @@ export const UsersDocument = gql`
   }
 }
     ${UserSmallCardFragmentDoc}
-${UserForUserPageFragmentDoc}`;
+${UserForSearchUserPageFragmentDoc}`;
 
 /**
  * __useUsersQuery__

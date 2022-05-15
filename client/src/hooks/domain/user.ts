@@ -22,7 +22,7 @@ gql`
           node {
             id
             ...UserSmallCard
-            ...UserForUserPage
+            ...UserForSearchUserPage
           }
           cursor
         }
