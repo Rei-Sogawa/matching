@@ -18,7 +18,7 @@ const { usersCollection, likesCollection, messageRoomsCollection, userIndexColle
 
 const seed = async () => {
   const fakeAuthUsers = await Promise.all(
-    Array.from({ length: 25 }).map((_, i) => {
+    Array.from({ length: 15 }).map((_, i) => {
       return { uid: id(), email: `fake-user-${i}@example.com`, password: "password" };
     })
   );
