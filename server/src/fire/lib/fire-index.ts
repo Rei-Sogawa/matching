@@ -65,7 +65,7 @@ export abstract class FireIndex<TData extends { id: string }> {
 
   async insert(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const docs = await Promise.all(this.docIds.map((id) => this.ref.doc(id).get()));
+      const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
 
       // DELETE
       const storedDoc = docs.find((doc) => {
@@ -82,7 +82,7 @@ export abstract class FireIndex<TData extends { id: string }> {
           valueLength: storedDocData.value.length - 1,
         };
         const estimatedByteSize = calcObjectByte(nextStoredDocData);
-        await t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
+        t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
       }
 
       // ADD
@@ -94,13 +94,13 @@ export abstract class FireIndex<TData extends { id: string }> {
         valueLength: randomDocData.value.length + 1,
       };
       const estimatedByteSize = calcObjectByte(nextRandomDocData);
-      await t.set(randomDoc.ref, { ...nextRandomDocData, estimatedByteSize });
+      t.set(randomDoc.ref, { ...nextRandomDocData, estimatedByteSize });
     });
   }
 
   async delete(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const docs = await Promise.all(this.docIds.map((id) => this.ref.doc(id).get()));
+      const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
 
       // DELETE
       const storedDoc = docs.find((doc) => {
@@ -117,7 +117,7 @@ export abstract class FireIndex<TData extends { id: string }> {
           valueLength: storedDocData.value.length - 1,
         };
         const estimatedByteSize = calcObjectByte(nextStoredDocData);
-        await t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
+        t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
       }
     });
   }
