@@ -1,13 +1,15 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, Reference, useApolloClient } from "@apollo/client";
 import { collection, getFirestore, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { useEffect } from "react";
 
+import { useAuth } from "../../contexts/Auth";
 import { useMe } from "../../contexts/Me";
 import {
   useCreatedMessageLazyQuery,
   useCreateMessageMutation,
   useMessageRoomQuery,
   useMessageRoomsQuery,
+  useUpdatedMessageRoomLazyQuery,
 } from "../../graphql/generated";
 
 // QUERY
@@ -127,8 +129,10 @@ export const useSubscribeMessage = (messageRoomId: string) => {
         snap.docChanges().forEach(async (dc) => {
           const messageRoomId = dc.doc.data().messageRoomId;
           const messageId = dc.doc.data().messageId;
+
           const { data } = await fetch({ variables: { messageId } });
           if (!data) return;
+
           client.cache.modify({
             id: client.cache.identify({ __typename: "MessageRoom", id: messageRoomId }),
             fields: {
@@ -148,25 +152,79 @@ export const useSubscribeMessage = (messageRoomId: string) => {
   }, []);
 };
 
-// export const useSubscribeMessageRooms = () => {
-//   const { me } = useMe();
+gql`
+  query UpdatedMessageRoom($messageRoomId: ID!) {
+    viewer {
+      id
+      messageRoom(messageRoomId: $messageRoomId) {
+        id
+        ...MessageRoomItem
+      }
+    }
+  }
+`;
 
-//   useEffect(() => {
-//     return onSnapshot(
-//       query(
-//         collection(getFirestore(), "messageRoomEvents"),
-//         where("userIds", "array-contains", me.id),
-//         where("createdAt", ">=", Timestamp.now()),
-//         orderBy("createdAt", "desc")
-//       ),
-//       (snap) => {
-//         snap.docChanges().forEach(async (dc) => {
-//           const messageRoomId = dc.doc.data().messageRoomId;
-//         });
-//       }
-//     );
-//   }, []);
-// };
+export const useSubscribeMessageRooms = () => {
+  const { uid } = useAuth();
+
+  const client = useApolloClient();
+
+  const [fetch] = useUpdatedMessageRoomLazyQuery();
+
+  useEffect(() => {
+    if (!uid) return;
+    return onSnapshot(
+      query(
+        collection(getFirestore(), "messageRoomEvents"),
+        where("userIds", "array-contains", uid),
+        where("createdAt", ">=", Timestamp.now()),
+        orderBy("createdAt", "desc")
+      ),
+      (snap) => {
+        snap.docChanges().forEach(async (dc) => {
+          const messageRoomId = dc.doc.data().messageRoomId;
+
+          const { data } = await fetch({ variables: { messageRoomId } });
+          if (!data) return;
+
+          client.cache.modify({
+            id: client.cache.identify({ __typename: "Viewer", id: uid }),
+            fields: {
+              messageRooms(existing, { readField, toReference }) {
+                const cacheEdge = existing.edges.find(
+                  ({ node }: { node: Reference }) => readField("id", node) === messageRoomId
+                );
+
+                if (cacheEdge) {
+                  const edge = { __typename: "MessageRoomEdge", node: cacheEdge, cursor: new Date().toISOString() };
+                  const filtered = existing.edges.filter(
+                    ({ node }: { node: Reference }) => readField("id", node) !== messageRoomId
+                  );
+
+                  return {
+                    ...existing,
+                    edges: [edge, ...filtered],
+                  };
+                }
+
+                const edge = {
+                  __typename: "MessageRoomEdge",
+                  node: toReference(data.viewer.messageRoom),
+                  cursor: new Date().toISOString(),
+                };
+
+                return {
+                  ...existing,
+                  edges: [edge, ...existing.edges],
+                };
+              },
+            },
+          });
+        });
+      }
+    );
+  }, []);
+};
 
 // MUTATION
 gql`

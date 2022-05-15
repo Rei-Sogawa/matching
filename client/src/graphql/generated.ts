@@ -315,6 +315,13 @@ export type CreatedMessageQueryVariables = Exact<{
 
 export type CreatedMessageQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, message: { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } } } };
 
+export type UpdatedMessageRoomQueryVariables = Exact<{
+  messageRoomId: Scalars['ID'];
+}>;
+
+
+export type UpdatedMessageRoomQuery = { __typename?: 'Query', viewer: { __typename?: 'Viewer', id: string, messageRoom: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } } };
+
 export type CreateMessageMutationVariables = Exact<{
   input: CreateMessageInput;
 }>;
@@ -820,6 +827,45 @@ export function useCreatedMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type CreatedMessageQueryHookResult = ReturnType<typeof useCreatedMessageQuery>;
 export type CreatedMessageLazyQueryHookResult = ReturnType<typeof useCreatedMessageLazyQuery>;
 export type CreatedMessageQueryResult = Apollo.QueryResult<CreatedMessageQuery, CreatedMessageQueryVariables>;
+export const UpdatedMessageRoomDocument = gql`
+    query UpdatedMessageRoom($messageRoomId: ID!) {
+  viewer {
+    id
+    messageRoom(messageRoomId: $messageRoomId) {
+      id
+      ...MessageRoomItem
+    }
+  }
+}
+    ${MessageRoomItemFragmentDoc}`;
+
+/**
+ * __useUpdatedMessageRoomQuery__
+ *
+ * To run a query within a React component, call `useUpdatedMessageRoomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUpdatedMessageRoomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpdatedMessageRoomQuery({
+ *   variables: {
+ *      messageRoomId: // value for 'messageRoomId'
+ *   },
+ * });
+ */
+export function useUpdatedMessageRoomQuery(baseOptions: Apollo.QueryHookOptions<UpdatedMessageRoomQuery, UpdatedMessageRoomQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UpdatedMessageRoomQuery, UpdatedMessageRoomQueryVariables>(UpdatedMessageRoomDocument, options);
+      }
+export function useUpdatedMessageRoomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UpdatedMessageRoomQuery, UpdatedMessageRoomQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UpdatedMessageRoomQuery, UpdatedMessageRoomQueryVariables>(UpdatedMessageRoomDocument, options);
+        }
+export type UpdatedMessageRoomQueryHookResult = ReturnType<typeof useUpdatedMessageRoomQuery>;
+export type UpdatedMessageRoomLazyQueryHookResult = ReturnType<typeof useUpdatedMessageRoomLazyQuery>;
+export type UpdatedMessageRoomQueryResult = Apollo.QueryResult<UpdatedMessageRoomQuery, UpdatedMessageRoomQueryVariables>;
 export const CreateMessageDocument = gql`
     mutation CreateMessage($input: CreateMessageInput!) {
   createMessage(input: $input) {
