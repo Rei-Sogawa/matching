@@ -1,4 +1,4 @@
-import { CollectionReference, Timestamp } from "firebase-admin/firestore";
+import { CollectionReference } from "firebase-admin/firestore";
 
 const randomInt = (max: number, min = 0) => {
   return Math.floor((max - min + 1) * Math.random() + min);
@@ -10,8 +10,9 @@ const isPrimitive = (input: unknown) => {
     typeof input === "number" ||
     typeof input === "boolean" ||
     input === null ||
-    // TODO: ライブラリ化した時にライブラリの firebase app に依存させたくないので hasOwnProperty('toDate') とかで判定したい
-    input instanceof Timestamp
+    (typeof input === "object" &&
+      Object.prototype.hasOwnProperty.call(input, "nanoseconds") &&
+      Object.prototype.hasOwnProperty.call(input, "seconds"))
   )
     return true;
   return false;
@@ -23,7 +24,12 @@ const calcPrimitiveByte = (input: unknown) => {
   if (typeof input === "number") return 8;
   if (typeof input === "boolean") return 1;
   if (input === null) return 1;
-  if (input instanceof Timestamp) return 8;
+  if (
+    typeof input === "object" &&
+    Object.prototype.hasOwnProperty.call(input, "nanoseconds") &&
+    Object.prototype.hasOwnProperty.call(input, "seconds")
+  )
+    return 8;
   throw new Error("could not calcPrimitiveByte");
 };
 
@@ -50,42 +56,68 @@ export abstract class FireIndex<TData extends { id: string }> {
   }
 
   async get() {
-    const { docs } = await this.ref.get();
-    return docs.flatMap((doc) => doc.data().value);
-  }
-
-  async add(data: TData) {
-    return this.ref.firestore.runTransaction(async (t) => {
-      const doc = await t.get(this.ref.doc(this.docIds[randomInt(this.docIds.length - 1)]));
-      const prev = doc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
-      const next = { ...prev, value: [...prev.value, data], valueLength: prev.value.length + 1 };
-      const estimatedByteSize = calcObjectByte(next);
-      await t.set(doc.ref, { ...next, estimatedByteSize });
+    const docs = await Promise.all(this.docIds.map((id) => this.ref.doc(id).get()));
+    return docs.flatMap((doc) => {
+      const docData = doc.data();
+      return docData ? docData.value : ([] as TData[]);
     });
   }
 
-  async update(data: TData) {
+  async insert(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const { docs } = await t.get(this.ref);
-      const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
-      if (doc) {
-        const prev = doc.data() ?? { estimatedByteSize: 0, value: [] };
-        const next = { ...prev, value: prev.value.map((v) => (v.id === data.id ? data : v)) };
-        const estimatedByteSize = calcObjectByte(next);
-        await t.set(doc.ref, { ...next, estimatedByteSize });
+      const docs = await Promise.all(this.docIds.map((id) => this.ref.doc(id).get()));
+
+      // DELETE
+      const storedDoc = docs.find((doc) => {
+        const docData = doc.data();
+        return docData?.value.find((v) => v.id === data.id);
+      });
+
+      if (storedDoc) {
+        const storedDocData = storedDoc.data();
+        if (!storedDocData) throw new Error("storedDocData is not defined.");
+        const nextStoredDocData = {
+          ...storedDocData,
+          value: storedDocData.value.filter((v) => v.id !== data.id),
+          valueLength: storedDocData.value.length - 1,
+        };
+        const estimatedByteSize = calcObjectByte(nextStoredDocData);
+        await t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
       }
+
+      // ADD
+      const randomDoc = docs[randomInt(this.docIds.length - 1)];
+      const randomDocData = randomDoc.data() ?? { estimatedByteSize: 0, valueLength: 0, value: [] };
+      const nextRandomDocData = {
+        ...randomDocData,
+        value: [...randomDocData.value, data],
+        valueLength: randomDocData.value.length + 1,
+      };
+      const estimatedByteSize = calcObjectByte(nextRandomDocData);
+      await t.set(randomDoc.ref, { ...nextRandomDocData, estimatedByteSize });
     });
   }
 
   async delete(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
-      const { docs } = await t.get(this.ref);
-      const doc = docs.find((doc) => doc.data().value.find((v) => v.id === data.id));
-      if (doc) {
-        const prev = doc.data() ?? { estimatedByteSize: 0, value: [] };
-        const next = { ...prev, value: prev.value.filter((v) => v.id !== data.id), valueLength: prev.value.length - 1 };
-        const estimatedByteSize = calcObjectByte(next);
-        await t.set(doc.ref, { ...next, estimatedByteSize });
+      const docs = await Promise.all(this.docIds.map((id) => this.ref.doc(id).get()));
+
+      // DELETE
+      const storedDoc = docs.find((doc) => {
+        const docData = doc.data();
+        return docData?.value.find((v) => v.id === data.id);
+      });
+
+      if (storedDoc) {
+        const storedDocData = storedDoc.data();
+        if (!storedDocData) throw new Error("storedDocData is not defined.");
+        const nextStoredDocData = {
+          ...storedDocData,
+          value: storedDocData.value.filter((v) => v.id !== data.id),
+          valueLength: storedDocData.value.length - 1,
+        };
+        const estimatedByteSize = calcObjectByte(nextStoredDocData);
+        await t.set(storedDoc.ref, { ...nextStoredDocData, estimatedByteSize });
       }
     });
   }

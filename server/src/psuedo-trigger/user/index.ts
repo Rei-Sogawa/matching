@@ -5,12 +5,12 @@ export const onCreateUser = async (
   { user }: { user: UserDoc },
   { userIndexCollection }: { userIndexCollection: UserIndexCollection }
 ) => {
-  await userIndexCollection.add(user.indexData);
+  await userIndexCollection.insert(user.indexData);
 };
 
 export const onUpdateUser = async (
   { user }: { user: UserDoc },
   { userIndexCollection }: { userIndexCollection: UserIndexCollection }
 ) => {
-  await userIndexCollection.update(user.indexData);
+  await userIndexCollection.insert(user.indexData);
 };
