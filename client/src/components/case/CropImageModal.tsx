@@ -91,9 +91,9 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
   }, [file]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal size="full" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent height="full" py="4">
+      <ModalContent py="4" mt="auto">
         <ModalBody>
           <Stack maxW="container.sm" mx="auto" spacing="8">
             <AppHeading alignSelf="center">切り抜き</AppHeading>
