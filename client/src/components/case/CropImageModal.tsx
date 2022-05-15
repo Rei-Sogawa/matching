@@ -3,8 +3,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import {
   Box,
   Button,
-  Flex,
-  IconButton,
+  HStack,
   Image,
   Modal,
   ModalBody,
@@ -14,7 +13,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FC, useEffect, useRef, useState } from "react";
-import { BiX } from "react-icons/bi";
 import ReactCrop, { Crop } from "react-image-crop";
 
 import { useObjectURL } from "../../hooks/common/useObjectURL";
@@ -108,12 +106,9 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
       <ModalContent py="4" margin="0" rounded="none">
         <ModalBody>
           <Stack maxW="container.sm" mx="auto" spacing="8">
-            <Flex justifyContent="space-between">
-              <Box fontWeight="bold" fontSize="2xl">
-                トリミング
-              </Box>
-              <IconButton size="sm" aria-label="close" icon={<BiX fontSize="20px" />} onClick={onClose} />
-            </Flex>
+            <Box alignSelf="center" fontWeight="bold" fontSize="2xl">
+              切り抜き
+            </Box>
 
             {objectURL ? (
               <ReactCrop crop={crop} onChange={setCrop} aspect={1 / 1} minWidth={100}>
@@ -121,11 +116,14 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
               </ReactCrop>
             ) : null}
 
-            <Box alignSelf="end">
-              <Button onClick={handleOk} disabled={!crop}>
+            <HStack alignSelf="end">
+              <Button onClick={onClose} variant="ghost">
+                キャンセル
+              </Button>
+              <Button onClick={handleOk} disabled={!crop} colorScheme="primary">
                 完了
               </Button>
-            </Box>
+            </HStack>
           </Stack>
         </ModalBody>
       </ModalContent>
