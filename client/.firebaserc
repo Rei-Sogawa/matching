@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "playground-abc-firebase"
+  },
+  "targets": {
+    "playground-abc-firebase": {
+      "hosting": {
+        "ma-tching": [
+          "dist"
+        ]
+      }
+    }
   }
 }
