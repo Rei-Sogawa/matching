@@ -15,7 +15,7 @@ gql`
   mutation MatchLike($userId: ID!) {
     matchLike(userId: $userId) {
       id
-      ...UserForLikePage
+      ...MessageRoomItem
     }
   }
 `;
@@ -25,12 +25,22 @@ export const useMatchLike = (userId: string) => {
 
   const [mutate] = useMatchLikeMutation({
     variables: { userId },
-    update(cache) {
+    update(cache, { data }) {
+      assertDefined(data);
+
       cache.modify({
         id: cache.identify({ __typename: "Viewer", id: me.id }),
         fields: {
           receiveLikeUsers(existing, { readField }) {
             return existing.filter((u: Reference) => readField("id", u) !== userId);
+          },
+          messageRooms(existing, { toReference }) {
+            const edge = {
+              __typename: "MessageRoomEdge",
+              node: toReference(data.matchLike),
+              cursor: new Date().toISOString(),
+            };
+            return { ...existing, edges: [edge, ...existing.edges] };
           },
         },
       });
@@ -116,6 +126,7 @@ gql`
   mutation MatchSkippedLike($userId: ID!) {
     matchSkippedLike(userId: $userId) {
       id
+      ...MessageRoomItem
     }
   }
 `;
@@ -125,7 +136,9 @@ export const useMatchSkippedLike = (userId: string) => {
 
   const [mutate] = useMatchSkippedLikeMutation({
     variables: { userId },
-    update(cache) {
+    update(cache, { data }) {
+      assertDefined(data);
+
       cache.modify({
         id: cache.identify({ __typename: "Viewer", id: me.id }),
         fields: {
@@ -134,6 +147,15 @@ export const useMatchSkippedLike = (userId: string) => {
               ...existing,
               edges: existing.edges.filter(({ node }: { node: Reference }) => readField("id", node) !== userId),
             };
+          },
+
+          messageRooms(existing, { toReference }) {
+            const edge = {
+              __typename: "MessageRoomEdge",
+              node: toReference(data.matchSkippedLike),
+              cursor: new Date().toISOString(),
+            };
+            return { ...existing, edges: [edge, ...existing.edges] };
           },
         },
       });

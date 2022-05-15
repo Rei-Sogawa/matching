@@ -24,5 +24,5 @@ export const matchLikeMutation = async (
   await messageRoom.save();
   await onUpdateLike({ like: receiveLike }, { userLikeIndexCollection });
 
-  return usersCollection.findOne(receiveLike.senderId);
+  return messageRoom;
 };

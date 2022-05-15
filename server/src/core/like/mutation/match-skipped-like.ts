@@ -7,7 +7,7 @@ import { onUpdateLike } from "../../../psuedo-trigger/like";
 export const matchSkippedLikeMutation = async (
   _: unknown,
   { userId }: MutationMatchSkippedLikeArgs,
-  { auth, collections: { usersCollection, likesCollection, messageRoomsCollection, userLikeIndexCollection } }: Context
+  { auth, collections: { likesCollection, messageRoomsCollection, userLikeIndexCollection } }: Context
 ) => {
   authorize(auth);
 
@@ -24,5 +24,5 @@ export const matchSkippedLikeMutation = async (
   await messageRoom.save();
   await onUpdateLike({ like: skippedLike }, { userLikeIndexCollection });
 
-  return usersCollection.findOne(skippedLike.senderId);
+  return messageRoom;
 };

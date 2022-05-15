@@ -96,8 +96,8 @@ export type Mutation = {
   cancelLike: User;
   createLike: User;
   createMessage: Message;
-  matchLike: User;
-  matchSkippedLike: User;
+  matchLike: MessageRoom;
+  matchSkippedLike: MessageRoom;
   signUp: Me;
   skipLike: User;
   updateUserLastAccess: Me;
@@ -263,7 +263,7 @@ export type MatchLikeMutationVariables = Exact<{
 }>;
 
 
-export type MatchLikeMutation = { __typename?: 'Mutation', matchLike: { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> } };
+export type MatchLikeMutation = { __typename?: 'Mutation', matchLike: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } };
 
 export type SkipLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -284,7 +284,7 @@ export type MatchSkippedLikeMutationVariables = Exact<{
 }>;
 
 
-export type MatchSkippedLikeMutation = { __typename?: 'Mutation', matchSkippedLike: { __typename?: 'User', id: string } };
+export type MatchSkippedLikeMutation = { __typename?: 'Mutation', matchSkippedLike: { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } } };
 
 export type CreateLikeMutationVariables = Exact<{
   userId: Scalars['ID'];
@@ -519,10 +519,10 @@ export const MatchLikeDocument = gql`
     mutation MatchLike($userId: ID!) {
   matchLike(userId: $userId) {
     id
-    ...UserForLikePage
+    ...MessageRoomItem
   }
 }
-    ${UserForLikePageFragmentDoc}`;
+    ${MessageRoomItemFragmentDoc}`;
 export type MatchLikeMutationFn = Apollo.MutationFunction<MatchLikeMutation, MatchLikeMutationVariables>;
 
 /**
@@ -620,9 +620,10 @@ export const MatchSkippedLikeDocument = gql`
     mutation MatchSkippedLike($userId: ID!) {
   matchSkippedLike(userId: $userId) {
     id
+    ...MessageRoomItem
   }
 }
-    `;
+    ${MessageRoomItemFragmentDoc}`;
 export type MatchSkippedLikeMutationFn = Apollo.MutationFunction<MatchSkippedLikeMutation, MatchSkippedLikeMutationVariables>;
 
 /**

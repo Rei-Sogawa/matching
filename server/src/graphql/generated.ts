@@ -102,8 +102,8 @@ export type Mutation = {
   cancelLike: User;
   createLike: User;
   createMessage: Message;
-  matchLike: User;
-  matchSkippedLike: User;
+  matchLike: MessageRoom;
+  matchSkippedLike: MessageRoom;
   signUp: Me;
   skipLike: User;
   updateUserLastAccess: Me;
@@ -435,8 +435,8 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   cancelLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCancelLikeArgs, 'userId'>>;
   createLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateLikeArgs, 'userId'>>;
   createMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'input'>>;
-  matchLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationMatchLikeArgs, 'userId'>>;
-  matchSkippedLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationMatchSkippedLikeArgs, 'userId'>>;
+  matchLike?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<MutationMatchLikeArgs, 'userId'>>;
+  matchSkippedLike?: Resolver<ResolversTypes['MessageRoom'], ParentType, ContextType, RequireFields<MutationMatchSkippedLikeArgs, 'userId'>>;
   signUp?: Resolver<ResolversTypes['Me'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
   skipLike?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationSkipLikeArgs, 'userId'>>;
   updateUserLastAccess?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;

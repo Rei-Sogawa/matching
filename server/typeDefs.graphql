@@ -146,8 +146,8 @@ type Mutation {
   createLike(userId: ID!): User!
   cancelLike(userId: ID!): User!
   skipLike(userId: ID!): User!
-  matchLike(userId: ID!): User!
-  matchSkippedLike(userId: ID!): User!
+  matchLike(userId: ID!): MessageRoom!
+  matchSkippedLike(userId: ID!): MessageRoom!
 
   createMessage(input: CreateMessageInput!): Message!
 }
