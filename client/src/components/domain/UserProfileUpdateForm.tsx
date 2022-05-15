@@ -2,7 +2,7 @@ import { Button, Divider, FormControl, FormLabel, HStack, Image, Radio, Stack, u
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { head } from "lodash-es";
 import { FC, useEffect, useMemo, useState } from "react";
 import { Field, Form } from "react-final-form";
@@ -63,8 +63,6 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   };
 
   const onRemove = async (index: number) => {
-    // const photoPath = photoPaths[index];
-    // await deleteObject(ref(getStorage(), photoPath));
     setPhotoPaths((prev) => prev.filter((_, _index) => _index !== index));
   };
 
@@ -96,6 +94,13 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
     }
 
     await onSubmit({ ...v, age: Number(v.age), photoPaths });
+
+    // NOTE: 不要になった storage の profilePhotos を削除
+    const profilePhotosRef = ref(getStorage(), `users/${me.id}/profilePhotos`);
+    const { items } = await listAll(profilePhotosRef);
+    const storedPhotoPaths = items.map((i) => i.fullPath);
+    const unusedPhotoPaths = storedPhotoPaths.filter((spp) => !photoPaths.includes(spp));
+    await Promise.all(unusedPhotoPaths.map((upp) => deleteObject(ref(getStorage(), upp))));
   };
 
   return (
