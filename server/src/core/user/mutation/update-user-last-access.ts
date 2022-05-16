@@ -14,7 +14,7 @@ export const updateUserLastAccessMutation = async (
   user.access();
 
   await user.save();
-  await onUpdateUser({ user }, { userIndexCollection });
+  await onUpdateUser(user, { userIndexCollection });
 
   return user;
 };

@@ -4,7 +4,8 @@ import { MessageRoomDoc } from "../../fire/docs/message-room";
 import { MessageRoomEventDoc } from "../../fire/docs/message-room-event";
 
 export const onCreateMessage = async (
-  { messageRoom, message }: { messageRoom: MessageRoomDoc; message: MessageDoc },
+  messageRoom: MessageRoomDoc,
+  message: MessageDoc,
   { messageRoomEventsCollection }: { messageRoomEventsCollection: MessageRoomEventsCollection }
 ) => {
   await MessageRoomEventDoc.create(messageRoomEventsCollection, {

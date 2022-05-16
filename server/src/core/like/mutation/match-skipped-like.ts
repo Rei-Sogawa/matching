@@ -22,7 +22,7 @@ export const matchSkippedLikeMutation = async (
 
   await skippedLike.save();
   await messageRoom.save();
-  await onUpdateLike({ like: skippedLike }, { userLikeIndexCollection });
+  await onUpdateLike(skippedLike, { userLikeIndexCollection });
 
   return messageRoom;
 };

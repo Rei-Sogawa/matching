@@ -15,7 +15,7 @@ export const updateUserProfileMutation = async (
   user.edit(input);
 
   await user.save();
-  await onUpdateUser({ user }, { userIndexCollection });
+  await onUpdateUser(user, { userIndexCollection });
 
   return user;
 };

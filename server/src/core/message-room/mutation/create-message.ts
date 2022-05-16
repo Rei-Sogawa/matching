@@ -18,7 +18,7 @@ export const createMessageMutation = async (
 
   await message.save();
   await messageRoom.touch().save();
-  await onCreateMessage({ messageRoom, message }, { messageRoomEventsCollection });
+  await onCreateMessage(messageRoom, message, { messageRoomEventsCollection });
 
   return message;
 };

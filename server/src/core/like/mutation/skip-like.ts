@@ -16,7 +16,7 @@ export const skipLikeMutation = async (
   sendLike.skip();
 
   await sendLike.save();
-  await onUpdateLike({ like: sendLike }, { userLikeIndexCollection });
+  await onUpdateLike(sendLike, { userLikeIndexCollection });
 
   return usersCollection.findOne(sendLike.receiverId);
 };
