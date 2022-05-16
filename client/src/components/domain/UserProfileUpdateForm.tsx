@@ -48,6 +48,8 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
   const [photoPaths, setPhotoPaths] = useState<string[]>(initialValues.photoPaths);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
 
+  const topPhotoUrl = head(photoUrls);
+
   useEffect(() => {
     (async () => {
       const res = await Promise.all(photoPaths.map((photoPath) => getDownloadURL(ref(getStorage(), photoPath))));
@@ -113,7 +115,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
             <FormControl>
               <FormLabel>プロフィール写真</FormLabel>
               <Stack spacing="4">
-                <Image src={head(photoUrls)} boxSize={{ base: "full", md: "md" }} rounded="md" />
+                {topPhotoUrl && <Image src={topPhotoUrl} boxSize={{ base: "full", md: "md" }} rounded="md" />}
                 <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
               </Stack>
             </FormControl>
