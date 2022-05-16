@@ -63,7 +63,7 @@ export abstract class FireIndex<TData extends { id: string }> {
     });
   }
 
-  async insert(data: TData) {
+  async store(data: TData) {
     return this.ref.firestore.runTransaction(async (t) => {
       const docs = await Promise.all(this.docIds.map((id) => t.get(this.ref.doc(id))));
 
@@ -71,7 +71,8 @@ export abstract class FireIndex<TData extends { id: string }> {
       for (const doc of docs) {
         const exists = doc.data()?.value.some((v) => v.id === data.id);
         if (!exists) continue;
-        const prevData = doc.data()!;
+        const prevData = doc.data();
+        if (!prevData) throw new Error("prevData is not defined");
         const nextData = {
           ...doc.data(),
           value: prevData.value.map((v) => (v.id === data.id ? data : v)),
@@ -102,7 +103,8 @@ export abstract class FireIndex<TData extends { id: string }> {
       for (const doc of docs) {
         const exists = doc.data()?.value.some((v) => v.id === data.id);
         if (!exists) continue;
-        const prevData = doc.data()!;
+        const prevData = doc.data();
+        if (!prevData) throw new Error("prevData is not defined");
         const nextData = {
           ...doc.data(),
           value: prevData.value.filter((v) => v.id !== data.id),
