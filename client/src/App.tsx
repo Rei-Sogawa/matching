@@ -7,7 +7,6 @@ import { GlobalProvider } from "./contexts/Global";
 import { GlobalSubscriber } from "./contexts/GlobalSubscriber";
 import { MeProvider } from "./contexts/Me";
 import { useUpdateUserLastAccess } from "./hooks/domain/user";
-import { Compose } from "./middleware/Compose";
 import { paths, routes } from "./routes";
 
 const Pages: FC = () => {
@@ -20,18 +19,8 @@ const Pages: FC = () => {
   return (
     <Routes>
       {paths.map((path) => {
-        const { Component, middleware } = routes[path];
-        return (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <Compose components={middleware}>
-                <Component />
-              </Compose>
-            }
-          />
-        );
+        const { Component } = routes[path];
+        return <Route key={path} path={path} element={<Component />} />;
       })}
     </Routes>
   );

@@ -6,10 +6,11 @@ import { AppHeading } from "../components/base/AppHeading";
 import { AppLink } from "../components/base/AppLink";
 import { SignUpForm, SignUpFormProps } from "../components/common/SignUpForm";
 import { useGlobal } from "../contexts/Global";
+import { withNoAuthenticated } from "../hocs/withNoAuthenicated";
 import { useSignUp } from "../hooks/domain/user";
 import { routes } from "../routes";
 
-export const SignUpPage: FC = () => {
+const _SignUpPage: FC = () => {
   const { setRedirect } = useGlobal();
 
   const { signUp } = useSignUp();
@@ -37,3 +38,5 @@ export const SignUpPage: FC = () => {
     </Box>
   );
 };
+
+export const SignUpPage: FC = withNoAuthenticated(_SignUpPage);

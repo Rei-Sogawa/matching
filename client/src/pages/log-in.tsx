@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { AppHeading } from "../components/base/AppHeading";
 import { AppLink } from "../components/base/AppLink";
 import { LogInForm } from "../components/common/LogInForm";
+import { withNoAuthenticated } from "../hocs/withNoAuthenicated";
 import { routes } from "../routes";
 
-export const LogInPage: FC = () => {
+export const _LogInPage: FC = () => {
   const navigate = useNavigate();
 
   const logIn = async ({ email, password }: { email: string; password: string }) => {
@@ -30,3 +31,5 @@ export const LogInPage: FC = () => {
     </Box>
   );
 };
+
+export const LogInPage: FC = withNoAuthenticated(_LogInPage);

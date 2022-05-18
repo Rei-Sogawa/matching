@@ -1,7 +1,6 @@
 import { pathBuilder } from "@rei-sogawa/path-builder";
 
-import { Authenticated } from "./middleware/Authenticated";
-import { BeforeAuthenticated } from "./middleware/BeforeAuthenticated";
+import { withAuthenticated } from "./hocs/withAuthenticated";
 import { IndexPage } from "./pages/Index";
 import { LikesPage } from "./pages/likes";
 import { LikePage } from "./pages/likes/[likeId]";
@@ -16,85 +15,58 @@ import { SearchUsersPage } from "./pages/search-users";
 import { SearchUserPage } from "./pages/search-users/[userId]";
 import { SignUpPage } from "./pages/sign-up";
 
-const INDEX_PATH = "/";
-const SIGN_UP_PATH = "/sign-up";
-const LOG_IN_PATH = "/log-in";
-const MY_PAGE = "/my-page";
-const MY_PAGE_LIKES = "/my-page/likes";
-const MY_PAGE_PROFILE_EDIT = "/my-page/profile/edit";
-const SEARCH_USERS_PATH = "/search-users";
-const SEARCH_USER_PATH = "/search-users/:userId";
-const LIKES_PATH = "/likes";
-const LIKES_SKIPPED_PATH = "/likes/skipped";
-const LIKE_PATH = "/likes/:userId";
-const MESSAGE_ROOMS_PATH = "/message-rooms";
-const MESSAGE_ROOM_PATH = "/message-rooms/:messageRoomId";
-
 export const routes = {
-  [INDEX_PATH]: {
-    path: pathBuilder(INDEX_PATH),
+  "/": {
+    path: pathBuilder("/"),
     Component: IndexPage,
-    middleware: [],
   },
-  [SIGN_UP_PATH]: {
-    path: pathBuilder(SIGN_UP_PATH),
+  "/sign-up": {
+    path: pathBuilder("/sign-up"),
     Component: SignUpPage,
-    middleware: [BeforeAuthenticated],
   },
-  [LOG_IN_PATH]: {
-    path: pathBuilder(LOG_IN_PATH),
+  "/log-in": {
+    path: pathBuilder("/log-in"),
     Component: LogInPage,
-    middleware: [BeforeAuthenticated],
   },
-  [MY_PAGE]: {
-    path: pathBuilder(MY_PAGE),
-    Component: MyPagePage,
-    middleware: [Authenticated],
+  "/my-page": {
+    path: pathBuilder("/my-page"),
+    Component: withAuthenticated(MyPagePage),
   },
-  [MY_PAGE_LIKES]: {
-    path: pathBuilder(MY_PAGE_LIKES),
-    Component: MyPageLikesPage,
-    middleware: [Authenticated],
+  "/my-page/likes": {
+    path: pathBuilder("/my-page/likes"),
+    Component: withAuthenticated(MyPageLikesPage),
   },
-  [MY_PAGE_PROFILE_EDIT]: {
-    path: pathBuilder(MY_PAGE_PROFILE_EDIT),
-    Component: MyPageProfileEditPage,
-    middleware: [Authenticated],
+  "/my-page/profile/edit": {
+    path: pathBuilder("/my-page/profile/edit"),
+    Component: withAuthenticated(MyPageProfileEditPage),
   },
-  [SEARCH_USERS_PATH]: {
-    path: pathBuilder(SEARCH_USERS_PATH),
-    Component: SearchUsersPage,
-    middleware: [Authenticated],
+  "/search-users": {
+    path: pathBuilder("/search-users"),
+    Component: withAuthenticated(SearchUsersPage),
   },
-  [SEARCH_USER_PATH]: {
-    path: pathBuilder(SEARCH_USER_PATH),
-    Component: SearchUserPage,
-    middleware: [Authenticated],
+  "/search-users/:userId": {
+    path: pathBuilder("/search-users/:userId"),
+    Component: withAuthenticated(SearchUserPage),
   },
-  [LIKES_PATH]: {
-    path: pathBuilder(LIKES_PATH),
-    Component: LikesPage,
-    middleware: [Authenticated],
+  "/likes": {
+    path: pathBuilder("/likes"),
+    Component: withAuthenticated(LikesPage),
   },
-  [LIKES_SKIPPED_PATH]: {
-    path: pathBuilder(LIKES_SKIPPED_PATH),
-    Component: LikesSkippedPage,
-    middleware: [Authenticated],
+  "/likes/skipped": {
+    path: pathBuilder("/likes/skipped"),
+    Component: withAuthenticated(LikesSkippedPage),
   },
-  [LIKE_PATH]: {
-    path: pathBuilder(LIKE_PATH),
-    Component: LikePage,
-    middleware: [Authenticated],
+  "/likes/:userId": {
+    path: pathBuilder("/likes/:userId"),
+    Component: withAuthenticated(LikePage),
   },
-  [MESSAGE_ROOMS_PATH]: {
-    path: pathBuilder(MESSAGE_ROOMS_PATH),
-    Component: MessageRoomsPage,
-    middleware: [Authenticated],
+  "/message-rooms": {
+    path: pathBuilder("/message-rooms"),
+    Component: withAuthenticated(MessageRoomsPage),
   },
-  [MESSAGE_ROOM_PATH]: {
-    path: pathBuilder(MESSAGE_ROOM_PATH),
-    Component: MessageRoomPage,
-    middleware: [Authenticated],
+  "/message-rooms/:messageRoomId": {
+    path: pathBuilder("/message-rooms/:messageRoomId"),
+    Component: withAuthenticated(MessageRoomPage),
   },
 };
 
