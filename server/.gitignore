@@ -5,4 +5,4 @@ node_modules
 *.log
 dist
 
-emulators-export
+emulator-export
