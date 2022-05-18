@@ -1,4 +1,15 @@
-import { Button, Divider, FormControl, FormLabel, HStack, Image, Radio, Stack, useToast } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Divider,
+  FormControl,
+  FormLabel,
+  HStack,
+  Image,
+  Radio,
+  Stack,
+  useToast,
+} from "@chakra-ui/react";
 import { pathBuilder } from "@rei-sogawa/path-builder";
 import { arrayMoveImmutable } from "array-move";
 import imageCompression from "browser-image-compression";
@@ -11,6 +22,7 @@ import { v4 } from "uuid";
 import { useMe } from "../../contexts/Me";
 import { Gender } from "../../graphql/generated";
 import { AdaptedRadioGroup, InputControl } from "../base/AppForm";
+import { Loading } from "../base/Loading";
 import { UserPhotoPicker } from "./UserPhotoPicker";
 
 const userProfileStoragePath = pathBuilder("users/:userId/profilePhotos/:profilePhotoId");
@@ -119,6 +131,7 @@ export const UserProfileUpdateForm: FC<UserProfileUpdateFormProps> = ({ initialV
                 <UserPhotoPicker {...{ photoUrls, onPick, onUp, onDown, onRemove }} />
               </Stack>
             </FormControl>
+
             <Field name="gender" label="性別" component={AdaptedRadioGroup}>
               <HStack>
                 {/* FIXME: Unable to preventDefault inside passive event listener invocation. が発生する。公式でも発生している
