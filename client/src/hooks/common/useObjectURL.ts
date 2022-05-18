@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 
-export const useObjectURL = (value: null | File | Blob | MediaSource) => {
-  const [object, setObject] = useState<null | File | Blob | MediaSource>(value);
-  const [objectURL, setObjectURL] = useState<null | string>(null);
+export const useObjectURL = (value: File | Blob | undefined) => {
+  const [objectURL, setObjectURL] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!object) {
-      return;
-    }
+    if (!value) return;
 
-    const objectURL = URL.createObjectURL(object);
+    const objectURL = URL.createObjectURL(value);
     setObjectURL(objectURL);
+
     return () => {
       URL.revokeObjectURL(objectURL);
-      setObjectURL(null);
+      setObjectURL(undefined);
     };
-  }, [object]);
+  }, [value]);
 
   return {
-    object,
     objectURL,
-    setObject,
   };
 };

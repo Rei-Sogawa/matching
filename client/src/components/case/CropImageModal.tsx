@@ -5,6 +5,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 
 import { useObjectURL } from "../../hooks/common/useObjectURL";
+import { assertDefined } from "../../utils/assert-defined";
 import { AppHeading } from "../base/AppHeading";
 
 const getBlobFromCanvas = (canvas: HTMLCanvasElement, file: File): Promise<File> =>
@@ -76,8 +77,16 @@ type CropImageModalProps = {
 export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose, onOk }) => {
   const toast = useToast();
 
+  // NOTE: IPad で 100vh にならないので、頑張ってる
+  const [height, setHeight] = useState("100vh");
+  useEffect(() => {
+    const rootRef = document.getElementById("root");
+    assertDefined(rootRef);
+    setHeight(`${rootRef.clientHeight}px`);
+  }, []);
+
   const { imageRef, crop, setCrop, getCroppedImage } = useCropImage(file);
-  const { objectURL, setObject } = useObjectURL(file);
+  const { objectURL } = useObjectURL(file);
 
   const handleOk = async () => {
     if (!crop) toast({ title: "範囲が選択されていません。", status: "error", position: "top-right" });
@@ -86,14 +95,10 @@ export const CropImageModal: FC<CropImageModalProps> = ({ file, isOpen, onClose,
     setCrop(undefined);
   };
 
-  useEffect(() => {
-    setObject(file);
-  }, [file]);
-
   return (
     <Modal size="full" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent py="4" my="auto" rounded="none">
+      <ModalContent height={height} py="4" my="auto" rounded="none" overflow="auto">
         <ModalBody>
           <Stack maxW="container.sm" mx="auto" spacing="8">
             <AppHeading alignSelf="center">切り抜き</AppHeading>
