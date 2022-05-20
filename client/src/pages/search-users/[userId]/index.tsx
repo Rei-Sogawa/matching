@@ -8,7 +8,7 @@ import { animated, useSpring } from "react-spring";
 import { BackButton } from "../../../components/case/BackButton";
 import { LikeButton } from "../../../components/case/LikeButton";
 import { SkipButton } from "../../../components/case/SkipButton";
-import { UserTopCard } from "../../../components/domain/UserTopCard";
+import { UserPrimaryCard } from "../../../components/UserPrimaryCard";
 import { UserForSearchUserPageFragment, UsersDocument, UsersQueryResult } from "../../../graphql/generated";
 import { useCreateLike } from "../../../hooks/domain/like";
 import { AppLayout } from "../../../layouts/AppLayout";
@@ -18,7 +18,7 @@ import { routes } from "../../../routes";
 gql`
   fragment UserForSearchUserPage on User {
     id
-    ...UserTopCard
+    ...UserPrimaryCard
   }
 `;
 
@@ -117,7 +117,7 @@ const SearchUserPageTemplate: FC<SearchUserPageTemplateProps> = ({ user }) => {
       <AppMain>
         <VStack spacing="8">
           <BackButton alignSelf="start" onClick={() => navigate(routes["/search-users"].path())} />
-          <UserTopCard user={user} imageForeground={imageForeground} />
+          <UserPrimaryCard user={user} imageForeground={imageForeground} />
           <HStack spacing="8">
             <SkipButton onClick={onSkip} disabled={liked || skipped} />
             <LikeButton onClick={onLike} disabled={liked || skipped} />

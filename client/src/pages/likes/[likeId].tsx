@@ -8,7 +8,7 @@ import { animated, useSpring } from "react-spring";
 
 import { LikeButton } from "../../components/case/LikeButton";
 import { SkipButton } from "../../components/case/SkipButton";
-import { UserTopCard } from "../../components/domain/UserTopCard";
+import { UserPrimaryCard } from "../../components/UserPrimaryCard";
 import {
   ReceiveLikeUsersDocument,
   ReceiveLikeUsersQueryResult,
@@ -24,7 +24,7 @@ import { routes } from "../../routes";
 gql`
   fragment UserForLikePage on User {
     id
-    ...UserTopCard
+    ...UserPrimaryCard
   }
 `;
 
@@ -130,7 +130,7 @@ const LikePageTemplate: FC<LikePageTemplateProps> = ({ user }) => {
     <AppLayout header={null} footer={footer}>
       <AppMain>
         <VStack spacing="6">
-          <UserTopCard user={user} imageForeground={imageForeground} />
+          <UserPrimaryCard user={user} imageForeground={imageForeground} />
           <HStack spacing="8">
             <SkipButton onClick={onSkip} disabled={liked || skipped} />
             <LikeButton onClick={onMatch} disabled={liked || skipped} />

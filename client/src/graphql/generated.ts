@@ -247,9 +247,9 @@ export type ViewerUsersArgs = {
 
 export type UserAvatarItemFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null };
 
-export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
+export type UserPrimaryCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type MeProviderFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
@@ -406,8 +406,8 @@ export const MeProviderFragmentDoc = gql`
   photoUrls
 }
     `;
-export const UserTopCardFragmentDoc = gql`
-    fragment UserTopCard on User {
+export const UserPrimaryCardFragmentDoc = gql`
+    fragment UserPrimaryCard on User {
   id
   gender
   nickName
@@ -419,9 +419,9 @@ export const UserTopCardFragmentDoc = gql`
 export const UserForLikePageFragmentDoc = gql`
     fragment UserForLikePage on User {
   id
-  ...UserTopCard
+  ...UserPrimaryCard
 }
-    ${UserTopCardFragmentDoc}`;
+    ${UserPrimaryCardFragmentDoc}`;
 export const UserActionCardFragmentDoc = gql`
     fragment UserActionCard on User {
   id
@@ -474,9 +474,9 @@ export const SendLikeUserItemFragmentDoc = gql`
 export const UserForSearchUserPageFragmentDoc = gql`
     fragment UserForSearchUserPage on User {
   id
-  ...UserTopCard
+  ...UserPrimaryCard
 }
-    ${UserTopCardFragmentDoc}`;
+    ${UserPrimaryCardFragmentDoc}`;
 export const MeDocument = gql`
     query me {
   viewer {

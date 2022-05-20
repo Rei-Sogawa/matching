@@ -2,11 +2,11 @@ import { gql } from "@apollo/client";
 import { Box, HStack, Stack } from "@chakra-ui/react";
 import { FC, ReactNode, useState } from "react";
 
-import { UserTopCardFragment } from "../../graphql/generated";
-import { AppHeading } from "../base/AppHeading";
+import { UserPrimaryCardFragment } from "../graphql/generated";
+import { AppHeading } from "./base/AppHeading";
 
 gql`
-  fragment UserTopCard on User {
+  fragment UserPrimaryCard on User {
     id
     gender
     nickName
@@ -16,9 +16,9 @@ gql`
   }
 `;
 
-type UserTopCardProps = { user: UserTopCardFragment; imageForeground?: ReactNode };
+type UserPrimaryCardProps = { user: UserPrimaryCardFragment; imageForeground?: ReactNode };
 
-export const UserTopCard: FC<UserTopCardProps> = ({ user, imageForeground }) => {
+export const UserPrimaryCard: FC<UserPrimaryCardProps> = ({ user, imageForeground }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const onClickRight = () => {
@@ -51,8 +51,8 @@ export const UserTopCard: FC<UserTopCardProps> = ({ user, imageForeground }) => 
             ))}
           </HStack>
 
-          <Box position="absolute" top="0" left="0" w="50%" h="100%" cursor="pointer" onClick={onClickLeft} />
-          <Box position="absolute" top="0" left="50%" w="50%" h="100%" cursor="pointer" onClick={onClickRight} />
+          <Box position="absolute" top="0" left="0" w="50%" h="100%" onClick={onClickLeft} />
+          <Box position="absolute" top="0" left="50%" w="50%" h="100%" onClick={onClickRight} />
         </Box>
 
         <Box>
