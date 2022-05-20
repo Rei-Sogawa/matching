@@ -73,7 +73,7 @@ gql`
         edges {
           node {
             id
-            ...SendLikeUserItem
+            ...UserLikedItem
           }
           cursor
         }

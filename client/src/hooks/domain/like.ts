@@ -173,7 +173,7 @@ gql`
   mutation CreateLike($userId: ID!) {
     createLike(userId: $userId) {
       id
-      ...SendLikeUserItem
+      ...UserLikedItem
     }
   }
 `;

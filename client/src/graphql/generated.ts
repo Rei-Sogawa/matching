@@ -384,8 +384,6 @@ export type MessageItemFragment = { __typename?: 'Message', id: string, mine: bo
 
 export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
 
-export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
-
 export type UserForSearchUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
 export const UserAvatarItemFragmentDoc = gql`
@@ -409,6 +407,16 @@ export const UserLikedItemFragmentDoc = gql`
     `;
 export const UserSkippedItemFragmentDoc = gql`
     fragment UserSkippedItem on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
+  topPhotoUrl
+}
+    `;
+export const UserActionCardFragmentDoc = gql`
+    fragment UserActionCard on User {
   id
   gender
   nickName
@@ -471,22 +479,6 @@ export const MessageRoomItemFragmentDoc = gql`
   }
 }
     `;
-export const UserActionCardFragmentDoc = gql`
-    fragment UserActionCard on User {
-  id
-  gender
-  nickName
-  age
-  livingPref
-  topPhotoUrl
-}
-    `;
-export const SendLikeUserItemFragmentDoc = gql`
-    fragment SendLikeUserItem on User {
-  id
-  ...UserActionCard
-}
-    ${UserActionCardFragmentDoc}`;
 export const UserForSearchUserPageFragmentDoc = gql`
     fragment UserForSearchUserPage on User {
   id
@@ -670,10 +662,10 @@ export const CreateLikeDocument = gql`
     mutation CreateLike($userId: ID!) {
   createLike(userId: $userId) {
     id
-    ...SendLikeUserItem
+    ...UserLikedItem
   }
 }
-    ${SendLikeUserItemFragmentDoc}`;
+    ${UserLikedItemFragmentDoc}`;
 export type CreateLikeMutationFn = Apollo.MutationFunction<CreateLikeMutation, CreateLikeMutationVariables>;
 
 /**
@@ -1013,7 +1005,7 @@ export const SendLikeUsersDocument = gql`
       edges {
         node {
           id
-          ...SendLikeUserItem
+          ...UserLikedItem
         }
         cursor
       }
@@ -1024,7 +1016,7 @@ export const SendLikeUsersDocument = gql`
     }
   }
 }
-    ${SendLikeUserItemFragmentDoc}`;
+    ${UserLikedItemFragmentDoc}`;
 
 /**
  * __useSendLikeUsersQuery__
