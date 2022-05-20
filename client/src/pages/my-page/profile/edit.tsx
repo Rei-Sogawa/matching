@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { AppHeading } from "../../../components/base/AppHeading";
 import { BackButton } from "../../../components/case/BackButton";
-import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/domain/UserProfileUpdateForm";
+import { UserProfileUpdateForm, UserProfileUpdateFormProps } from "../../../components/UserProfileUpdateForm";
 import { useMe } from "../../../contexts/Me";
 import { useUpdateUserProfile } from "../../../hooks/domain/user";
 import { AppHeader } from "../../../layouts/AppHeader";

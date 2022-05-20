@@ -19,11 +19,11 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { v4 } from "uuid";
 
-import { useMe } from "../../contexts/Me";
-import { Gender } from "../../graphql/generated";
-import { AdaptedRadioGroup, InputControl } from "../base/AppForm";
-import { Loading } from "../base/Loading";
-import { UserPhotoPicker } from "./UserPhotoPicker";
+import { useMe } from "../contexts/Me";
+import { Gender } from "../graphql/generated";
+import { AdaptedRadioGroup, InputControl } from "./base/AppForm";
+import { Loading } from "./base/Loading";
+import { UserPhotoPicker } from "./domain/UserPhotoPicker";
 
 const userProfileStoragePath = pathBuilder("users/:userId/profilePhotos/:profilePhotoId");
 
