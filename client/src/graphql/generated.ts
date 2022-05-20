@@ -247,7 +247,11 @@ export type ViewerUsersArgs = {
 
 export type UserAvatarItemFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null };
 
+export type UserLikedItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
+
 export type UserPrimaryCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
+
+export type UserSkippedItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
@@ -376,8 +380,6 @@ export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserPro
 
 export type UserForLikePageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export type SkipLikeUserItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
-
 export type MessageItemFragment = { __typename?: 'Message', id: string, mine: boolean, content: string, createdAt: string, user: { __typename?: 'User', id: string, topPhotoUrl?: string | null } };
 
 export type MessageRoomItemFragment = { __typename?: 'MessageRoom', id: string, partner: { __typename?: 'User', id: string, nickName: string, photoUrls: Array<string> }, latestMessage: { __typename?: 'Message', id: string, content: string, createdAt: string } };
@@ -390,6 +392,26 @@ export const UserAvatarItemFragmentDoc = gql`
     fragment UserAvatarItem on User {
   id
   gender
+  age
+  livingPref
+  topPhotoUrl
+}
+    `;
+export const UserLikedItemFragmentDoc = gql`
+    fragment UserLikedItem on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
+  topPhotoUrl
+}
+    `;
+export const UserSkippedItemFragmentDoc = gql`
+    fragment UserSkippedItem on User {
+  id
+  gender
+  nickName
   age
   livingPref
   topPhotoUrl
@@ -422,22 +444,6 @@ export const UserForLikePageFragmentDoc = gql`
   ...UserPrimaryCard
 }
     ${UserPrimaryCardFragmentDoc}`;
-export const UserActionCardFragmentDoc = gql`
-    fragment UserActionCard on User {
-  id
-  gender
-  nickName
-  age
-  livingPref
-  topPhotoUrl
-}
-    `;
-export const SkipLikeUserItemFragmentDoc = gql`
-    fragment SkipLikeUserItem on User {
-  id
-  ...UserActionCard
-}
-    ${UserActionCardFragmentDoc}`;
 export const MessageItemFragmentDoc = gql`
     fragment MessageItem on Message {
   id
@@ -463,6 +469,16 @@ export const MessageRoomItemFragmentDoc = gql`
     content
     createdAt
   }
+}
+    `;
+export const UserActionCardFragmentDoc = gql`
+    fragment UserActionCard on User {
+  id
+  gender
+  nickName
+  age
+  livingPref
+  topPhotoUrl
 }
     `;
 export const SendLikeUserItemFragmentDoc = gql`
@@ -1045,7 +1061,7 @@ export const SkipLikeUsersDocument = gql`
       edges {
         node {
           id
-          ...SkipLikeUserItem
+          ...UserSkippedItem
         }
         cursor
       }
@@ -1056,7 +1072,7 @@ export const SkipLikeUsersDocument = gql`
     }
   }
 }
-    ${SkipLikeUserItemFragmentDoc}`;
+    ${UserSkippedItemFragmentDoc}`;
 
 /**
  * __useSkipLikeUsersQuery__

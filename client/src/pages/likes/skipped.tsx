@@ -1,60 +1,16 @@
-import { gql } from "@apollo/client";
-import { Box, Button, Divider, Flex, HStack, Stack, useToast } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Stack } from "@chakra-ui/react";
 import { FC } from "react";
-import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import { AppHeading } from "../../components/base/AppHeading";
 import { Loading } from "../../components/base/Loading";
 import { BackButton } from "../../components/case/BackButton";
-import { UserActionCard } from "../../components/domain/UserActionCard";
-import { SkipLikeUserItemFragment } from "../../graphql/generated";
-import { useMatchSkippedLike } from "../../hooks/domain/like";
+import { UserSkippedItem } from "../../components/UserSkippedItem";
 import { useSkipLikeUsers } from "../../hooks/domain/user";
 import { AppHeader } from "../../layouts/AppHeader";
 import { AppLayout } from "../../layouts/AppLayout";
 import { AppMain } from "../../layouts/AppMain";
 import { routes } from "../../routes";
-
-gql`
-  fragment SkipLikeUserItem on User {
-    id
-    ...UserActionCard
-  }
-`;
-
-type SkipLikeUserItemProps = {
-  user: SkipLikeUserItemFragment;
-};
-
-const SkipLikeUserItem: FC<SkipLikeUserItemProps> = ({ user }) => {
-  const toast = useToast();
-
-  const { matchSkippedLike } = useMatchSkippedLike(user.id);
-
-  const onClick = async () => {
-    await matchSkippedLike();
-    toast({
-      position: "top-right",
-      render: () => (
-        <HStack px="4" py="3" rounded="md" bg="secondary.500">
-          <FaHeart color="white" fontSize="20px" />
-          <Box fontWeight="bold" color="white">
-            マッチング成立しました！
-          </Box>
-        </HStack>
-      ),
-    });
-  };
-
-  const actionButton = (
-    <Button onClick={onClick} colorScheme="secondary">
-      いいね！ありがとう
-    </Button>
-  );
-
-  return <UserActionCard user={user} actionButton={actionButton} />;
-};
 
 export const LikesSkippedPage: FC = () => {
   const navigate = useNavigate();
@@ -83,7 +39,7 @@ export const LikesSkippedPage: FC = () => {
         <Stack spacing="6">
           {users.map((u) => (
             <Stack key={u.id} alignSelf="center" spacing="6">
-              <SkipLikeUserItem user={u} />
+              <UserSkippedItem user={u} />
               <Divider />
             </Stack>
           ))}

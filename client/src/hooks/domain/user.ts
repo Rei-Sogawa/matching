@@ -108,7 +108,7 @@ gql`
         edges {
           node {
             id
-            ...SkipLikeUserItem
+            ...UserSkippedItem
           }
           cursor
         }
