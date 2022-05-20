@@ -23,7 +23,7 @@ import { useMe } from "../contexts/Me";
 import { Gender } from "../graphql/generated";
 import { AdaptedRadioGroup, InputControl } from "./base/AppForm";
 import { Loading } from "./base/Loading";
-import { UserPhotoPicker } from "./domain/UserPhotoPicker";
+import { UserPhotoPicker } from "./UserPhotoPicker";
 
 const userProfileStoragePath = pathBuilder("users/:userId/profilePhotos/:profilePhotoId");
 

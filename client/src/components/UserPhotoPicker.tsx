@@ -3,8 +3,8 @@ import { Box, Button, HStack, Image, Input, Stack, useDisclosure, VStack, Wrap, 
 import { FC, useEffect, useState } from "react";
 import { BiUpload } from "react-icons/bi";
 
-import { useFileInput } from "../../hooks/common/useFileInput";
-import { CropImageModal } from "../case/CropImageModal";
+import { useFileInput } from "../hooks/common/useFileInput";
+import { CropImageModal } from "./case/CropImageModal";
 
 type UserPhotoCardProps = { photoUrl: string; onUp: () => void; onDown: () => void; onRemove: () => void };
 
