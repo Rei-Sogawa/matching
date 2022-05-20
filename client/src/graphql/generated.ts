@@ -253,8 +253,6 @@ export type UserPrimaryCardFragment = { __typename?: 'User', id: string, gender:
 
 export type UserSkippedItemFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
-export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
-
 export type MeProviderFragment = { __typename?: 'Me', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoPaths: Array<string>, photoUrls: Array<string> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -407,16 +405,6 @@ export const UserLikedItemFragmentDoc = gql`
     `;
 export const UserSkippedItemFragmentDoc = gql`
     fragment UserSkippedItem on User {
-  id
-  gender
-  nickName
-  age
-  livingPref
-  topPhotoUrl
-}
-    `;
-export const UserActionCardFragmentDoc = gql`
-    fragment UserActionCard on User {
   id
   gender
   nickName
