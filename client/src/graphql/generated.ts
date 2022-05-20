@@ -245,9 +245,9 @@ export type ViewerUsersArgs = {
   input: PageInput;
 };
 
-export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
+export type UserAvatarItemFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null };
 
-export type UserSmallCardFragment = { __typename?: 'User', id: string, gender: Gender, age: number, livingPref: string, topPhotoUrl?: string | null };
+export type UserActionCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, topPhotoUrl?: string | null };
 
 export type UserTopCardFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
@@ -386,8 +386,8 @@ export type SendLikeUserItemFragment = { __typename?: 'User', id: string, gender
 
 export type UserForSearchUserPageFragment = { __typename?: 'User', id: string, gender: Gender, nickName: string, age: number, livingPref: string, photoUrls: Array<string> };
 
-export const UserSmallCardFragmentDoc = gql`
-    fragment UserSmallCard on User {
+export const UserAvatarItemFragmentDoc = gql`
+    fragment UserAvatarItem on User {
   id
   gender
   age
@@ -909,7 +909,7 @@ export const UsersDocument = gql`
       edges {
         node {
           id
-          ...UserSmallCard
+          ...UserAvatarItem
           ...UserForSearchUserPage
         }
         cursor
@@ -921,7 +921,7 @@ export const UsersDocument = gql`
     }
   }
 }
-    ${UserSmallCardFragmentDoc}
+    ${UserAvatarItemFragmentDoc}
 ${UserForSearchUserPageFragmentDoc}`;
 
 /**

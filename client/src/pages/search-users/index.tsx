@@ -2,7 +2,7 @@ import { Button, Flex, IconButton, Stack, Wrap, WrapItem } from "@chakra-ui/reac
 import { FC } from "react";
 import { BiSearch } from "react-icons/bi";
 
-import { UserSmallCard } from "../../components/domain/UserSmallCard";
+import { UserAvatarItem } from "../../components/UserAvatarItem";
 import { useUsers } from "../../hooks/domain/user";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppLayout } from "../../layouts/AppLayout";
@@ -32,7 +32,7 @@ export const SearchUsersPage: FC = () => {
           <Wrap justify="center" spacing="6">
             {users.map((user) => (
               <WrapItem key={user.id}>
-                <UserSmallCard user={user} />
+                <UserAvatarItem user={user} />
               </WrapItem>
             ))}
           </Wrap>

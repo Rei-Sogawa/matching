@@ -21,7 +21,7 @@ gql`
         edges {
           node {
             id
-            ...UserSmallCard
+            ...UserAvatarItem
             ...UserForSearchUserPage
           }
           cursor

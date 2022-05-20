@@ -2,12 +2,12 @@ import { gql } from "@apollo/client";
 import { Avatar, Box, HStack, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 
-import { UserSmallCardFragment } from "../../graphql/generated";
-import { routes } from "../../routes";
-import { AppLink } from "../base/AppLink";
+import { UserAvatarItemFragment } from "../graphql/generated";
+import { routes } from "../routes";
+import { AppLink } from "./base/AppLink";
 
 gql`
-  fragment UserSmallCard on User {
+  fragment UserAvatarItem on User {
     id
     gender
     age
@@ -16,11 +16,11 @@ gql`
   }
 `;
 
-export type UserSmallCard = {
-  user: UserSmallCardFragment;
+export type UserAvatarItem = {
+  user: UserAvatarItemFragment;
 };
 
-export const UserSmallCard: FC<UserSmallCard> = ({ user }) => {
+export const UserAvatarItem: FC<UserAvatarItem> = ({ user }) => {
   return (
     <AppLink to={routes["/search-users/:userId"].path({ userId: user.id })}>
       <VStack>
