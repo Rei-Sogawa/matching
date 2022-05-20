@@ -137,7 +137,7 @@ const seed = async () => {
     .touch()
     .save();
 
-  for (const i of Array.from({ length: 30 }).map((_, i) => i)) {
+  for (const i of Array.from({ length: 100 }).map((_, i) => i)) {
     const message = MessageDoc.create(messageRoom.messagesCollection, {
       userId: messageRoom.userIds[i % 2],
       content: i.toString(),
