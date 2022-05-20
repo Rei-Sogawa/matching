@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AppHeading } from "../../components/base/AppHeading";
-import { Loading } from "../../components/base/Loading";
+import { AppLoading } from "../../components/base/AppLoading";
 import { BackButton } from "../../components/case/BackButton";
 import { UserLikedItem } from "../../components/UserLikedItem";
 import { useSendLikeUsers } from "../../hooks/domain/user";
@@ -31,7 +31,7 @@ export const MyPageLikesPage: FC = () => {
     </AppHeader>
   );
 
-  if (!data) return <Loading />;
+  if (!data) return <AppLoading />;
 
   return (
     <AppLayout header={header} footer={null}>

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { AppHeading } from "../../components/base/AppHeading";
 import { AppLink } from "../../components/base/AppLink";
-import { Loading } from "../../components/base/Loading";
+import { AppLoading } from "../../components/base/AppLoading";
 import { useReceiveLikeUsers } from "../../hooks/domain/user";
 import { AppFooter } from "../../layouts/AppFooter";
 import { AppHeader } from "../../layouts/AppHeader";
@@ -42,8 +42,8 @@ export const LikesPage: FC = () => {
     </AppFooter>
   );
 
-  if (!data) return <Loading />;
-  if (users.length > 0) return <Loading />;
+  if (!data) return <AppLoading />;
+  if (users.length > 0) return <AppLoading />;
 
   return (
     <AppLayout header={header} footer={footer}>
