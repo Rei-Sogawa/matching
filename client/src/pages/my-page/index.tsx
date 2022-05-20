@@ -30,7 +30,7 @@ export const MyPagePage: FC = () => {
     <AppLayout header={null} footer={footer}>
       <AppMain>
         <Stack spacing="6">
-          <HStack spacing="8" px="10" py="4">
+          <HStack spacing="8" p="4">
             <Avatar src={head(me.photoUrls)} size="xl" ring="4px" ringColor="primary.500" />
             <Box>
               <AppHeading>{me.nickName}</AppHeading>
