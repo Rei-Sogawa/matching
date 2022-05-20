@@ -18,6 +18,11 @@ import { AppMain } from "../../layouts/AppMain";
 import { routes } from "../../routes";
 import { assertDefined } from "../../utils/assert-defined";
 
+const sleep = (ms: number) =>
+  new Promise((res) => {
+    setTimeout(res, ms);
+  });
+
 gql`
   fragment MessageItem on Message {
     id
@@ -98,7 +103,7 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
   const footer = (
     <AppFooter>
       <form onSubmit={onSubmit}>
-        <HStack>
+        <HStack py="2">
           <AutoResizeTextarea minRows={2} maxRows={4} isRequired {...input} />
           <IconButton type="submit" h="16" aria-label="send" icon={<BiSend fontSize="28px" />} />
         </HStack>
@@ -116,9 +121,12 @@ const MessageRoomPageTemplate: FC<MessageRoomPageTemplateProps> = ({ partner, me
 
   const onClick = async () => {
     assertDefined(mainRef.current);
-    const prevHeight = mainRef.current.scrollHeight;
+    const prevScrollHeight = mainRef.current.scrollHeight;
+
     await onLoadMore();
-    mainRef.current.scrollTo({ top: mainRef.current.scrollHeight - prevHeight });
+
+    await sleep(0);
+    mainRef.current.scroll({ top: mainRef.current.scrollHeight - prevScrollHeight });
   };
 
   return (
